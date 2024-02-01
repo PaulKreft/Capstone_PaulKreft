@@ -1,4 +1,4 @@
-name: "HexHex Game"
+name: "Deploy to Render.com"
 
 on:
   push:
