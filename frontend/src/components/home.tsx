@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function Home() {
   return (
     <div className="flex flex-1 flex-col items-center justify-center pb-52">
@@ -10,6 +12,9 @@ export default function Home() {
         <span className="text-[#F8F991]">x</span>
         <span className="text-[#720026]">!</span>
       </h1>
+      <Link to="/play">
+        <button className="mt-32 rounded-3xl bg-black px-16 py-6 text-4xl text-white">Play!</button>
+      </Link>
     </div>
   );
 }
