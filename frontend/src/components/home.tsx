@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 export default function Home() {
   return (
     <div className="flex flex-1 flex-col items-center justify-center pb-52">
-      <h1 className="text-center text-8xl font-extrabold leading-snug">
+      <h1 className="max-w-96 text-center text-6xl font-extrabold leading-snug sm:max-w-none sm:text-8xl sm:leading-snug">
         Welcome to <span className="text-[#3A0842]">H</span>
         <span className="text-[#9AB87A]">e</span>
         <span className="text-[#444B6E]">x</span>
