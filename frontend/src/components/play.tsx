@@ -3,8 +3,6 @@ import { addHexColors, getRandomHexColor, subtractHexColors } from "../lib/hexUt
 import { shuffleArray } from "../lib/shuffleArray.tsx";
 import { cn } from "../lib/utils.ts";
 
-import { v4 as uuid } from "uuid";
-
 const WHITE = "#ffffff";
 const BLACK = "#000000";
 
@@ -26,13 +24,13 @@ export default function Play() {
 
   useEffect(() => {
     const additionalTilePairs: Color[] = [
-      { id: uuid(), value: "#FFF" },
-      { id: uuid(), value: "#000" },
-      { id: uuid(), value: "#FFF" },
-      { id: uuid(), value: "#000" },
+      { id: "1", value: "#FFF" },
+      { id: "2", value: "#000" },
+      { id: "3", value: "#FFF" },
+      { id: "4", value: "#000" },
     ];
     for (let i = 0; i < difficulty; i++) {
-      additionalTilePairs.push({ id: uuid(), value: "#FFF" }, { id: uuid(), value: "#000" });
+      additionalTilePairs.push({ id: (i * 2).toString(), value: "#FFF" }, { id: (i * 3).toString(), value: "#000" });
     }
 
     setColors(additionalTilePairs);
@@ -165,13 +163,13 @@ export default function Play() {
 
       <div className="flex gap-5">
         <button
-            className="mt-10 rounded-[20px] border-2 border-[#73BA9B] px-5 py-2 text-xl text-[#73BA9B]"
+          className="mt-10 rounded-[20px] border-2 border-[#73BA9B] px-5 py-2 text-xl text-[#73BA9B]"
           onClick={() => setDifficulty(1)}
         >
           Easy
         </button>
         <button
-            className="mt-10 rounded-[20px] border-2 border-[#6D98BA] px-5 py-2 text-xl text-[#6D98BA]"
+          className="mt-10 rounded-[20px] border-2 border-[#6D98BA] px-5 py-2 text-xl text-[#6D98BA]"
           onClick={() => setDifficulty(2)}
         >
           Medium
