@@ -1,7 +1,5 @@
 export default function Login() {
-  const link = import.meta.env.PROD
-    ? "/oauth2/authorization/github"
-    : "http://localhost:8080/oauth2/authorization/github";
+  const link = "/";
 
   return (
     <div className="mx-auto flex flex-1 items-center justify-center pb-20">
