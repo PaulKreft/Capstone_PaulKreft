@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { addHexColors, getRandomHexColor, subtractHexColors } from "../lib/hexUtils.ts";
 import { shuffleArray } from "../lib/shuffleArray.tsx";
+import { cn } from "../lib/utils.ts";
 
 const WHITE = "#ffffff";
 const BLACK = "#000000";
@@ -14,9 +15,11 @@ export default function Play() {
   const [hasLost, setHasLost] = useState<boolean>(false);
   const [isOver, setIsOver] = useState<boolean>(false);
 
+  const [lastMatch, setLastMatch] = useState<string>("");
+
   const [selectedColor, setSelectedColor] = useState<string>("");
   const [colors, setColors] = useState<Color[]>([
-    { id: "1", value: "#FFf" },
+    { id: "1", value: "#FFF" },
     { id: "2", value: "#000" },
     { id: "3", value: "#FFF" },
     { id: "4", value: "#000" },
@@ -38,8 +41,13 @@ export default function Play() {
     setIsOver(!colors.filter((tile) => tile.value !== WHITE && tile.value !== BLACK).length);
   }, [colors]);
 
-  const selectColor = (id: string) => {
+  const selectColor = (id: string): void => {
+    if (isOver) {
+      return;
+    }
+
     if (!selectedColor) {
+      getLastMatch(id);
       setSelectedColor(id);
       return;
     }
@@ -51,6 +59,16 @@ export default function Play() {
 
     combineTiles(selectedColor, id);
     setSelectedColor("");
+  };
+
+  const getLastMatch = (last: string): void => {
+    const lastColor = colors.find((color) => color.id === last);
+
+    if (!lastColor) {
+      return;
+    }
+    const match: Color | undefined = colors.find((color) => addHexColors(color.value, lastColor.value) === WHITE);
+    setLastMatch(match ? match.id : "Nothing found");
   };
 
   const combineTiles = (givingId: string, receivingId: string): void => {
@@ -103,17 +121,22 @@ export default function Play() {
   };
 
   return (
-    <div className="mx-auto max-w-72 flex flex-1 flex-col items-center justify-center sm:max-w-none sm:px-10 sm:pb-20">
-      {!isOver || (
-        <div className="mb-8 sm:mb-10 text-5xl">
-          You {hasLost ? <span className="text-[#9F0003]"> lost...</span> : <span> won!</span>}
-        </div>
-      )}
+    <div className="mx-auto flex max-w-72 flex-1 flex-col items-center justify-center sm:max-w-none sm:px-10 sm:pb-20">
+      <div className={cn("mb-8 text-5xl sm:mb-10", isOver ? "text-black" : "text-transparent")}>
+        You {hasLost ? <span className="text-[#9F0003]"> lost...</span> : <span> won!</span>}
+      </div>
+
       <div className="flex max-w-96 flex-wrap justify-center gap-4">
         {colors.map((color) => (
           <div
             key={color.id}
-            className={`h-28 w-28 rounded-xl border border-black text-blue-600 ${selectedColor === color.id ? "border-4 border-black" : ""}`}
+            className={cn(
+              "h-28 w-28 rounded-xl text-blue-600",
+              selectedColor === color.id ? "border-2 border-black" : "",
+              lastMatch === color.id && hasLost ? "border-4 border-white outline outline-4 outline-black" : "",
+              isOver ? "cursor-default" : "cursor-pointer",
+              [WHITE, "#FFF"].includes(color.value) ? "border border-black" : "",
+            )}
             onClick={() => selectColor(color.id)}
             style={{ backgroundColor: color.value }}
           ></div>
