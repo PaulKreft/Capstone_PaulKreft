@@ -27,7 +27,7 @@ public class SecurityConfig {
                 )
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .logout(logout -> {
-                    if (environment.equals("prod")) {
+                    if (environment.equals("production")) {
                         logout.logoutSuccessUrl("/").permitAll();
                     } else {
                         logout.logoutSuccessUrl("http://localhost:5173").permitAll();
@@ -36,7 +36,7 @@ public class SecurityConfig {
                 .oauth2Login(c -> {
                     try {
                         c.init(http);
-                        if (environment.equals("prod")) {
+                        if (environment.equals("production")) {
                             c.defaultSuccessUrl("/", true);
                         } else {
                             c.defaultSuccessUrl("http://localhost:5173", true);
