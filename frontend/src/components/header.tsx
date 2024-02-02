@@ -1,6 +1,6 @@
 "use client";
 
-import logoUrl from "../assets/_e9143fb5-fffe-41b2-b320-9b00cc908ff5.jpeg";
+import logoUrl from "./../assets/_e9143fb5-fffe-41b2-b320-9b00cc908ff5.jpeg";
 
 import { Link } from "react-router-dom";
 import { StickyHeader } from "./sticky-header";
