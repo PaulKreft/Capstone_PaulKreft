@@ -55,6 +55,7 @@ export const Header: React.FC<HeaderProps> = ({ isLoggedIn, logout }) => {
     duration: number;
     opacity: 1 | 0;
   };
+
   const [menuButtonHoverState, setMenuButtonHoverState] = useState<ButtonHoverState>({
     left: 0,
     height: 0,
