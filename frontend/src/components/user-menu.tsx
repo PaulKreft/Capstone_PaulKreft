@@ -12,7 +12,7 @@ type UserMenuProps = {
 export const UserMenu: React.FC<UserMenuProps> = ({ isLoggedIn, className, logout, toggleMenu }) => {
   return isLoggedIn ? (
     <div className={className}>
-      <button onClick={logout} className={`h-8 rounded-lg px-3 text-sm`}>
+      <button onClick={logout} className="h-8 w-full rounded-lg px-3 border border-black">
         Log Out
       </button>
     </div>

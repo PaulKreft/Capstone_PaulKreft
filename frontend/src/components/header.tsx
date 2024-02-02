@@ -1,5 +1,7 @@
 "use client";
 
+import logoUrl from "../assets/_e9143fb5-fffe-41b2-b320-9b00cc908ff5.jpeg";
+
 import { Link } from "react-router-dom";
 import { StickyHeader } from "./sticky-header";
 import { HamburgerTwo } from "./hamburger-two";
@@ -53,6 +55,7 @@ export const Header: React.FC<HeaderProps> = ({ isLoggedIn, logout }) => {
     duration: number;
     opacity: 1 | 0;
   };
+
   const [menuButtonHoverState, setMenuButtonHoverState] = useState<ButtonHoverState>({
     left: 0,
     height: 0,
@@ -100,7 +103,7 @@ export const Header: React.FC<HeaderProps> = ({ isLoggedIn, logout }) => {
         <div className="flex h-1/2 w-full items-center justify-between px-8">
           <div className="flex h-full">
             <Link to={"/"} className="flex h-full items-center">
-              <img className="mr-4 h-full" src="/src/assets/_e9143fb5-fffe-41b2-b320-9b00cc908ff5.jpeg" alt="logo" />
+              <img className="mr-4 h-full" src={logoUrl} alt="logo" />
               <span className="mr-12 text-xl font-extrabold">HexHex</span>
             </Link>
             <div className="hidden items-center text-sm text-gray-600 lg:flex" onMouseLeave={onMenuMouseLeave}>
@@ -145,7 +148,7 @@ export const Header: React.FC<HeaderProps> = ({ isLoggedIn, logout }) => {
         <ul>
           {menuItems.map((item, index) => (
             <Link key={item.name + index * 123} to={item.href} onClick={() => setIsMenuClicked(!isMenuClicked)}>
-              <li className="cursor-pointer border-b border-black/15 py-3 leading-6 text-black pl-5 hover:bg-gray-50">
+              <li className="cursor-pointer border-b border-black/15 py-3 pl-5 leading-6 text-black hover:bg-gray-50">
                 {item.name}
               </li>
             </Link>
