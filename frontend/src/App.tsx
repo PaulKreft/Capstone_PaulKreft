@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { User } from "./types/User.ts";
 
 import axios from "axios";
+import Footer from "./components/footer.tsx";
 
 function App() {
   const navigate = useNavigate();
@@ -38,6 +39,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path={"/*"} element={<NotFound />} />
       </Routes>
+      <Footer />
     </div>
   );
 }
