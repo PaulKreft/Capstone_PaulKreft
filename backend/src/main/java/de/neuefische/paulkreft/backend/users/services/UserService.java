@@ -1,5 +1,6 @@
 package de.neuefische.paulkreft.backend.users.services;
 
+import de.neuefische.paulkreft.backend.services.IdService;
 import de.neuefische.paulkreft.backend.users.models.User;
 import de.neuefische.paulkreft.backend.users.repositories.UsersRepo;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserService {
     private final UsersRepo usersRepo;
+    private final IdService idService;
 
     public User getUser(OAuth2User user) {
         if (user == null) {
@@ -28,7 +30,7 @@ public class UserService {
         boolean isReturningUser = usersRepo.existsUserByGithubId(githubId);
 
         if (!isReturningUser) {
-            return usersRepo.save(new User(UUID.randomUUID().toString(), githubId, name));
+            return usersRepo.save(new User(idService.generateUUID(), githubId, name));
         }
 
         return usersRepo.findUserByGithubId(githubId);
