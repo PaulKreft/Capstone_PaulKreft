@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class GlobalExceptionHandlerTest {
 
     @Test
-    void noResourceFoundHandlerTest_whenEnvDevelopment_returnLocalhostPlusPath() throws NoResourceFoundException {
+    void noResourceFoundHandlerTest_whenEnvDevelopment_returnLocalhostPlusPath() {
         // Given
         String basePath = "http://localhost:5173/";
         String path = "test";
@@ -28,7 +28,7 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
-    void noResourceFoundHandlerTest_whenEnvProduction_returnRelativePath() throws NoResourceFoundException {
+    void noResourceFoundHandlerTest_whenEnvProduction_returnRelativePath() {
         // Given
         String basePath = "/";
         String path = "test";
@@ -37,7 +37,7 @@ class GlobalExceptionHandlerTest {
         GlobalExceptionHandler handler = new GlobalExceptionHandler(env);
 
         // When
-        ModelAndView expected = new ModelAndView("redirect:" + basePath + path);
+        ModelAndView expected = new ModelAndView("redirect:" + basePath);
         ModelAndView actual = handler.noResourceFoundHandler(exception);
 
         // Then
