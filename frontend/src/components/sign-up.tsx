@@ -1,4 +1,4 @@
-import githubMarkUrl from "../assets/github-mark.png";
+import githubMarkUrl from "./../assets/github-mark.png";
 
 export default function SignUp() {
   const link = import.meta.env.PROD

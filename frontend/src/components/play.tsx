@@ -103,9 +103,9 @@ export default function Play() {
   };
 
   return (
-    <div className="mx-auto flex flex-1 flex-col items-center justify-center pb-52">
+    <div className="mx-auto max-w-72 flex flex-1 flex-col items-center justify-center sm:max-w-none sm:px-10 sm:pb-20">
       {!isOver || (
-        <div className="mb-16 text-5xl">
+        <div className="mb-8 sm:mb-10 text-5xl">
           You {hasLost ? <span className="text-[#9F0003]"> lost...</span> : <span> won!</span>}
         </div>
       )}
