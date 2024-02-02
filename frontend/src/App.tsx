@@ -17,10 +17,7 @@ function App() {
   const [user, setUser] = useState<User>(null);
 
   useEffect(() => {
-    axios.get("/api/user").then((response) => {
-      console.log(response);
-      setUser(response.data);
-    });
+    axios.get("/api/user").then((response) => setUser(response.data));
   }, []);
 
   const logout = () =>
