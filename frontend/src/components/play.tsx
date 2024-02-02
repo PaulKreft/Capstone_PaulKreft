@@ -30,7 +30,7 @@ export default function Play() {
       { id: "4", value: "#000" },
     ];
     for (let i = 0; i < difficulty; i++) {
-      additionalTilePairs.push({ id: (i * 2).toString(), value: "#FFF" }, { id: (i * 3).toString(), value: "#000" });
+      additionalTilePairs.push({ id: (5 + i * 2).toString(), value: "#FFF" }, { id: (40 + i * 20).toString(), value: "#000" });
     }
 
     setColors(additionalTilePairs);
@@ -125,6 +125,8 @@ export default function Play() {
     });
 
     const shuffledTiles = shuffleArray<Color>(newTiles);
+
+    console.log(shuffledTiles);
 
     setColors(shuffledTiles);
   };
