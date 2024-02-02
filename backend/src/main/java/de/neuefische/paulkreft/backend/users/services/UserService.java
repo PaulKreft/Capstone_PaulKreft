@@ -7,8 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -34,5 +32,9 @@ public class UserService {
         }
 
         return usersRepo.findUserByGithubId(githubId);
+    }
+
+    public User updateUser(User user) {
+        return usersRepo.save(user);
     }
 }

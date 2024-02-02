@@ -23,4 +23,9 @@ public class UserController {
     public void logout(HttpSession session) {
         session.invalidate();
     }
+
+    @PutMapping
+    public User updateUser(@RequestBody User user) {
+        return userService.updateUser(user);
+    }
 }
