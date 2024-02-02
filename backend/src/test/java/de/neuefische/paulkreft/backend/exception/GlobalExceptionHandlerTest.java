@@ -37,7 +37,7 @@ class GlobalExceptionHandlerTest {
         GlobalExceptionHandler handler = new GlobalExceptionHandler(env);
 
         // When
-        ModelAndView expected = new ModelAndView("redirect:" + basePath + path);
+        ModelAndView expected = new ModelAndView("redirect:" + basePath);
         ModelAndView actual = handler.noResourceFoundHandler(exception);
 
         // Then

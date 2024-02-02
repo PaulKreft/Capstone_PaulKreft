@@ -17,7 +17,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({NoResourceFoundException.class})
     public ModelAndView noResourceFoundHandler(NoResourceFoundException e) {
         String basePath = environment.equals("production") ? "/" : "http://localhost:5173/";
-        String route = e.getResourcePath();
+        String route = environment.equals("production") ? "" : e.getResourcePath();
         return new ModelAndView("redirect:" + basePath + route);
     }
 }
