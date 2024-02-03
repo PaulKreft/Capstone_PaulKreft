@@ -24,13 +24,13 @@ export default function Play() {
 
   useEffect(() => {
     const additionalTilePairs: Color[] = [
-      { id: "1", value: "#FFF" },
-      { id: "2", value: "#000" },
-      { id: "3", value: "#FFF" },
-      { id: "4", value: "#000" },
+      { id: "1-classic", value: "#FFF" },
+      { id: "2-classic", value: "#000" },
+      { id: "3-classic", value: "#FFF" },
+      { id: "4-classic", value: "#000" },
     ];
-    for (let i = 0; i < difficulty; i++) {
-      additionalTilePairs.push({ id: (5 + i * 2).toString(), value: "#FFF" }, { id: (40 + i * 20).toString(), value: "#000" });
+    for (let i = 5; i < difficulty * 2 + 5; i += 2) {
+      additionalTilePairs.push({ id: `${i}-classic`, value: "#FFF" }, { id: `${i + 1}-classic`, value: "#000" });
     }
 
     setColors(additionalTilePairs);
@@ -126,21 +126,19 @@ export default function Play() {
 
     const shuffledTiles = shuffleArray<Color>(newTiles);
 
-    console.log(shuffledTiles);
-
     setColors(shuffledTiles);
   };
 
   return (
-    <div className="mx-auto flex flex-1 flex-col items-center justify-center px-5 sm:max-w-none sm:px-10 sm:pb-20">
-      <div className={cn("mb-8 text-5xl sm:mb-10", isOver ? "text-black" : "text-transparent")}>
+    <div className="flex flex-1 flex-col items-center justify-center px-5 pb-32 sm:px-10 xs:pb-20">
+      <div className={cn("mb-8 text-2xl sm:mb-10 sm:text-5xl", isOver ? "text-black" : "text-transparent")}>
         You {hasLost ? <span className="text-[#9F0003]"> lost...</span> : <span> won!</span>}
       </div>
 
       <div
         className={cn(
           "flex flex-wrap justify-center gap-4",
-          difficulty === 1 ? "max-w-80 sm:max-w-96" : "max-w-[24rem] sm:max-w-[32rem]",
+          colors.length === 6 ? "max-w-80 sm:max-w-96" : "max-w-[24rem] sm:max-w-[32rem]",
         )}
       >
         {colors.map((color) => (
@@ -163,21 +161,30 @@ export default function Play() {
         New Puzzle
       </button>
 
-      <div className="flex gap-5">
+      <div className="xs:gap-5 mt-10 flex gap-3">
         <button
-          className="mt-10 rounded-[20px] border-2 border-[#73BA9B] px-5 py-2 text-xl text-[#73BA9B]"
+          className={cn(
+            "xs:px-5 xs:py-2 xs:text-xl rounded-2xl px-3 py-1 text-lg",
+            difficulty === 1 ? "bg-[#73BA9B] text-white" : "border-2 border-[#73BA9B] text-[#73BA9B]",
+          )}
           onClick={() => setDifficulty(1)}
         >
           Easy
         </button>
         <button
-          className="mt-10 rounded-[20px] border-2 border-[#6D98BA] px-5 py-2 text-xl text-[#6D98BA]"
+          className={cn(
+            "xs:px-5 xs:py-2 xs:text-xl rounded-2xl px-3 py-1 text-lg",
+            difficulty === 2 ? "bg-[#6D98BA] text-white" : "border-2 border-[#6D98BA] text-[#6D98BA]",
+          )}
           onClick={() => setDifficulty(2)}
         >
           Medium
         </button>
         <button
-          className="mt-10 rounded-[20px] border-2 border-[#BA2D0B] px-5 py-2 text-xl text-[#BA2D0B]"
+          className={cn(
+            "xs:px-5 xs:py-2 xs:text-xl rounded-2xl px-3 py-1 text-lg",
+            difficulty === 4 ? "bg-[#BA2D0B] text-white" : "border-2 border-[#BA2D0B] text-[#BA2D0B]",
+          )}
           onClick={() => setDifficulty(4)}
         >
           Hard
