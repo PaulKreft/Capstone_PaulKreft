@@ -1,12 +1,15 @@
 package de.neuefische.paulkreft.backend.users.services;
 
 import de.neuefische.paulkreft.backend.services.IdService;
+import de.neuefische.paulkreft.backend.services.TimeService;
 import de.neuefische.paulkreft.backend.users.models.User;
 import de.neuefische.paulkreft.backend.users.repositories.UsersRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+
+import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -18,6 +21,8 @@ class UserServiceTest {
 
     private IdService idService;
 
+    private TimeService timeService;
+
     private UserService userService;
 
     private User testUser;
@@ -26,9 +31,10 @@ class UserServiceTest {
     public void instantiateTestUser() {
         usersRepo = Mockito.mock(UsersRepo.class);
         idService = Mockito.mock(IdService.class);
-        userService = new UserService(usersRepo, idService);
+        timeService = Mockito.mock(TimeService.class);
+        userService = new UserService(usersRepo, idService, timeService);
 
-        testUser = new User("Some UUID", 12345, "Some Name");
+        testUser = new User("Some UUID", 12345, "Some Name", Instant.now(), Instant.now());
     }
 
     @Test
@@ -70,19 +76,28 @@ class UserServiceTest {
     void getUserShouldReturnExistingUserWhenUserInDatabase() {
         // Given
         OAuth2User user = mock(OAuth2User.class);
+        Instant now = Instant.parse("2016-06-09T00:00:00.00Z");
+        when(timeService.getNow()).thenReturn(now);
+
         when(user.getAttribute("id")).thenReturn(testUser.githubId());
+        when(user.getAttribute("login")).thenReturn(testUser.name());
         when(usersRepo.existsUserByGithubId(testUser.githubId())).thenReturn(true);
-        when(user.getAttribute("name")).thenReturn(testUser.name());
         when(usersRepo.findUserByGithubId(testUser.githubId())).thenReturn(testUser);
+        when(usersRepo.save(Mockito.any(User.class))).thenReturn(testUser);
 
         // When
         User result = userService.getUser(user);
 
         // Then
         assertNotNull(result);
-        assertEquals(testUser, result);
+        assertEquals(testUser.id(), result.id());
+        assertEquals(testUser.githubId(), result.githubId());
+        assertEquals(testUser.name(), result.name());
         verify(usersRepo, times(1)).existsUserByGithubId(testUser.githubId());
         verify(usersRepo, times(1)).findUserByGithubId(testUser.githubId());
-        verifyNoMoreInteractions(idService, usersRepo);
+        verify(usersRepo, times(1)).save(Mockito.any(User.class));
+        verify(user, times(2)).getAttribute(Mockito.any());
+        verify(timeService, times(1)).getNow();
+        verifyNoMoreInteractions(idService, usersRepo, timeService, user);
     }
 }

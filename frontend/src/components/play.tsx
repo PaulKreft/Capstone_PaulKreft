@@ -6,6 +6,12 @@ import { cn } from "../lib/utils.ts";
 const WHITE = "#ffffff";
 const BLACK = "#000000";
 
+const EASY = 1;
+const MEDIUM = 2;
+const HARD = 4;
+
+type Difficulty = 1 | 2 | 4;
+
 type Color = {
   id: string;
   value: string;
@@ -15,7 +21,7 @@ export default function Play() {
   const [hasLost, setHasLost] = useState<boolean>(false);
   const [isOver, setIsOver] = useState<boolean>(false);
 
-  const [difficulty, setDifficulty] = useState<1 | 2 | 4>(2);
+  const [difficulty, setDifficulty] = useState<Difficulty>(EASY);
 
   const [lastMatch, setLastMatch] = useState<string>("");
 
@@ -130,7 +136,7 @@ export default function Play() {
   };
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center px-5 pb-32 sm:px-10 xs:pb-20">
+    <div className="xs:pb-20 flex flex-1 flex-col items-center justify-center px-5 pb-32 sm:px-10">
       <div className={cn("mb-8 text-2xl sm:mb-10 sm:text-5xl", isOver ? "text-black" : "text-transparent")}>
         You {hasLost ? <span className="text-[#9F0003]"> lost...</span> : <span> won!</span>}
       </div>
@@ -167,7 +173,7 @@ export default function Play() {
             "xs:px-5 xs:py-2 xs:text-xl rounded-2xl px-3 py-1 text-lg",
             difficulty === 1 ? "bg-[#73BA9B] text-white" : "border-2 border-[#73BA9B] text-[#73BA9B]",
           )}
-          onClick={() => setDifficulty(1)}
+          onClick={() => setDifficulty(EASY)}
         >
           Easy
         </button>
@@ -176,7 +182,7 @@ export default function Play() {
             "xs:px-5 xs:py-2 xs:text-xl rounded-2xl px-3 py-1 text-lg",
             difficulty === 2 ? "bg-[#6D98BA] text-white" : "border-2 border-[#6D98BA] text-[#6D98BA]",
           )}
-          onClick={() => setDifficulty(2)}
+          onClick={() => setDifficulty(MEDIUM)}
         >
           Medium
         </button>
@@ -185,7 +191,7 @@ export default function Play() {
             "xs:px-5 xs:py-2 xs:text-xl rounded-2xl px-3 py-1 text-lg",
             difficulty === 4 ? "bg-[#BA2D0B] text-white" : "border-2 border-[#BA2D0B] text-[#BA2D0B]",
           )}
-          onClick={() => setDifficulty(4)}
+          onClick={() => setDifficulty(HARD)}
         >
           Hard
         </button>

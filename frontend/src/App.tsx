@@ -27,7 +27,7 @@ function App() {
     });
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen w-screen flex-col">
       <Header isLoggedIn={!!user} logout={logout} />
       <Routes>
         <Route path="/" element={<Home />} />
