@@ -9,8 +9,8 @@ import java.time.Instant;
 public record User(
         @Id
         String id,
-        int githubId,
         String name,
+        String email,
         Instant lastActive,
         Instant createdAt
 ) {
