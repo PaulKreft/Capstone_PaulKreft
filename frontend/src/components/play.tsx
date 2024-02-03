@@ -130,8 +130,8 @@ export default function Play() {
   };
 
   return (
-    <div className="mx-auto flex flex-1 flex-col items-center justify-center px-5 sm:max-w-none sm:px-10 sm:pb-20">
-      <div className={cn("mb-8 text-5xl sm:mb-10", isOver ? "text-black" : "text-transparent")}>
+    <div className="flex flex-1 flex-col items-center justify-center px-5 pb-32 sm:px-10 sm:pb-20">
+      <div className={cn("mb-8 text-2xl sm:mb-10 sm:text-5xl", isOver ? "text-black" : "text-transparent")}>
         You {hasLost ? <span className="text-[#9F0003]"> lost...</span> : <span> won!</span>}
       </div>
 
@@ -161,21 +161,30 @@ export default function Play() {
         New Puzzle
       </button>
 
-      <div className="flex gap-5">
+      <div className="xs:gap-5 mt-10 flex gap-3">
         <button
-          className="mt-10 rounded-[20px] border-2 border-[#73BA9B] px-5 py-2 text-xl text-[#73BA9B]"
+          className={cn(
+            "xs:px-5 xs:py-2 xs:text-xl rounded-2xl px-3 py-1 text-lg",
+            difficulty === 1 ? "bg-[#73BA9B] text-white" : "border-2 border-[#73BA9B] text-[#73BA9B]",
+          )}
           onClick={() => setDifficulty(1)}
         >
           Easy
         </button>
         <button
-          className="mt-10 rounded-[20px] border-2 border-[#6D98BA] px-5 py-2 text-xl text-[#6D98BA]"
+          className={cn(
+            "xs:px-5 xs:py-2 xs:text-xl rounded-2xl px-3 py-1 text-lg",
+            difficulty === 2 ? "bg-[#6D98BA] text-white" : "border-2 border-[#6D98BA] text-[#6D98BA]",
+          )}
           onClick={() => setDifficulty(2)}
         >
           Medium
         </button>
         <button
-          className="mt-10 rounded-[20px] border-2 border-[#BA2D0B] px-5 py-2 text-xl text-[#BA2D0B]"
+          className={cn(
+            "xs:px-5 xs:py-2 xs:text-xl rounded-2xl px-3 py-1 text-lg",
+            difficulty === 4 ? "bg-[#BA2D0B] text-white" : "border-2 border-[#BA2D0B] text-[#BA2D0B]",
+          )}
           onClick={() => setDifficulty(4)}
         >
           Hard
