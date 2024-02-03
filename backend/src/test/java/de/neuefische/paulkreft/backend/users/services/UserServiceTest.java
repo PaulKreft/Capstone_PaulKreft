@@ -76,19 +76,28 @@ class UserServiceTest {
     void getUserShouldReturnExistingUserWhenUserInDatabase() {
         // Given
         OAuth2User user = mock(OAuth2User.class);
+        Instant now = Instant.parse("2016-06-09T00:00:00.00Z");
+        when(timeService.getNow()).thenReturn(now);
+
         when(user.getAttribute("id")).thenReturn(testUser.githubId());
+        when(user.getAttribute("login")).thenReturn(testUser.name());
         when(usersRepo.existsUserByGithubId(testUser.githubId())).thenReturn(true);
-        when(user.getAttribute("name")).thenReturn(testUser.name());
         when(usersRepo.findUserByGithubId(testUser.githubId())).thenReturn(testUser);
+        when(usersRepo.save(Mockito.any(User.class))).thenReturn(testUser);
 
         // When
         User result = userService.getUser(user);
 
         // Then
         assertNotNull(result);
-        assertEquals(testUser, result);
+        assertEquals(testUser.id(), result.id());
+        assertEquals(testUser.githubId(), result.githubId());
+        assertEquals(testUser.name(), result.name());
         verify(usersRepo, times(1)).existsUserByGithubId(testUser.githubId());
         verify(usersRepo, times(1)).findUserByGithubId(testUser.githubId());
-        verifyNoMoreInteractions(idService, usersRepo);
+        verify(usersRepo, times(1)).save(Mockito.any(User.class));
+        verify(user, times(2)).getAttribute(Mockito.any());
+        verify(timeService, times(1)).getNow();
+        verifyNoMoreInteractions(idService, usersRepo, timeService, user);
     }
 }
