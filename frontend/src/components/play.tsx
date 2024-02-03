@@ -140,7 +140,7 @@ export default function Play() {
       <div
         className={cn(
           "flex flex-wrap justify-center gap-4",
-          difficulty === 1 ? "max-w-80 sm:max-w-96" : "max-w-[24rem] sm:max-w-[32rem]",
+          colors.length === 6 ? "max-w-80 sm:max-w-96" : "max-w-[24rem] sm:max-w-[32rem]",
         )}
       >
         {colors.map((color) => (
