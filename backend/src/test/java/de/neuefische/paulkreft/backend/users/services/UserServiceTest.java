@@ -1,12 +1,15 @@
 package de.neuefische.paulkreft.backend.users.services;
 
 import de.neuefische.paulkreft.backend.services.IdService;
+import de.neuefische.paulkreft.backend.services.TimeService;
 import de.neuefische.paulkreft.backend.users.models.User;
 import de.neuefische.paulkreft.backend.users.repositories.UsersRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+
+import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -18,6 +21,8 @@ class UserServiceTest {
 
     private IdService idService;
 
+    private TimeService timeService;
+
     private UserService userService;
 
     private User testUser;
@@ -26,9 +31,10 @@ class UserServiceTest {
     public void instantiateTestUser() {
         usersRepo = Mockito.mock(UsersRepo.class);
         idService = Mockito.mock(IdService.class);
-        userService = new UserService(usersRepo, idService);
+        timeService = Mockito.mock(TimeService.class);
+        userService = new UserService(usersRepo, idService, timeService);
 
-        testUser = new User("Some UUID", 12345, "Some Name");
+        testUser = new User("Some UUID", 12345, "Some Name", Instant.now(), Instant.now());
     }
 
     @Test
