@@ -24,13 +24,13 @@ export default function Play() {
 
   useEffect(() => {
     const additionalTilePairs: Color[] = [
-      { id: "1", value: "#FFF" },
-      { id: "2", value: "#000" },
-      { id: "3", value: "#FFF" },
-      { id: "4", value: "#000" },
+      { id: "1-classic", value: "#FFF" },
+      { id: "2-classic", value: "#000" },
+      { id: "3-classic", value: "#FFF" },
+      { id: "4-classic", value: "#000" },
     ];
-    for (let i = 0; i < difficulty; i++) {
-      additionalTilePairs.push({ id: (5 + i * 2).toString(), value: "#FFF" }, { id: (40 + i * 20).toString(), value: "#000" });
+    for (let i = 5; i < difficulty * 2 + 5; i += 2) {
+      additionalTilePairs.push({ id: `${i}-classic`, value: "#FFF" }, { id: `${i + 1}-classic`, value: "#000" });
     }
 
     setColors(additionalTilePairs);
