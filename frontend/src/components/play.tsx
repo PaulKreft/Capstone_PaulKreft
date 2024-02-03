@@ -126,8 +126,6 @@ export default function Play() {
 
     const shuffledTiles = shuffleArray<Color>(newTiles);
 
-    console.log(shuffledTiles);
-
     setColors(shuffledTiles);
   };
 
