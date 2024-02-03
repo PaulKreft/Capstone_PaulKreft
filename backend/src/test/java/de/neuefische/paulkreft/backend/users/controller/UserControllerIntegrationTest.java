@@ -1,5 +1,6 @@
 package de.neuefische.paulkreft.backend.users.controller;
 
+import de.neuefische.paulkreft.backend.github.services.GithubService;
 import de.neuefische.paulkreft.backend.services.IdService;
 import de.neuefische.paulkreft.backend.services.TimeService;
 import de.neuefische.paulkreft.backend.users.models.User;
@@ -38,12 +39,16 @@ class UserControllerIntegrationTest {
     @MockBean
     private TimeService timeService;
 
+    @MockBean
+    private GithubService githubService;
+
+
     private User testUser;
 
     @BeforeEach
     public void instantiateTestUser() {
         Instant now = Instant.parse("2016-06-09T00:00:00.00Z");
-        testUser = new User("123", 123, "Paul", now, now);
+        testUser = new User("123", "Paul", "testemail@at.de", now, now);
     }
 
     @Test
@@ -56,21 +61,23 @@ class UserControllerIntegrationTest {
 
     @Test
     void testGetLoggedInUser_whenReturningUserIsLoggedIn_returnReturningUser() throws Exception {
-        System.out.println(usersRepo.save(testUser));
+        usersRepo.save(testUser);
 
         // Given
         Instant now = Instant.parse("2016-06-09T00:00:00Z");
         when(timeService.getNow()).thenReturn(now);
+        when(idService.generateUUID()).thenReturn("123");
+        when(githubService.getUserEmail(Mockito.any(),Mockito.any())).thenReturn("testemail@at.de");
 
         // When
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user")
-                        .with(oidcLogin().userInfoToken(token -> token.claim("login", "Paul").claim("id", 123))))
+                        .with(oidcLogin().userInfoToken(token -> token.claim("login", "Paul"))))
                 // Then
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         {
                             "id":"123",
-                            "githubId":123,
+                            "email":"testemail@at.de",
                             "name":"Paul",
                             "lastActive": "2016-06-09T00:00:00Z",
                             "createdAt": "2016-06-09T00:00:00Z"
@@ -79,7 +86,8 @@ class UserControllerIntegrationTest {
 
 
         Mockito.verify(timeService, Mockito.times(1)).getNow();
-        verifyNoMoreInteractions(timeService);
+        Mockito.verify(githubService, Mockito.times(1)).getUserEmail(Mockito.any(),Mockito.any());
+        verifyNoMoreInteractions(timeService, githubService);
     }
 
     @Test
@@ -89,15 +97,16 @@ class UserControllerIntegrationTest {
 
         when(idService.generateUUID()).thenReturn("123");
         when(timeService.getNow()).thenReturn(now);
+        when(githubService.getUserEmail(Mockito.any(),Mockito.any())).thenReturn("testemail@at.de");
 
         // When
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user")
-                        .with(oidcLogin().userInfoToken(token -> token.claim("login", "Paul").claim("id", 123))))
+                        .with(oidcLogin().userInfoToken(token -> token.claim("login", "Paul"))))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         {
                             "id":"123",
-                            "githubId":123,
+                            "email":"testemail@at.de",
                             "name":"Paul",
                             "lastActive": "2016-06-09T00:00:00Z",
                             "createdAt": "2016-06-09T00:00:00Z"
@@ -107,16 +116,7 @@ class UserControllerIntegrationTest {
         // Then
         Mockito.verify(idService, Mockito.times(1)).generateUUID();
         Mockito.verify(timeService, Mockito.times(1)).getNow();
-        verifyNoMoreInteractions(idService, timeService);
-    }
-
-    @Test
-    void testGetLoggedInUser_whenNoGithubId_returnNull() throws Exception {
-        // When
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/user")
-                        .with(oidcLogin().userInfoToken(token -> token.claim("login", "Paul"))))
-                // Then
-                .andExpect(status().isOk())
-                .andExpect(content().string(""));
+        Mockito.verify(githubService, Mockito.times(1)).getUserEmail(Mockito.any(),Mockito.any());
+        verifyNoMoreInteractions(idService, timeService, githubService);
     }
 }
