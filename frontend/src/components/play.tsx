@@ -130,7 +130,7 @@ export default function Play() {
   };
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center px-5 pb-32 sm:px-10 sm:pb-20">
+    <div className="flex flex-1 flex-col items-center justify-center px-5 pb-32 sm:px-10 xs:pb-20">
       <div className={cn("mb-8 text-2xl sm:mb-10 sm:text-5xl", isOver ? "text-black" : "text-transparent")}>
         You {hasLost ? <span className="text-[#9F0003]"> lost...</span> : <span> won!</span>}
       </div>
