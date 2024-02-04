@@ -8,7 +8,11 @@ export default {
       xs: "380px",
       ...defaultTheme.screens,
     },
-    extend: {},
+    extend: {
+      cursor: {
+        'magic': 'url(./src/assets/wand.cur), default',
+      }
+    },
   },
   plugins: [],
 };
