@@ -58,7 +58,6 @@ export default function EmailLogin() {
               password ? (isPasswordValid ? "focus:border-[#73BA9B]" : "border-[#BA2D0B]") : "focus:border-black",
             )}
             type="password"
-            title="lsdgads"
             placeholder="••••••••"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
