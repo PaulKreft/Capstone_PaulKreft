@@ -39,7 +39,7 @@ class UserServiceTest {
         githubService = Mockito.mock(GithubService.class);
         userService = new UserService(usersRepo, idService, timeService, githubService);
 
-        testUser = new User("Some UUID", "Some Name", "someemail@soem.de", Instant.now(), Instant.now());
+        testUser = new User("Some UUID", "Some Name", "someemail@soem.de", "", Instant.now(), Instant.now());
     }
 
     @Test

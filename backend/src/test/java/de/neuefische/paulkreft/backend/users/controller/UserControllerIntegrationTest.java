@@ -48,7 +48,7 @@ class UserControllerIntegrationTest {
     @BeforeEach
     public void instantiateTestUser() {
         Instant now = Instant.parse("2016-06-09T00:00:00.00Z");
-        testUser = new User("123", "Paul", "testemail@at.de", now, now);
+        testUser = new User("123", "Paul", "testemail@at.de", "", now, now);
     }
 
     @Test
