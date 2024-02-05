@@ -2,7 +2,7 @@ package de.neuefische.paulkreft.backend.security.controller;
 
 import de.neuefische.paulkreft.backend.security.models.SignUpRequest;
 import de.neuefische.paulkreft.backend.security.services.SignUpService;
-import de.neuefische.paulkreft.backend.users.models.User;
+import de.neuefische.paulkreft.backend.users.models.UserGet;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +18,7 @@ public class SignUpController {
     }
 
     @PostMapping("/email")
-    public User signUpWithEmail(@RequestBody SignUpRequest request) {
+    public UserGet signUpWithEmail(@RequestBody SignUpRequest request) {
         return signUpService.signUpWithEmail(request);
     }
 }

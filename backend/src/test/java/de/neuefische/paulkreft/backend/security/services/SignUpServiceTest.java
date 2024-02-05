@@ -1,7 +1,7 @@
 package de.neuefische.paulkreft.backend.security.services;
 
 import de.neuefische.paulkreft.backend.security.models.SignUpRequest;
-import de.neuefische.paulkreft.backend.users.models.User;
+import de.neuefische.paulkreft.backend.users.models.UserGet;
 import de.neuefische.paulkreft.backend.users.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,14 +17,14 @@ class SignUpServiceTest {
     UserService userService;
     SignUpService signUpService;
 
-    User testUser;
+    UserGet testUser;
 
     @BeforeEach
     public void instantiateServices() {
         userService = Mockito.mock(UserService.class);
         signUpService = new SignUpService(userService);
 
-        testUser = new User("1", "Soso", "example@domain.com", "", Instant.now(), Instant.now());
+        testUser = new UserGet("1", "Soso", "example@domain.com", Instant.now(), Instant.now());
     }
 
     @Test
@@ -37,7 +37,7 @@ class SignUpServiceTest {
         String expected = "example@domain.com";
 
         // When
-        User actual = signUpService.signUpWithEmail(signUpRequest);
+        UserGet actual = signUpService.signUpWithEmail(signUpRequest);
 
         // Then
         assertEquals(expected, actual.email());
@@ -49,7 +49,7 @@ class SignUpServiceTest {
         SignUpRequest signUpRequest = new SignUpRequest("exampledomain.com", "V!Qzx^sgSNe9XnJ8wTkem");
 
         // When
-        User actual = signUpService.signUpWithEmail(signUpRequest);
+        UserGet actual = signUpService.signUpWithEmail(signUpRequest);
 
         // Then
         assertNull(actual);
@@ -61,7 +61,7 @@ class SignUpServiceTest {
         SignUpRequest signUpRequest = new SignUpRequest("example@domain.com", "");
 
         // When
-        User actual = signUpService.signUpWithEmail(signUpRequest);
+        UserGet actual = signUpService.signUpWithEmail(signUpRequest);
 
         // Then
         assertNull(actual);
@@ -73,7 +73,7 @@ class SignUpServiceTest {
         SignUpRequest signUpRequest = new SignUpRequest("example@domain.com", "wCgqLfDaSW83eXkDsqV2U");
 
         // When
-        User actual = signUpService.signUpWithEmail(signUpRequest);
+        UserGet actual = signUpService.signUpWithEmail(signUpRequest);
 
         // Then
         assertNull(actual);
@@ -85,7 +85,7 @@ class SignUpServiceTest {
         SignUpRequest signUpRequest = new SignUpRequest("example@domain.com", "q$^38n9*dx5auh7r#g%cz");
 
         // When
-        User actual = signUpService.signUpWithEmail(signUpRequest);
+        UserGet actual = signUpService.signUpWithEmail(signUpRequest);
 
         // Then
         assertNull(actual);
@@ -97,7 +97,7 @@ class SignUpServiceTest {
         SignUpRequest signUpRequest = new SignUpRequest("example@domain.com", "678^SQ*R4Z*^DGB*LD*4B");
 
         // When
-        User actual = signUpService.signUpWithEmail(signUpRequest);
+        UserGet actual = signUpService.signUpWithEmail(signUpRequest);
 
         // Then
         assertNull(actual);
@@ -109,7 +109,7 @@ class SignUpServiceTest {
         SignUpRequest signUpRequest = new SignUpRequest("example@domain.com", "cTG&gXAHH%QCHNA#QrEHh");
 
         // When
-        User actual = signUpService.signUpWithEmail(signUpRequest);
+        UserGet actual = signUpService.signUpWithEmail(signUpRequest);
 
         // Then
         assertNull(actual);
@@ -121,7 +121,7 @@ class SignUpServiceTest {
         SignUpRequest signUpRequest = new SignUpRequest("example@domain.com", "fqX$7fe");
 
         // When
-        User actual = signUpService.signUpWithEmail(signUpRequest);
+        UserGet actual = signUpService.signUpWithEmail(signUpRequest);
 
         // Then
         assertNull(actual);
@@ -133,7 +133,7 @@ class SignUpServiceTest {
         SignUpRequest signUpRequest = new SignUpRequest("example@domain.com", "E#4&W%5X!8eyK@hnGu%p7MMznTF6Q#iT%7LVi4ZpaQ#Sqwr4Ud6ZJV7Kj#KHyiQbakCJt$PmkuLAqK!%9T8bn%qtk$hP6t^6DGvt6");
 
         // When
-        User actual = signUpService.signUpWithEmail(signUpRequest);
+        UserGet actual = signUpService.signUpWithEmail(signUpRequest);
 
         // Then
         assertNull(actual);
@@ -146,7 +146,7 @@ class SignUpServiceTest {
         when(userService.existsByEmail("example@domain.com")).thenReturn(true);
 
         // When
-        User actual = signUpService.signUpWithEmail(signUpRequest);
+        UserGet actual = signUpService.signUpWithEmail(signUpRequest);
 
         // Then
         assertNull(actual);

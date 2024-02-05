@@ -1,6 +1,7 @@
 package de.neuefische.paulkreft.backend.users.controller;
 
 import de.neuefische.paulkreft.backend.users.models.User;
+import de.neuefische.paulkreft.backend.users.models.UserGet;
 import de.neuefische.paulkreft.backend.users.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -15,12 +16,12 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public User getUser(Principal principal, HttpServletRequest request) {
+    public UserGet getUser(Principal principal, HttpServletRequest request) {
         return userService.getUser(principal, request);
     }
 
     @PutMapping
-    public User updateUser(@RequestBody User user) {
+    public UserGet updateUser(@RequestBody User user) {
         return userService.updateUser(user);
     }
 }

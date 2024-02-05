@@ -1,7 +1,7 @@
 package de.neuefische.paulkreft.backend.security.services;
 
 import de.neuefische.paulkreft.backend.security.models.SignUpRequest;
-import de.neuefische.paulkreft.backend.users.models.User;
+import de.neuefische.paulkreft.backend.users.models.UserGet;
 import de.neuefische.paulkreft.backend.users.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 public class SignUpService {
     private final UserService userService;
 
-    public User signUpWithEmail(SignUpRequest request) {
+    public UserGet signUpWithEmail(SignUpRequest request) {
         String email = request.email();
         String password = request.password();
 

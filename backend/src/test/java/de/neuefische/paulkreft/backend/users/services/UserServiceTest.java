@@ -4,6 +4,7 @@ import de.neuefische.paulkreft.backend.github.services.GithubService;
 import de.neuefische.paulkreft.backend.services.IdService;
 import de.neuefische.paulkreft.backend.services.TimeService;
 import de.neuefische.paulkreft.backend.users.models.User;
+import de.neuefische.paulkreft.backend.users.models.UserGet;
 import de.neuefische.paulkreft.backend.users.repositories.UsersRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,7 +46,7 @@ class UserServiceTest {
     @Test
     void getUserShouldReturnNullWhenUserIsNull() {
         // When
-        User result = userService.getUser(null, null);
+        UserGet result = userService.getUser(null, null);
 
         // Then
         assertNull(result);
@@ -81,7 +82,7 @@ class UserServiceTest {
         when(usersRepo.save(any(User.class))).thenReturn(testUser);
 
         // When
-        User result = userService.getUser(user, null);
+        UserGet result = userService.getUser(user, null);
 
         // Then
         assertNotNull(result);
@@ -108,7 +109,7 @@ class UserServiceTest {
         when(usersRepo.save(Mockito.any(User.class))).thenReturn(testUser);
 
         // When
-        User result = userService.getUser(user, null);
+        UserGet result = userService.getUser(user, null);
 
         // Then
         assertNotNull(result);

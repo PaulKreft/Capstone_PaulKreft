@@ -4,6 +4,7 @@ import de.neuefische.paulkreft.backend.github.services.GithubService;
 import de.neuefische.paulkreft.backend.services.IdService;
 import de.neuefische.paulkreft.backend.services.TimeService;
 import de.neuefische.paulkreft.backend.users.models.User;
+import de.neuefische.paulkreft.backend.users.models.UserGet;
 import de.neuefische.paulkreft.backend.users.repositories.UsersRepo;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class UserService {
     private final TimeService timeService;
     private final GithubService githubService;
 
-    public User getUser(Principal user, HttpServletRequest request) {
+    public UserGet getUser(Principal user, HttpServletRequest request) {
 
         if (user == null) {
             return null;
@@ -37,7 +38,7 @@ public class UserService {
         return getOAuthUser(request);
     }
 
-    private User getEmailUser(Principal user) {
+    private UserGet getEmailUser(Principal user) {
         String email = user.getName();
 
         if (!existsByEmail(email)) {
@@ -49,7 +50,7 @@ public class UserService {
         return updateUser(currentUser.withLastActive(timeService.getNow()));
     }
 
-    private User getOAuthUser(HttpServletRequest request) {
+    private UserGet getOAuthUser(HttpServletRequest request) {
         Authentication authentication =
                 SecurityContextHolder
                         .getContext()
@@ -68,7 +69,7 @@ public class UserService {
 
         Instant now = timeService.getNow();
         if (!isReturningUser) {
-            return usersRepo.save(new User(idService.generateUUID(), email, email, null, now, now));
+            return new UserGet(usersRepo.save(new User(idService.generateUUID(), email, email, null, now, now)));
         }
 
         User currentUser = usersRepo.findUserByEmail(email);
@@ -76,14 +77,14 @@ public class UserService {
         return updateUser(currentUser.withLastActive(now));
     }
 
-    public User createUser(String name, String email, String password) {
+    public UserGet createUser(String name, String email, String password) {
         Instant now = timeService.getNow();
 
-        return usersRepo.save(new User(idService.generateUUID(), name, email, password, now, now));
+        return new UserGet(usersRepo.save(new User(idService.generateUUID(), name, email, password, now, now)));
     }
 
-    public User updateUser(User user) {
-        return usersRepo.save(user);
+    public UserGet updateUser(User user) {
+        return new UserGet(usersRepo.save(user));
     }
 
     public boolean existsByEmail(String email) {
