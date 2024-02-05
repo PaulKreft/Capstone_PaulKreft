@@ -1,7 +1,11 @@
-import { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { cn } from "../lib/utils.ts";
 
-export default function EmailLogin() {
+type EmailLoginProps = {
+  login: (email: string, password: string) => void;
+};
+
+export const EmailLogin: React.FC<EmailLoginProps> = ({ login }) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
@@ -10,22 +14,22 @@ export default function EmailLogin() {
 
   useEffect(() => {
     const regX: RegExp = new RegExp(
-      "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
+      "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$",
     );
     setIsEmailValid(regX.test(email));
   }, [email]);
 
   useEffect(() => {
     const regX: RegExp = new RegExp(
-      "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[ !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~])[A-Za-z\\d !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~]{8,100}$",
+      "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[ !\"#$%&'()*+,-./:;<=>?@\\[\\]^_`{|}~\\\\])[A-Za-z\\d !\"#$%&'()*+,-./:;<=>?@\\[\\]^_`{|}~\\\\]{8,100}$",
     );
     setIsPasswordValid(regX.test(password));
   }, [password]);
 
   const loginWithEmail = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(email);
-    console.log(password);
+
+    login(email, password);
   };
 
   return (
@@ -72,7 +76,7 @@ export default function EmailLogin() {
             Invalid password format
           </div>
           <button
-            className="mt-4 h-8 w-full rounded-lg bg-black px-3 text-white disabled:bg-black/20"
+            className="mt-4 w-full rounded-lg bg-black px-3 py-2 text-white disabled:bg-black/20"
             type="submit"
             disabled={!isEmailValid || !isPasswordValid}
           >
@@ -82,4 +86,4 @@ export default function EmailLogin() {
       </div>
     </div>
   );
-}
+};

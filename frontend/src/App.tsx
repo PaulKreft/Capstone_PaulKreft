@@ -11,7 +11,7 @@ import { User } from "./types/User.ts";
 
 import axios from "axios";
 import Footer from "./components/footer.tsx";
-import EmailLogin from "./components/email-login.tsx";
+import { EmailLogin } from "./components/email-login.tsx";
 import EmailSignUp from "./components/email-sign-up.tsx";
 
 function App() {
@@ -22,8 +22,18 @@ function App() {
     axios.get("/api/user").then((response) => setUser(response.data));
   }, []);
 
+  const login = (email: string, password: string) =>
+    axios
+      .get("/api/user", {
+        auth: { username: email, password: password },
+      })
+      .then((response) => {
+        setUser(response.data);
+        navigate("/");
+      });
+
   const logout = () =>
-    axios.get("/api/user/logout").then(() => {
+    axios.post("/api/logout").then(() => {
       setUser(null);
       navigate("/");
     });
@@ -35,7 +45,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/play" element={<Play />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/login/email" element={<EmailLogin />} />
+        <Route path="/login/email" element={<EmailLogin login={login} />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/signup/email" element={<EmailSignUp />} />
         <Route path={"/*"} element={<NotFound />} />
