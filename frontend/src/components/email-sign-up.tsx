@@ -1,8 +1,12 @@
-import { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { cn } from "../lib/utils.ts";
 import axios from "axios";
 
-export default function EmailSignUp() {
+type EmailSignUpProps = {
+  login: (email: string, password: string) => void;
+};
+
+export const EmailSignUp: React.FC<EmailSignUpProps> = ({ login }) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
@@ -25,11 +29,9 @@ export default function EmailSignUp() {
 
   const signUpWithEmail = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(email);
-    console.log(password);
 
     axios.post("/api/signup/email", { email, password }).then(() => {
-      console.log("no response");
+      login(email, password);
     });
   };
 
@@ -88,4 +90,4 @@ export default function EmailSignUp() {
       </div>
     </div>
   );
-}
+};
