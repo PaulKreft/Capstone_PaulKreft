@@ -16,7 +16,9 @@ export default function EmailLogin() {
   }, [email]);
 
   useEffect(() => {
-    const regX: RegExp = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[ !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~])[A-Za-z\\d !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~]{8,100}$");
+    const regX: RegExp = new RegExp(
+      "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[ !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~])[A-Za-z\\d !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~]{8,100}$",
+    );
     setIsPasswordValid(regX.test(password));
   }, [password]);
 
@@ -34,8 +36,8 @@ export default function EmailLogin() {
           <div className="mb-1 pl-1 text-lg">Email</div>
           <input
             className={cn(
-              "flex h-max items-center rounded-lg border px-5 py-4 text-lg font-light focus:border-2",
-              email ? (isEmailValid ? "border-[#73BA9B]" : "border-[#BA2D0B]") : "border-black",
+              "flex h-max items-center rounded-lg border border-black px-5 py-4 text-lg font-light focus:border-2",
+              email ? (isEmailValid ? "focus:border-[#73BA9B]" : "border-[#BA2D0B]") : "focus:border-black",
             )}
             type="email"
             placeholder="example@domain.com"
@@ -52,8 +54,8 @@ export default function EmailLogin() {
           <div className="mb-1 mt-1 pl-1 text-lg">Password</div>
           <input
             className={cn(
-              "flex h-max items-center rounded-lg border px-5 py-4 text-lg font-light focus:border-2",
-              password ? (isPasswordValid ? "border-[#73BA9B]" : "border-[#BA2D0B]") : "border-black",
+              "flex h-max items-center rounded-lg border border-black px-5 py-4 text-lg font-light focus:border-2",
+              password ? (isPasswordValid ? "focus:border-[#73BA9B]" : "border-[#BA2D0B]") : "focus:border-black",
             )}
             type="password"
             title="lsdgads"
@@ -63,11 +65,18 @@ export default function EmailLogin() {
             required
           />
           <div
-            className={cn("mt-1 text-center text-sm", password && !isPasswordValid ? "text-[#BA2D0B]" : "text-transparent")}
+            className={cn(
+              "mt-1 text-center text-sm",
+              password && !isPasswordValid ? "text-[#BA2D0B]" : "text-transparent",
+            )}
           >
             Invalid password format
           </div>
-          <button className="mt-4 h-8 w-full rounded-lg bg-black px-3 text-white" type="submit">
+          <button
+            className="mt-4 h-8 w-full rounded-lg bg-black px-3 text-white disabled:bg-black/80"
+            type="submit"
+            disabled={!isEmailValid || !isPasswordValid}
+          >
             Log In
           </button>
         </form>
