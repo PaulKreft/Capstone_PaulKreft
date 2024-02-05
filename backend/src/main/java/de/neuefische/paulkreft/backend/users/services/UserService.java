@@ -38,7 +38,7 @@ public class UserService {
 
         Instant now = timeService.getNow();
         if (!isReturningUser) {
-            return usersRepo.save(new User(idService.generateUUID(), name, email, now, now));
+            return usersRepo.save(new User(idService.generateUUID(), name, email, null, now, now));
         }
 
         User currentUser = usersRepo.findUserByEmail(email);
@@ -46,7 +46,17 @@ public class UserService {
         return updateUser(currentUser.withLastActive(now));
     }
 
+    public User createUser(String name, String email, String password) {
+        Instant now = timeService.getNow();
+
+        return usersRepo.save(new User(idService.generateUUID(), name, email, password, now, now));
+    }
+
     public User updateUser(User user) {
         return usersRepo.save(user);
+    }
+
+    public boolean existsByEmail(String email) {
+        return usersRepo.existsUserByEmail(email);
     }
 }

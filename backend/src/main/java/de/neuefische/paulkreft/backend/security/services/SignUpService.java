@@ -1,27 +1,44 @@
 package de.neuefische.paulkreft.backend.security.services;
 
 import de.neuefische.paulkreft.backend.security.models.SignUpRequest;
+import de.neuefische.paulkreft.backend.users.models.User;
+import de.neuefische.paulkreft.backend.users.services.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
+@RequiredArgsConstructor
 public class SignUpService {
+    private final UserService userService;
 
-    public String signUpWithEmail(SignUpRequest request) {
-        boolean isEmailValid = validateEmail(request.email());
-        boolean isPasswordValid = validatePassword(request.password());
+    public User signUpWithEmail(SignUpRequest request) {
+        String email = request.email();
+        String password = request.password();
+
+        boolean isEmailValid = validateEmail(email);
+        boolean isPasswordValid = validatePassword(password);
 
         if (!(isEmailValid && isPasswordValid)) {
             return null;
         }
 
-        return request.email();
+        if (userService.existsByEmail(email)) {
+            return null;
+        }
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+        String hashedPassword = encoder.encode(password);
+
+        return userService.createUser(email, email, hashedPassword);
     }
 
     private boolean validateEmail(String email) {
-        Pattern emailPattern = Pattern.compile("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");
+        String regX = "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
+        Pattern emailPattern = Pattern.compile(regX);
         Matcher emailMatcher = emailPattern.matcher(email);
 
         return emailMatcher.matches();
