@@ -1,7 +1,8 @@
 import { FormEvent, useEffect, useState } from "react";
 import { cn } from "../lib/utils.ts";
+import axios from "axios";
 
-export default function EmailLogin() {
+export default function EmailSignUp() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
@@ -17,22 +18,26 @@ export default function EmailLogin() {
 
   useEffect(() => {
     const regX: RegExp = new RegExp(
-      "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[ !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~])[A-Za-z\\d !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~]{8,100}$",
+      "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[ !\"#$%&'()*+,-./:;<=>?@\\[\\]^_`{|}~\\\\])[A-Za-z\\d !\"#$%&'()*+,-./:;<=>?@\\[\\]^_`{|}~\\\\]{8,100}$",
     );
     setIsPasswordValid(regX.test(password));
   }, [password]);
 
-  const loginWithEmail = (event: FormEvent<HTMLFormElement>) => {
+  const signUpWithEmail = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     console.log(email);
     console.log(password);
+
+    axios.post("/api/signup/email", { email, password }).then(() => {
+      console.log("no response");
+    });
   };
 
   return (
     <div className="mx-auto flex flex-1 flex-col items-center justify-center pb-20">
       <div className="flex flex-col items-center  rounded-2xl border border-black px-20 pb-24 pt-12">
-        <h2 className="pb-20 text-4xl">Log in with Email</h2>
-        <form className="" onSubmit={loginWithEmail} noValidate>
+        <h2 className="pb-20 text-4xl">Sign up with Email</h2>
+        <form className="" onSubmit={signUpWithEmail} noValidate>
           <div className="mb-1 pl-1 text-lg">Email</div>
           <input
             className={cn(
