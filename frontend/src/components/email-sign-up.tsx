@@ -11,7 +11,7 @@ export default function EmailSignUp() {
 
   useEffect(() => {
     const regX: RegExp = new RegExp(
-      "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
+      "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$",
     );
     setIsEmailValid(regX.test(email));
   }, [email]);
@@ -35,13 +35,13 @@ export default function EmailSignUp() {
 
   return (
     <div className="mx-auto flex flex-1 flex-col items-center justify-center pb-20">
-      <div className="flex flex-col items-center  rounded-2xl border border-black px-20 pb-24 pt-12">
-        <h2 className="pb-20 text-4xl">Sign up with Email</h2>
+      <div className="flex flex-col items-center  rounded-2xl border-2 border-black px-20 pb-24 pt-16">
+        <h2 className="pb-16 text-4xl">Sign up with Email</h2>
         <form className="" onSubmit={signUpWithEmail} noValidate>
           <div className="mb-1 pl-1 text-lg">Email</div>
           <input
             className={cn(
-              "flex h-max items-center rounded-lg border border-black px-5 py-4 text-lg font-light focus:border-2",
+              "flex h-max items-center rounded-lg border-2 border-black px-5 py-4 text-lg font-light focus:border-2",
               email ? (isEmailValid ? "focus:border-[#73BA9B]" : "border-[#BA2D0B]") : "focus:border-black",
             )}
             type="email"
@@ -59,7 +59,7 @@ export default function EmailSignUp() {
           <div className="mb-1 mt-1 pl-1 text-lg">Password</div>
           <input
             className={cn(
-              "flex h-max items-center rounded-lg border border-black px-5 py-4 text-lg font-light focus:border-2",
+              "flex h-max items-center rounded-lg border-2 border-black px-5 py-4 text-lg font-light focus:border-2",
               password ? (isPasswordValid ? "focus:border-[#73BA9B]" : "border-[#BA2D0B]") : "focus:border-black",
             )}
             type="password"
@@ -78,11 +78,11 @@ export default function EmailSignUp() {
             Invalid password format
           </div>
           <button
-            className="mt-4 h-8 w-full rounded-lg bg-black px-3 text-white disabled:bg-black/80"
+            className="mt-4 w-full rounded-lg bg-black px-3 py-2 text-white disabled:bg-black/20"
             type="submit"
             disabled={!isEmailValid || !isPasswordValid}
           >
-            Log In
+            Sign Up
           </button>
         </form>
       </div>

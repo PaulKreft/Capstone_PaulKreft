@@ -30,13 +30,13 @@ export default function EmailLogin() {
 
   return (
     <div className="mx-auto flex flex-1 flex-col items-center justify-center pb-20">
-      <div className="flex flex-col items-center  rounded-2xl border border-black px-20 pb-24 pt-12">
+      <div className="flex flex-col items-center  rounded-2xl border-2 border-black px-20 pb-24 pt-12">
         <h2 className="pb-20 text-4xl">Log in with Email</h2>
         <form className="" onSubmit={loginWithEmail} noValidate>
           <div className="mb-1 pl-1 text-lg">Email</div>
           <input
             className={cn(
-              "flex h-max items-center rounded-lg border border-black px-5 py-4 text-lg font-light focus:border-2",
+              "flex h-max items-center rounded-lg border-2 border-black px-5 py-4 text-lg font-light focus:border-2",
               email ? (isEmailValid ? "focus:border-[#73BA9B]" : "border-[#BA2D0B]") : "focus:border-black",
             )}
             type="email"
@@ -54,7 +54,7 @@ export default function EmailLogin() {
           <div className="mb-1 mt-1 pl-1 text-lg">Password</div>
           <input
             className={cn(
-              "flex h-max items-center rounded-lg border border-black px-5 py-4 text-lg font-light focus:border-2",
+              "flex h-max items-center rounded-lg border-2 border-black px-5 py-4 text-lg font-light focus:border-2",
               password ? (isPasswordValid ? "focus:border-[#73BA9B]" : "border-[#BA2D0B]") : "focus:border-black",
             )}
             type="password"
@@ -73,7 +73,7 @@ export default function EmailLogin() {
             Invalid password format
           </div>
           <button
-            className="mt-4 h-8 w-full rounded-lg bg-black px-3 text-white disabled:bg-black/80"
+            className="mt-4 h-8 w-full rounded-lg bg-black px-3 text-white disabled:bg-black/20"
             type="submit"
             disabled={!isEmailValid || !isPasswordValid}
           >
