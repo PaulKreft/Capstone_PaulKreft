@@ -9,8 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mockito;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 
+import java.security.Principal;
 import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -45,7 +45,7 @@ class UserServiceTest {
     @Test
     void getUserShouldReturnNullWhenUserIsNull() {
         // When
-        User result = userService.getUser(null, null, null);
+        User result = userService.getUser(null, null);
 
         // Then
         assertNull(result);
@@ -55,12 +55,12 @@ class UserServiceTest {
     @Test
     void getUserShouldReturnNullWhenEmailIsNull() {
         // Given
-        OAuth2User user = mock(OAuth2User.class);
+        Principal user = mock(Principal.class);
         when(githubService.getUserEmail(Mockito.any(), Mockito.any())).thenReturn(null);
 
         // When
         Executable executable =
-                () -> userService.getUser(user, null, null);
+                () -> userService.getUser(user, null);
 
         // Then
         assertThrows(RuntimeException.class, executable);
@@ -70,9 +70,9 @@ class UserServiceTest {
     @Test
     void getUserShouldSaveNewUserWhenUserNotInDatabase() {
         // Given
-        OAuth2User user = mock(OAuth2User.class);
+        Principal user = mock(Principal.class);
 
-        when(user.getAttribute("name")).thenReturn(testUser.name());
+        when(user.getName()).thenReturn(testUser.email());
         when(idService.generateUUID()).thenReturn(testUser.id());
         when(githubService.getUserEmail(Mockito.any(), Mockito.any())).thenReturn(testUser.email());
         when(githubService.getUserEmail(Mockito.any(), Mockito.any())).thenReturn("someemail@soem.de");
@@ -81,7 +81,7 @@ class UserServiceTest {
         when(usersRepo.save(any(User.class))).thenReturn(testUser);
 
         // When
-        User result = userService.getUser(user, null, null);
+        User result = userService.getUser(user, null);
 
         // Then
         assertNotNull(result);
@@ -90,7 +90,6 @@ class UserServiceTest {
         verify(usersRepo, times(1)).existsUserByEmail(testUser.email());
         verify(usersRepo, times(1)).save(any(User.class));
         verify(idService, times(1)).generateUUID();
-        verify(user, times(1)).getAttribute(Mockito.any());
         verify(githubService, times(1)).getUserEmail(Mockito.any(), Mockito.any());
         verifyNoMoreInteractions(usersRepo, idService, githubService);
     }
@@ -98,18 +97,18 @@ class UserServiceTest {
     @Test
     void getUserShouldReturnExistingUserWhenUserInDatabase() {
         // Given
-        OAuth2User user = mock(OAuth2User.class);
+        Principal user = mock(Principal.class);
         Instant now = Instant.parse("2016-06-09T00:00:00.00Z");
         when(timeService.getNow()).thenReturn(now);
         when(githubService.getUserEmail(Mockito.any(), Mockito.any())).thenReturn("someemail@soem.de");
 
-        when(user.getAttribute("login")).thenReturn(testUser.name());
+        when(user.getName()).thenReturn(testUser.email());
         when(usersRepo.existsUserByEmail(testUser.email())).thenReturn(true);
         when(usersRepo.findUserByEmail(testUser.email())).thenReturn(testUser);
         when(usersRepo.save(Mockito.any(User.class))).thenReturn(testUser);
 
         // When
-        User result = userService.getUser(user, null, null);
+        User result = userService.getUser(user, null);
 
         // Then
         assertNotNull(result);
@@ -119,7 +118,6 @@ class UserServiceTest {
         verify(usersRepo, times(1)).existsUserByEmail(testUser.email());
         verify(usersRepo, times(1)).findUserByEmail(testUser.email());
         verify(usersRepo, times(1)).save(Mockito.any(User.class));
-        verify(user, times(1)).getAttribute(Mockito.any());
         verify(timeService, times(1)).getNow();
         verify(githubService, times(1)).getUserEmail(Mockito.any(), Mockito.any());
         verifyNoMoreInteractions(idService, usersRepo, timeService, user, githubService);
