@@ -5,6 +5,8 @@ import de.neuefische.paulkreft.backend.users.models.UserGet;
 import de.neuefische.paulkreft.backend.users.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
 import java.time.Instant;
@@ -44,102 +46,6 @@ class SignUpServiceTest {
     }
 
     @Test
-    void signUpWithEmailEmailTest_whenEmailWithoutAtSign_ReturnNull() {
-        // Given
-        SignUpRequest signUpRequest = new SignUpRequest("exampledomain.com", "V!Qzx^sgSNe9XnJ8wTkem");
-
-        // When
-        UserGet actual = signUpService.signUpWithEmail(signUpRequest);
-
-        // Then
-        assertNull(actual);
-    }
-
-    @Test
-    void signUpWithEmailEmailTest_whenPasswordEmptyString_ReturnNull() {
-        // Given
-        SignUpRequest signUpRequest = new SignUpRequest("example@domain.com", "");
-
-        // When
-        UserGet actual = signUpService.signUpWithEmail(signUpRequest);
-
-        // Then
-        assertNull(actual);
-    }
-
-    @Test
-    void signUpWithEmailEmailTest_whenPasswordWithoutSpecialChars_ReturnNull() {
-        // Given
-        SignUpRequest signUpRequest = new SignUpRequest("example@domain.com", "wCgqLfDaSW83eXkDsqV2U");
-
-        // When
-        UserGet actual = signUpService.signUpWithEmail(signUpRequest);
-
-        // Then
-        assertNull(actual);
-    }
-
-    @Test
-    void signUpWithEmailEmailTest_whenPasswordWithoutUpperCaseLetter_ReturnNull() {
-        // Given
-        SignUpRequest signUpRequest = new SignUpRequest("example@domain.com", "q$^38n9*dx5auh7r#g%cz");
-
-        // When
-        UserGet actual = signUpService.signUpWithEmail(signUpRequest);
-
-        // Then
-        assertNull(actual);
-    }
-
-    @Test
-    void signUpWithEmailEmailTest_whenPasswordWithoutLowerCaseLetter_ReturnNull() {
-        // Given
-        SignUpRequest signUpRequest = new SignUpRequest("example@domain.com", "678^SQ*R4Z*^DGB*LD*4B");
-
-        // When
-        UserGet actual = signUpService.signUpWithEmail(signUpRequest);
-
-        // Then
-        assertNull(actual);
-    }
-
-    @Test
-    void signUpWithEmailEmailTest_whenPasswordWithoutNumber_ReturnNull() {
-        // Given
-        SignUpRequest signUpRequest = new SignUpRequest("example@domain.com", "cTG&gXAHH%QCHNA#QrEHh");
-
-        // When
-        UserGet actual = signUpService.signUpWithEmail(signUpRequest);
-
-        // Then
-        assertNull(actual);
-    }
-
-    @Test
-    void signUpWithEmailEmailTest_whenPasswordLessThanEightSigns_ReturnNull() {
-        // Given
-        SignUpRequest signUpRequest = new SignUpRequest("example@domain.com", "fqX$7fe");
-
-        // When
-        UserGet actual = signUpService.signUpWithEmail(signUpRequest);
-
-        // Then
-        assertNull(actual);
-    }
-
-    @Test
-    void signUpWithEmailEmailTest_whenPasswordMoreThanHundredSigns_ReturnNull() {
-        // Given
-        SignUpRequest signUpRequest = new SignUpRequest("example@domain.com", "E#4&W%5X!8eyK@hnGu%p7MMznTF6Q#iT%7LVi4ZpaQ#Sqwr4Ud6ZJV7Kj#KHyiQbakCJt$PmkuLAqK!%9T8bn%qtk$hP6t^6DGvt6");
-
-        // When
-        UserGet actual = signUpService.signUpWithEmail(signUpRequest);
-
-        // Then
-        assertNull(actual);
-    }
-
-    @Test
     void signUpWithEmailEmailTest_whenEmailAlreadyRegistered_ReturnNull() {
         // Given
         SignUpRequest signUpRequest = new SignUpRequest("example@domain.com", "E#4&W%5X!8eyK@hnGu%p7MMznTF6Q#iT%7LVi4ZpaQ#Sqwr4Ud6ZJV7Kj#KHyiQbakCJt$PmkuLAqK!%9T8bn%qtk$hP6t^6DGvt6");
@@ -150,5 +56,32 @@ class SignUpServiceTest {
 
         // Then
         assertNull(actual);
+    }
+
+    static SignUpRequest[] invalidSignUpRequests() {
+        return new SignUpRequest[]{
+                // Email without @
+                new SignUpRequest("exampledomain.com", "V!Qzx^sgSNe9XnJ8wTkem"),
+                // Password is empty string
+                new SignUpRequest("example@domain.com", ""),
+                // Password has no special characters
+                new SignUpRequest("example@domain.com", "wCgqLfDaSW83eXkDsqV2U"),
+                // Password has no upper case letter
+                new SignUpRequest("example@domain.com", "q$^38n9*dx5auh7r#g%cz"),
+                // Password has no lower case letter
+                new SignUpRequest("example@domain.com", "678^SQ*R4Z*^DGB*LD*4B"),
+                // Password has no number
+                new SignUpRequest("example@domain.com", "cTG&gXAHH%QCHNA#QrEHh"),
+                // Password is too short
+                new SignUpRequest("example@domain.com", "fqX$7fe"),
+                // Password is too long
+                new SignUpRequest("example@domain.com", "E#4&W%5X!8eyK@hnGu%p7MMznTF6Q#iT%7LVi4ZpaQ#Sqwr4Ud6ZJV7Kj#KHyiQbakCJt$PmkuLAqK!%9T8bn%qtk$hP6t^6DGvt6")
+        };
+    }
+
+    @ParameterizedTest
+    @MethodSource("invalidSignUpRequests")
+    void signUpWithEmailEmailTest_invalidSignUps(SignUpRequest signUpRequest) {
+        assertNull(signUpService.signUpWithEmail(signUpRequest));
     }
 }
