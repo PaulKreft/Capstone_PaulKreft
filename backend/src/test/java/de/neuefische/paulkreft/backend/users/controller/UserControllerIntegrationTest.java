@@ -48,11 +48,11 @@ class UserControllerIntegrationTest {
     @BeforeEach
     public void instantiateTestUser() {
         Instant now = Instant.parse("2016-06-09T00:00:00.00Z");
-        testUser = new User("123", "Paul", "testemail@at.de", now, now);
+        testUser = new User("123", "Paul", "testemail@at.de", "", now, now);
     }
 
     @Test
-    void testGetLoggedInUser_whenNotLoggedIn_returnNull() throws Exception {
+    void testGetUser_whenNotLoggedIn_returnNull() throws Exception {
         // Given, when and then
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user"))
                 .andExpect(status().isOk())
@@ -60,7 +60,7 @@ class UserControllerIntegrationTest {
     }
 
     @Test
-    void testGetLoggedInUser_whenReturningUserIsLoggedIn_returnReturningUser() throws Exception {
+    void testGetUser_whenReturningUserIsLoggedIn_returnReturningUser() throws Exception {
         usersRepo.save(testUser);
 
         // Given
@@ -91,7 +91,7 @@ class UserControllerIntegrationTest {
     }
 
     @Test
-    void testGetLoggedInUser_whenNewUserIsLoggedIn_returnNewUser() throws Exception {
+    void testGetUser_whenNewUserIsLoggedIn_returnNewUser() throws Exception {
         // Given
         Instant now = Instant.parse("2016-06-09T00:00:00Z");
 
@@ -107,7 +107,7 @@ class UserControllerIntegrationTest {
                         {
                             "id":"123",
                             "email":"testemail@at.de",
-                            "name":"Paul",
+                            "name":"testemail@at.de",
                             "lastActive": "2016-06-09T00:00:00Z",
                             "createdAt": "2016-06-09T00:00:00Z"
                         }

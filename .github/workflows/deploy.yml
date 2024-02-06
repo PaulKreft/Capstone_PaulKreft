@@ -82,6 +82,7 @@ jobs:
     needs: push-to-docker-hub
     environment:
       name: HexHex
+      url: https://hexhex-game.onrender.com/
     steps:
       - name: Trigger Render.com Deployment
         run: |

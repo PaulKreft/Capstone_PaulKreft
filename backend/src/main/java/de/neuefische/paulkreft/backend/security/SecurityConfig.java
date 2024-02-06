@@ -8,6 +8,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
@@ -26,13 +28,10 @@ public class SecurityConfig {
                         .anyRequest().permitAll()
                 )
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
-                .logout(logout -> {
-                    if (environment.equals("production")) {
-                        logout.logoutSuccessUrl("/").permitAll();
-                    } else {
-                        logout.logoutSuccessUrl("http://localhost:5173").permitAll();
-                    }
-                })
+                .httpBasic(login -> login.init(http))
+                .logout(l -> l.logoutUrl("/api/logout")
+                        .logoutSuccessHandler(((request, response, authentication) -> response.setStatus(200)))
+                )
                 .oauth2Login(c -> {
                     try {
                         c.init(http);
@@ -47,6 +46,11 @@ public class SecurityConfig {
                 })
                 .exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)));
         return http.build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(12);
     }
 
 }
