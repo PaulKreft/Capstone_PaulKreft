@@ -19,7 +19,7 @@ export const EmailSignUp: React.FC<EmailSignUpProps> = ({ login }) => {
   }, [email]);
 
   useEffect(() => {
-    const regX: RegExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[ !@#$%^&*])[A-Za-z\\d !@#$%^&*]{8,100}$/;
+    const regX: RegExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[ !@#$%^&*])[A-Za-z\d !@#$%^&*]{8,100}$/;
     setIsPasswordValid(regX.test(password));
   }, [password]);
 
