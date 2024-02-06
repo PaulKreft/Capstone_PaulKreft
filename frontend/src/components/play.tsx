@@ -12,9 +12,9 @@ const HARD = 4;
 
 type Difficulty = 1 | 2 | 4;
 
-type Color = {
+type Tile = {
   id: string;
-  value: string;
+  color: string;
 };
 
 export default function Play() {
@@ -25,26 +25,38 @@ export default function Play() {
 
   const [lastMatch, setLastMatch] = useState<string>("");
 
-  const [selectedColor, setSelectedColor] = useState<string>("");
-  const [colors, setColors] = useState<Color[]>([]);
+  const [sourceTile, setSourceTile] = useState<string>("");
+  const [targetTile, setTargetTile] = useState<string>("");
+  const [currentConfig, setCurrentConfig] = useState<Tile[]>([]);
+  const [nextConfig, setNextConfig] = useState<Tile[]>([]);
 
   useEffect(() => {
-    const additionalTilePairs: Color[] = [
-      { id: "1-classic", value: "#FFF" },
-      { id: "2-classic", value: "#000" },
-      { id: "3-classic", value: "#FFF" },
-      { id: "4-classic", value: "#000" },
+    const additionalTilePairs: Tile[] = [
+      { id: "1-classic", color: WHITE },
+      { id: "2-classic", color: BLACK },
+      { id: "3-classic", color: WHITE },
+      { id: "4-classic", color: BLACK },
     ];
     for (let i = 5; i < difficulty * 2 + 5; i += 2) {
-      additionalTilePairs.push({ id: `${i}-classic`, value: "#FFF" }, { id: `${i + 1}-classic`, value: "#000" });
+      additionalTilePairs.push({ id: `${i}-classic`, color: WHITE }, { id: `${i + 1}-classic`, color: BLACK });
     }
 
-    setColors(additionalTilePairs);
+    setCurrentConfig(JSON.parse(JSON.stringify(additionalTilePairs)));
+    setNextConfig(JSON.parse(JSON.stringify(additionalTilePairs)));
+    resetGameState();
   }, [difficulty]);
 
+  const resetGameState = (): void => {
+    setSourceTile("");
+    setTargetTile("");
+    setLastMatch("");
+    setIsOver(false);
+    setHasLost(false);
+  };
+
   useEffect(() => {
-    const blackTiles: number = colors.filter((tile) => tile.value === BLACK).length;
-    const whiteTiles: number = colors.filter((tile) => tile.value === WHITE).length;
+    const blackTiles: number = nextConfig.filter((tile) => tile.color === BLACK).length;
+    const whiteTiles: number = nextConfig.filter((tile) => tile.color === WHITE).length;
     const lost: boolean = blackTiles !== whiteTiles;
 
     if (lost) {
@@ -53,86 +65,87 @@ export default function Play() {
       return;
     }
 
-    setIsOver(!colors.filter((tile) => tile.value !== WHITE && tile.value !== BLACK).length);
-  }, [colors]);
+    setCurrentConfig(JSON.parse(JSON.stringify(nextConfig)));
+    setSourceTile("");
+    setIsOver(!nextConfig.filter((tile) => tile.color !== WHITE && tile.color !== BLACK).length);
+  }, [nextConfig]);
 
   const selectColor = (id: string): void => {
     if (isOver) {
       return;
     }
 
-    if (!selectedColor) {
+    if (!sourceTile) {
       getLastMatch(id);
-      setSelectedColor(id);
+      setSourceTile(id);
       return;
     }
 
-    if (selectedColor === id) {
-      setSelectedColor("");
+    if (sourceTile === id) {
+      setSourceTile("");
       return;
     }
 
-    combineTiles(selectedColor, id);
-    setSelectedColor("");
+    setTargetTile(id);
+    combineTiles(sourceTile, id);
   };
 
   const getLastMatch = (last: string): void => {
-    const lastColor = colors.find((color) => color.id === last);
+    const lastColor = nextConfig.find((tile) => tile.id === last);
 
     if (!lastColor) {
       return;
     }
-    const match: Color | undefined = colors.find((color) => addHexColors(color.value, lastColor.value) === WHITE);
-    setLastMatch(match ? match.id : "Nothing found");
+    const match: Tile | undefined = nextConfig.find((tile) => addHexColors(tile.color, lastColor.color) === WHITE);
+    setLastMatch(match ? match.id : "");
   };
 
   const combineTiles = (givingId: string, receivingId: string): void => {
-    const givingTile = colors.find((tile) => tile.id === givingId);
-    const receivingTile = colors.find((tile) => tile.id === receivingId);
+    const givingTile = nextConfig.find((tile) => tile.id === givingId);
+    const receivingTile = nextConfig.find((tile) => tile.id === receivingId);
 
     if (!givingTile || !receivingTile) {
       return;
     }
 
-    receivingTile.value = addHexColors(receivingTile.value, givingTile.value);
-    givingTile.value = subtractHexColors(givingTile.value, givingTile.value);
+    receivingTile.color = addHexColors(receivingTile.color, givingTile.color);
+    givingTile.color = subtractHexColors(givingTile.color, givingTile.color);
 
-    setColors(
-      colors.map((color) => {
-        if (color.id === givingId) {
+    setNextConfig(
+      currentConfig.map((tile) => {
+        if (tile.id === givingId) {
           return givingTile;
         }
-        if (color.id === receivingId) {
+        if (tile.id === receivingId) {
           return receivingTile;
         }
-        return color;
+        return tile;
       }),
     );
   };
 
-  const resetTiles = (): Color[] => {
-    return colors.map((color, index) => (index % 2 == 0 ? { ...color, value: BLACK } : { ...color, value: WHITE }));
+  const resetTiles = (): Tile[] => {
+    return currentConfig.map((tile, index) => (index % 2 == 0 ? { ...tile, color: BLACK } : { ...tile, color: WHITE }));
   };
 
   const shuffleColours = (): void => {
-    setIsOver(false);
-    setHasLost(false);
-    setSelectedColor("");
-    const colors: Color[] = resetTiles();
+    resetGameState();
+    const baseConfig: Tile[] = resetTiles();
 
-    const newTiles: Color[] = [];
-    const whiteTiles = colors.filter((color) => color.value === WHITE);
-    const blackTiles = colors.filter((color) => color.value === BLACK);
+    const newTiles: Tile[] = [];
+    const whiteTiles = baseConfig.filter((tile) => tile.color === WHITE);
+    const blackTiles = baseConfig.filter((tile) => tile.color === BLACK);
 
     whiteTiles.forEach((tile, index) => {
-      const randomColor = getRandomHexColor(tile.value);
-      newTiles.push({ id: tile.id, value: subtractHexColors(tile.value, randomColor) });
-      newTiles.push({ id: blackTiles[index].id, value: addHexColors(blackTiles[index].value, randomColor) });
+      const randomColor = getRandomHexColor(tile.color);
+      newTiles.push({ id: tile.id, color: subtractHexColors(tile.color, randomColor) });
+      newTiles.push({ id: blackTiles[index].id, color: addHexColors(blackTiles[index].color, randomColor) });
     });
 
-    const shuffledTiles = shuffleArray<Color>(newTiles);
+    const shuffledTiles = shuffleArray<Tile>(newTiles);
 
-    setColors(shuffledTiles);
+    setCurrentConfig(shuffledTiles);
+    setNextConfig(shuffledTiles);
   };
 
   return (
@@ -144,21 +157,22 @@ export default function Play() {
       <div
         className={cn(
           "flex flex-wrap justify-center gap-4",
-          colors.length === 6 ? "max-w-80 sm:max-w-96" : "max-w-[24rem] sm:max-w-[32rem]",
+          currentConfig.length === 6 ? "max-w-80 sm:max-w-96" : "max-w-[24rem] sm:max-w-[32rem]",
         )}
       >
-        {colors.map((color) => (
+        {currentConfig.map((tile) => (
           <div
-            key={color.id}
+            key={tile.id}
             className={cn(
               "h-20 w-20 rounded-xl text-blue-600 sm:h-28 sm:w-28",
-              selectedColor === color.id ? "border-2 border-black" : "",
-              lastMatch === color.id && hasLost ? "border-4 border-white outline outline-4 outline-black" : "",
+              sourceTile === tile.id ? "border-2 border-white outline outline-2 outline-black" : "",
+              targetTile === tile.id && hasLost ? "border-4 border-white outline outline-4 outline-[#BA2D0B]" : "",
+              lastMatch === tile.id && hasLost ? "border-4 border-white outline outline-4 outline-[#73BA9B]" : "",
               isOver ? "cursor-default" : "cursor-pointer",
-              [WHITE, "#FFF"].includes(color.value) ? "border border-black" : "",
+              [WHITE, "#FFF"].includes(tile.color) ? "border border-black" : "",
             )}
-            onClick={() => selectColor(color.id)}
-            style={{ backgroundColor: color.value }}
+            onClick={() => selectColor(tile.id)}
+            style={{ backgroundColor: tile.color }}
           ></div>
         ))}
       </div>
