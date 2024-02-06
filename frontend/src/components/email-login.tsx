@@ -35,7 +35,7 @@ export const EmailLogin: React.FC<EmailLoginProps> = ({ login }) => {
   return (
     <div className="mx-auto flex flex-1 flex-col items-center justify-center pb-20">
       <div className="flex flex-col items-center  rounded-2xl border-2 border-black px-20 pb-24 pt-12">
-        <h2 className="pb-20 text-4xl">Log in with Email</h2>
+        <h2 className="pb-16 text-4xl">Log in with Email</h2>
         <form className="" onSubmit={loginWithEmail} noValidate>
           <div className="mb-1 pl-1 text-lg">Email</div>
           <input
