@@ -8,6 +8,7 @@ import de.neuefische.paulkreft.backend.users.models.UserGet;
 import de.neuefische.paulkreft.backend.users.repositories.UsersRepo;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -25,12 +26,11 @@ public class UserService {
     private final GithubService githubService;
 
     public UserGet getLoggedInUser(Principal user, HttpServletRequest request) {
-
         if (user == null) {
             return null;
         }
 
-        if (user.getClass().getTypeName().contains("UsernamePasswordAuthenticationToken")) {
+        if (user instanceof UsernamePasswordAuthenticationToken) {
             return getEmailUser(user);
         }
 
