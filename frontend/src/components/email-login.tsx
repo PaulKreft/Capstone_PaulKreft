@@ -13,16 +13,12 @@ export const EmailLogin: React.FC<EmailLoginProps> = ({ login }) => {
   const [isEmailValid, setIsEmailValid] = useState<boolean>(false);
 
   useEffect(() => {
-    const regX: RegExp = new RegExp(
-      "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$",
-    );
+    const regX: RegExp = /^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$/;
     setIsEmailValid(regX.test(email));
   }, [email]);
 
   useEffect(() => {
-    const regX: RegExp = new RegExp(
-      "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[ !\"#$%&'()*+,-./:;<=>?@\\[\\]^_`{|}~\\\\])[A-Za-z\\d !\"#$%&'()*+,-./:;<=>?@\\[\\]^_`{|}~\\\\]{8,100}$",
-    );
+    const regX: RegExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[ !@#$%^&*])[A-Za-z\\d !@#$%^&*]{8,100}$/;
     setIsPasswordValid(regX.test(password));
   }, [password]);
 

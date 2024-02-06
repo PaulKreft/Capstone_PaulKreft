@@ -45,7 +45,7 @@ public class SignUpService {
     }
 
     private boolean validatePassword(String password) {
-        Pattern passwordPattern = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[ !\"#$%&'()*+,-./:;<=>?@\\[\\]^_`{|}~\\\\])[A-Za-z\\d !\"#$%&'()*+,-./:;<=>?@\\[\\]^_`{|}~\\\\]{8,100}$");
+        Pattern passwordPattern = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[ !@#$%^&*])[A-Za-z\\d !@#$%^&*]{8,100}$");
         Matcher passwordMatcher = passwordPattern.matcher(password);
 
         return passwordMatcher.matches();
