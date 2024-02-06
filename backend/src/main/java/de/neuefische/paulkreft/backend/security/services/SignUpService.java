@@ -3,10 +3,14 @@ package de.neuefische.paulkreft.backend.security.services;
 import de.neuefische.paulkreft.backend.security.models.SignUpRequest;
 import de.neuefische.paulkreft.backend.users.models.UserGet;
 import de.neuefische.paulkreft.backend.users.services.UserService;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.ValidatorFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,7 +23,7 @@ public class SignUpService {
         String email = request.email();
         String password = request.password();
 
-        boolean isEmailValid = validateEmail(email);
+        boolean isEmailValid = validateEmail(request);
         boolean isPasswordValid = validatePassword(password);
 
         if (!(isEmailValid && isPasswordValid)) {
@@ -36,12 +40,15 @@ public class SignUpService {
         return userService.createUser(email, email, hashedPassword);
     }
 
-    private boolean validateEmail(String email) {
-        String regX = "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
-        Pattern emailPattern = Pattern.compile(regX);
-        Matcher emailMatcher = emailPattern.matcher(email);
+    private boolean validateEmail(SignUpRequest request) {
+        try (ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory()) {
+            Set<ConstraintViolation<SignUpRequest>> violations = validatorFactory.getValidator().validate(request);
+            if (!violations.isEmpty()) {
+                return false;
+            }
+        }
 
-        return emailMatcher.matches();
+        return true;
     }
 
     private boolean validatePassword(String password) {
