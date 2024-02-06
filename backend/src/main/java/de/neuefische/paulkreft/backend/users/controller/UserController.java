@@ -17,7 +17,7 @@ public class UserController {
 
     @GetMapping
     public UserGet getUser(Principal principal, HttpServletRequest request) {
-        return userService.getUser(principal, request);
+        return userService.getLoggedInUser(principal, request);
     }
 
     @PutMapping

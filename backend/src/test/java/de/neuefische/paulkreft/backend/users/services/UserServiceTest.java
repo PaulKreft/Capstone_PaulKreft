@@ -46,7 +46,7 @@ class UserServiceTest {
     @Test
     void getUserShouldReturnNullWhenUserIsNull() {
         // When
-        UserGet result = userService.getUser(null, null);
+        UserGet result = userService.getLoggedInUser(null, null);
 
         // Then
         assertNull(result);
@@ -61,7 +61,7 @@ class UserServiceTest {
 
         // When
         Executable executable =
-                () -> userService.getUser(user, null);
+                () -> userService.getLoggedInUser(user, null);
 
         // Then
         assertThrows(RuntimeException.class, executable);
@@ -82,7 +82,7 @@ class UserServiceTest {
         when(usersRepo.save(any(User.class))).thenReturn(testUser);
 
         // When
-        UserGet result = userService.getUser(user, null);
+        UserGet result = userService.getLoggedInUser(user, null);
 
         // Then
         assertNotNull(result);
@@ -109,7 +109,7 @@ class UserServiceTest {
         when(usersRepo.save(Mockito.any(User.class))).thenReturn(testUser);
 
         // When
-        UserGet result = userService.getUser(user, null);
+        UserGet result = userService.getLoggedInUser(user, null);
 
         // Then
         assertNotNull(result);

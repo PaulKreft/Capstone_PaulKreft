@@ -24,7 +24,7 @@ public class UserService {
     private final TimeService timeService;
     private final GithubService githubService;
 
-    public UserGet getUser(Principal user, HttpServletRequest request) {
+    public UserGet getLoggedInUser(Principal user, HttpServletRequest request) {
 
         if (user == null) {
             return null;
