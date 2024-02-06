@@ -35,6 +35,8 @@ export default function Play() {
   const [startTime, setStartTime] = useState<number>(0);
   const [endTime, setEndTime] = useState<number>(0);
 
+  const [streak, setStreak] = useState<number>(0);
+
   useEffect(() => {
     const additionalTilePairs: Tile[] = [
       { id: "1-classic", color: WHITE },
@@ -68,6 +70,7 @@ export default function Play() {
       setEndTime(Date.now());
       setHasLost(true);
       setIsOver(true);
+      setStreak(0);
       return;
     }
 
@@ -78,6 +81,7 @@ export default function Play() {
     if (isOver) {
       setEndTime(Date.now());
       setIsOver(true);
+      setStreak((s) => s + 1);
     }
   }, [hasStarted, nextConfig]);
 
@@ -169,8 +173,11 @@ export default function Play() {
           currentConfig.length === 6 ? "max-w-80 sm:max-w-96" : "max-w-[24rem] sm:max-w-[32rem]",
         )}
       >
+        <div className={cn("absolute -top-10 left-4 text-xl", hasLost ? "text-[#BA2D0B]" : "text-black")}>
+          Streak: {streak}
+        </div>
         <StopWatch
-          className={cn("absolute -top-10 right-3 text-2xl text-black", isOver && !hasLost ? "block" : "hidden")}
+          className={cn("absolute -top-10 right-3 text-xl text-black", isOver && !hasLost ? "block" : "hidden")}
           value={endTime - startTime}
         />
         {currentConfig.map((tile) => (
