@@ -46,7 +46,7 @@ class SignUpServiceTest {
     }
 
     @Test
-    void signUpWithEmailEmailTest_whenEmailAlreadyRegistered_ReturnNull() {
+    void signUpWithEmailTest_whenEmailAlreadyRegistered_ReturnNull() {
         // Given
         SignUpRequest signUpRequest = new SignUpRequest("example@domain.com", "E#4&W%5X!8eyK@hnGu%p7MMznTF6Q#iT%7LVi4ZpaQ#Sqwr4Ud6ZJV7Kj#KHyiQbakCJt$PmkuLAqK!%9T8bn%qtk$hP6t^6DGvt6");
         when(userService.existsByEmail("example@domain.com")).thenReturn(true);
@@ -81,7 +81,7 @@ class SignUpServiceTest {
 
     @ParameterizedTest
     @MethodSource("invalidSignUpRequests")
-    void signUpWithEmailEmailTest_invalidSignUps(SignUpRequest signUpRequest) {
+    void signUpWithEmailTest_invalidSignUps(SignUpRequest signUpRequest) {
         assertNull(signUpService.signUpWithEmail(signUpRequest));
     }
 }
