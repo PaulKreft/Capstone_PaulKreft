@@ -36,7 +36,7 @@ export const EmailLogin: React.FC<EmailLoginProps> = ({ login }) => {
           <div className="mb-1 pl-1 text-lg">Email</div>
           <input
             className={cn(
-              "flex h-max items-center rounded-lg border-2 border-black px-5 py-4 text-lg font-light focus:border-2",
+              "flex h-max items-center rounded-lg border-2 border-black px-5 py-4 text-lg font-light",
               email ? (isEmailValid ? "focus:border-[#73BA9B]" : "border-[#BA2D0B]") : "focus:border-black",
             )}
             type="email"
@@ -54,7 +54,7 @@ export const EmailLogin: React.FC<EmailLoginProps> = ({ login }) => {
           <div className="mb-1 mt-1 pl-1 text-lg">Password</div>
           <input
             className={cn(
-              "flex h-max items-center rounded-lg border-2 border-black px-5 py-4 text-lg font-light focus:border-2",
+              "flex h-max items-center rounded-lg border-2 border-black px-5 py-4 text-lg font-light",
               password ? (isPasswordValid ? "focus:border-[#73BA9B]" : "border-[#BA2D0B]") : "focus:border-black",
             )}
             type="password"
