@@ -5,7 +5,7 @@ import de.neuefische.paulkreft.backend.services.IdService;
 import de.neuefische.paulkreft.backend.services.TimeService;
 import de.neuefische.paulkreft.backend.users.models.User;
 import de.neuefische.paulkreft.backend.users.models.UserGet;
-import de.neuefische.paulkreft.backend.users.repositories.UsersRepo;
+import de.neuefische.paulkreft.backend.users.repository.UsersRepo;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

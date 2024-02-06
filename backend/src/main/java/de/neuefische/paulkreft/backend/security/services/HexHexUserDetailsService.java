@@ -1,7 +1,7 @@
 package de.neuefische.paulkreft.backend.security.services;
 
 import de.neuefische.paulkreft.backend.users.models.User;
-import de.neuefische.paulkreft.backend.users.repositories.UsersRepo;
+import de.neuefische.paulkreft.backend.users.repository.UsersRepo;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
