@@ -2,6 +2,7 @@ package de.neuefische.paulkreft.backend.exception;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -44,6 +45,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({GithubEmailNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String handleException(GithubEmailNotFoundException exception) {
+        return exception.getMessage();
+    }
+
+    @ExceptionHandler({UsernameNotFoundException.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String handleException(UsernameNotFoundException exception) {
         return exception.getMessage();
     }
 }
