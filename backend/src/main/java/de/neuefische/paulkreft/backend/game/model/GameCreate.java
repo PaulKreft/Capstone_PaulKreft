@@ -9,7 +9,7 @@ public record GameCreate(
         int difficulty,
         boolean isSuccess,
         int duration,
-        List<Tile> configuration
+        List<String> configuration
 ) {
 
     public Game withIdAndCreatedAt(String id, Instant createdAt) {

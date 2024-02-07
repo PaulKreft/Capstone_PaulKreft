@@ -1,8 +1,11 @@
-import { useEffect, useState } from "react";
-import { addHexColors, getRandomHexColor, subtractHexColors } from "../lib/hexUtils.ts";
-import { shuffleArray } from "../lib/shuffleArray.tsx";
+import React, { useEffect, useState } from "react";
 import { cn } from "../lib/utils.ts";
 import { StopWatch } from "./stop-watch.tsx";
+import { Button } from "./button.tsx";
+import { TileConfiguration } from "./tile-configuration.tsx";
+import { addHexColors, getRandomHexColor, subtractHexColors } from "../lib/hexUtils.ts";
+import { shuffleArray } from "../lib/shuffleArray.tsx";
+import axios from "axios";
 
 const WHITE = "#ffffff";
 const BLACK = "#000000";
@@ -13,223 +16,104 @@ const HARD = 4;
 
 type Difficulty = 1 | 2 | 4;
 
-type Tile = {
-  id: string;
-  color: string;
+type PlayProps = {
+  userId?: string;
 };
 
-export default function Play() {
-  const [hasStarted, setHasStarted] = useState<boolean>(false);
-  const [hasLost, setHasLost] = useState<boolean>(false);
-  const [isOver, setIsOver] = useState<boolean>(false);
+export const Play: React.FC<PlayProps> = ({ userId }) => {
+  const [colorConfig, setColorConfig] = useState<string[]>([]);
 
   const [difficulty, setDifficulty] = useState<Difficulty>(EASY);
 
-  const [lastMatch, setLastMatch] = useState<string>("");
-
-  const [sourceTile, setSourceTile] = useState<string>("");
-  const [targetTile, setTargetTile] = useState<string>("");
-  const [currentConfig, setCurrentConfig] = useState<Tile[]>([]);
-  const [nextConfig, setNextConfig] = useState<Tile[]>([]);
-
-  const [startTime, setStartTime] = useState<number>(0);
-  const [endTime, setEndTime] = useState<number>(0);
-
   const [streak, setStreak] = useState<number>(0);
 
-  useEffect(() => {
-    const additionalTilePairs: Tile[] = [
-      { id: "1-classic", color: WHITE },
-      { id: "2-classic", color: BLACK },
-      { id: "3-classic", color: WHITE },
-      { id: "4-classic", color: BLACK },
-    ];
-    for (let i = 5; i < difficulty * 2 + 5; i += 2) {
-      additionalTilePairs.push({ id: `${i}-classic`, color: WHITE }, { id: `${i + 1}-classic`, color: BLACK });
-    }
+  const [startTime, setStartTime] = useState<number>();
+  const [endTime, setEndTime] = useState<number>();
 
-    setCurrentConfig(JSON.parse(JSON.stringify(additionalTilePairs)));
-    setNextConfig(JSON.parse(JSON.stringify(additionalTilePairs)));
-    resetGameState();
+  useEffect(() => {
+    setColorConfig(
+      Array(4 + difficulty * 2)
+        .fill("")
+        .map((_value, index) => (index % 2 === 0 ? BLACK : WHITE)),
+    );
   }, [difficulty]);
 
-  const resetGameState = (): void => {
-    setSourceTile("");
-    setTargetTile("");
-    setLastMatch("");
-    setIsOver(false);
-    setHasLost(false);
-  };
+  const handleOverEvent = (result: "lost" | "won"): void => {
+    const now: number = Date.now();
+    const hasWon: boolean = result === "won";
 
-  useEffect(() => {
-    const blackTiles: number = nextConfig.filter((tile) => tile.color === BLACK).length;
-    const whiteTiles: number = nextConfig.filter((tile) => tile.color === WHITE).length;
-    const lost: boolean = blackTiles !== whiteTiles;
-
-    if (lost) {
-      setEndTime(Date.now());
-      setHasLost(true);
-      setIsOver(true);
-      setStreak(0);
-      return;
-    }
-
-    setCurrentConfig(JSON.parse(JSON.stringify(nextConfig)));
-    setSourceTile("");
-
-    const isOver = hasStarted && !nextConfig.filter((tile) => tile.color !== WHITE && tile.color !== BLACK).length;
-    if (isOver) {
-      setEndTime(Date.now());
-      setIsOver(true);
+    if (hasWon) {
+      setEndTime(now);
       setStreak((s) => s + 1);
-    }
-  }, [hasStarted, nextConfig]);
-
-  const selectColor = (id: string): void => {
-    if (isOver || !hasStarted) {
-      return;
+    } else {
+      setStreak(0);
     }
 
-    if (!sourceTile) {
-      getLastMatch(id);
-      setSourceTile(id);
-      return;
-    }
-
-    if (sourceTile === id) {
-      setSourceTile("");
-      return;
-    }
-
-    setTargetTile(id);
-    combineTiles(sourceTile, id);
+    axios
+      .post("api/games", {
+        userId,
+        type: "",
+        difficulty,
+        isSuccess: hasWon,
+        duration: hasWon && startTime ? now - startTime : null,
+        configuration: colorConfig,
+      })
+      .then((response) => console.log(response));
   };
 
-  const getLastMatch = (last: string): void => {
-    const lastColor = nextConfig.find((tile) => tile.id === last);
-
-    if (!lastColor) {
-      return;
-    }
-    const match: Tile | undefined = nextConfig.find((tile) => addHexColors(tile.color, lastColor.color) === WHITE);
-    setLastMatch(match ? match.id : "");
+  const resetClock = (): void => {
+    setStartTime(undefined);
+    setEndTime(undefined);
   };
 
-  const combineTiles = (givingId: string, receivingId: string): void => {
-    const givingTile = nextConfig.find((tile) => tile.id === givingId);
-    const receivingTile = nextConfig.find((tile) => tile.id === receivingId);
-
-    if (!givingTile || !receivingTile) {
-      return;
-    }
-
-    receivingTile.color = addHexColors(receivingTile.color, givingTile.color);
-    givingTile.color = subtractHexColors(givingTile.color, givingTile.color);
-
-    setNextConfig(
-      currentConfig.map((tile) => {
-        if (tile.id === givingId) {
-          return givingTile;
-        }
-        if (tile.id === receivingId) {
-          return receivingTile;
-        }
-        return tile;
-      }),
-    );
-  };
-
-  const resetTiles = (): Tile[] => {
-    return currentConfig.map((tile, index) => (index % 2 == 0 ? { ...tile, color: BLACK } : { ...tile, color: WHITE }));
+  const resetConfig = (): string[] => {
+    return colorConfig.map((_tile, index) => (index % 2 === 0 ? BLACK : WHITE));
   };
 
   const shuffleColours = (): void => {
-    resetGameState();
-    const baseConfig: Tile[] = resetTiles();
+    resetClock();
+    const baseConfig: string[] = resetConfig();
 
-    const newTiles: Tile[] = [];
-    const whiteTiles = baseConfig.filter((tile) => tile.color === WHITE);
-    const blackTiles = baseConfig.filter((tile) => tile.color === BLACK);
+    const newConfig: string[] = [];
+    const whiteTiles = baseConfig.filter((color) => color === WHITE);
+    const blackTiles = baseConfig.filter((color) => color === BLACK);
 
-    whiteTiles.forEach((tile, index) => {
-      const randomColor = getRandomHexColor(tile.color);
-      newTiles.push({ id: tile.id, color: subtractHexColors(tile.color, randomColor) });
-      newTiles.push({ id: blackTiles[index].id, color: addHexColors(blackTiles[index].color, randomColor) });
+    whiteTiles.forEach((tileColor, index) => {
+      const randomColor = getRandomHexColor(tileColor);
+      newConfig.push(subtractHexColors(tileColor, randomColor));
+      newConfig.push(addHexColors(blackTiles[index], randomColor));
     });
 
-    const shuffledTiles = shuffleArray<Tile>(newTiles);
-
-    setCurrentConfig(shuffledTiles);
-    setNextConfig(shuffledTiles);
-    setHasStarted(true);
+    setColorConfig(shuffleArray<string>(newConfig));
     setStartTime(Date.now());
   };
 
   return (
-    <div className="xs:pb-20 flex flex-1 flex-col items-center justify-center px-5 pb-32 pt-20 sm:px-10">
-      <div
-        className={cn(
-          "relative flex flex-wrap justify-center gap-4",
-          currentConfig.length === 6 ? "max-w-80 sm:max-w-96" : "max-w-[24rem] sm:max-w-[32rem]",
-        )}
-      >
-        <div className={cn("absolute -top-10 left-4 text-xl", hasLost ? "text-[#BA2D0B]" : "text-black")}>
+    <div className="flex flex-1 flex-col items-center justify-center px-5 pb-32 pt-20 xs:pb-20 sm:px-10">
+      <TileConfiguration baseConfig={colorConfig} overEvent={handleOverEvent}>
+        <div className={cn("absolute -top-10 left-4 text-xl text-black", streak ? "block" : "hidden")}>
           Streak: {streak}
         </div>
         <StopWatch
-          className={cn("absolute -top-10 right-3 text-xl text-black", isOver && !hasLost ? "block" : "hidden")}
-          value={endTime - startTime}
+          className={cn("absolute -top-10 right-3 text-xl text-black", startTime && endTime ? "block" : "hidden")}
+          value={startTime && endTime ? endTime - startTime : null}
         />
-        {currentConfig.map((tile) => (
-          <div
-            key={tile.id}
-            className={cn(
-              "h-20 w-20 rounded-xl text-blue-600 sm:h-28 sm:w-28",
-              sourceTile === tile.id ? "border-2 border-white outline outline-2 outline-black" : "",
-              targetTile === tile.id && hasLost ? "border-4 border-white outline outline-4 outline-[#BA2D0B]" : "",
-              lastMatch === tile.id && hasLost ? "border-4 border-white outline outline-4 outline-[#73BA9B]" : "",
-              isOver || !hasStarted ? "cursor-default" : "cursor-pointer",
-              [WHITE, "#FFF"].includes(tile.color) ? "border border-black" : "",
-            )}
-            onClick={() => selectColor(tile.id)}
-            style={{ backgroundColor: tile.color }}
-          ></div>
-        ))}
-      </div>
+      </TileConfiguration>
 
       <button className="mt-10 rounded-[20px] border-2 border-black px-12 py-4 text-2xl" onClick={shuffleColours}>
         New Puzzle
       </button>
-
-      <div className="xs:gap-5 mt-10 flex gap-3">
-        <button
-          className={cn(
-            "xs:px-5 xs:py-2 xs:text-xl rounded-2xl px-3 py-1 text-lg",
-            difficulty === 1 ? "bg-[#73BA9B] text-white" : "border-2 border-[#73BA9B] text-[#73BA9B]",
-          )}
-          onClick={() => setDifficulty(EASY)}
-        >
+      <div className="mt-10 flex gap-3 xs:gap-5">
+        <Button color="#73BA9B" onClick={() => setDifficulty(EASY)} isActive={difficulty === 1}>
           Easy
-        </button>
-        <button
-          className={cn(
-            "xs:px-5 xs:py-2 xs:text-xl rounded-2xl px-3 py-1 text-lg",
-            difficulty === 2 ? "bg-[#6D98BA] text-white" : "border-2 border-[#6D98BA] text-[#6D98BA]",
-          )}
-          onClick={() => setDifficulty(MEDIUM)}
-        >
+        </Button>
+        <Button color="#6D98BA" onClick={() => setDifficulty(MEDIUM)} isActive={difficulty === 2}>
           Medium
-        </button>
-        <button
-          className={cn(
-            "xs:px-5 xs:py-2 xs:text-xl rounded-2xl px-3 py-1 text-lg",
-            difficulty === 4 ? "bg-[#BA2D0B] text-white" : "border-2 border-[#BA2D0B] text-[#BA2D0B]",
-          )}
-          onClick={() => setDifficulty(HARD)}
-        >
+        </Button>
+        <Button color="#BA2D0B" onClick={() => setDifficulty(HARD)} isActive={difficulty === 4}>
           Hard
-        </button>
+        </Button>
       </div>
     </div>
   );
-}
+};

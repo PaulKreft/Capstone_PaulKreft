@@ -1,7 +1,6 @@
 package de.neuefische.paulkreft.backend.game.controller;
 
 import de.neuefische.paulkreft.backend.game.model.Game;
-import de.neuefische.paulkreft.backend.game.model.Tile;
 import de.neuefische.paulkreft.backend.game.repository.GameRepo;
 import de.neuefische.paulkreft.backend.services.IdService;
 import de.neuefische.paulkreft.backend.services.TimeService;
@@ -88,7 +87,7 @@ class GameControllerIntegrationTest {
     void getGamesByUserIdTest_whenOneMatchingGameInDB_thenReturnMatchingGame() throws Exception {
         // Given
         Instant now = Instant.parse("2016-06-09T00:00:00Z");
-        Game testGame = new Game("1", "User1", "Type", 1, true, 10, List.of(new Tile("#FFFFFF")), now);
+        Game testGame = new Game("1", "User1", "Type", 1, true, 10, List.of("#FFFFFF"), now);
         Game testGame2 = new Game("2", "User2", "Type", 1, true, 10, Collections.emptyList(), now);
         gameRepo.save(testGame);
         gameRepo.save(testGame2);
@@ -105,7 +104,7 @@ class GameControllerIntegrationTest {
                             "difficulty": 1,
                             "isSuccess": true,
                             "duration": 10,
-                            "configuration": [{"color":"#FFFFFF"}],
+                            "configuration": ["#FFFFFF"],
                             "createdAt": "2016-06-09T00:00:00Z"
                         }]
                         """));

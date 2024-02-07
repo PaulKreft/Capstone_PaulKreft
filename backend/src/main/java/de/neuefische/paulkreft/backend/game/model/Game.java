@@ -13,7 +13,7 @@ public record Game(
         int difficulty,
         boolean isSuccess,
         int duration,
-        List<Tile> configuration,
+        List<String> configuration,
         Instant createdAt
 ) {
 }
