@@ -13,7 +13,7 @@ export const EmailLogin: React.FC<EmailLoginProps> = ({ login }) => {
   const [isEmailValid, setIsEmailValid] = useState<boolean>(false);
 
   useEffect(() => {
-    const regX: RegExp = /^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$/;
+    const regX: RegExp = /^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+(\.[A-Za-z0-9-]+)*(\.[A-Za-z]{2,})$/;
     setIsEmailValid(regX.test(email));
   }, [email]);
 
