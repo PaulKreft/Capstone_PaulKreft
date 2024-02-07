@@ -125,7 +125,7 @@ class UserControllerIntegrationTest {
 
     @DirtiesContext
     @Test
-    void testGetUser_whenGithubEmailNotFound_throwException() throws Exception {
+    void testGetUser_whenGithubEmailNotFound_throwGithubEmailNotFoundException() throws Exception {
         usersRepo.save(testUser);
 
         // Given
@@ -152,6 +152,7 @@ class UserControllerIntegrationTest {
     void testGetUser_whenEmailNotInDB_returnNull() throws Exception {
         // Given & When
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user"))
+
                 // Then
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
