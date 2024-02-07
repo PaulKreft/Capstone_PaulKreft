@@ -25,25 +25,25 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({EmailAlreadyRegisteredException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorMessage handleException(EmailAlreadyRegisteredException exception) {
-        return new ErrorMessage(exception.getMessage());
+    public String handleException(EmailAlreadyRegisteredException exception) {
+        return exception.getMessage();
     }
 
     @ExceptionHandler({IllegalArgumentException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorMessage handleException(IllegalArgumentException exception) {
-        return new ErrorMessage(exception.getMessage());
+    public String handleException(IllegalArgumentException exception) {
+        return exception.getMessage();
     }
 
     @ExceptionHandler({OAuth2LoginException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorMessage handleException(OAuth2LoginException exception) {
-        return new ErrorMessage(exception.getMessage());
+    public String handleException(OAuth2LoginException exception) {
+        return exception.getMessage();
     }
 
     @ExceptionHandler({GithubEmailNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorMessage handleException(GithubEmailNotFoundException exception) {
-        return new ErrorMessage(exception.getMessage());
+    public String handleException(GithubEmailNotFoundException exception) {
+        return exception.getMessage();
     }
 }
