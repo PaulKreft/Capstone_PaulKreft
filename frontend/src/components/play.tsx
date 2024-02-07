@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { addHexColors, getRandomHexColor, subtractHexColors } from "../lib/hexUtils.ts";
 import { shuffleArray } from "../lib/shuffleArray.tsx";
 import { cn } from "../lib/utils.ts";
+import { StopWatch } from "./stop-watch.tsx";
 
 const WHITE = "#ffffff";
 const BLACK = "#000000";
@@ -18,6 +19,7 @@ type Tile = {
 };
 
 export default function Play() {
+  const [hasStarted, setHasStarted] = useState<boolean>(false);
   const [hasLost, setHasLost] = useState<boolean>(false);
   const [isOver, setIsOver] = useState<boolean>(false);
 
@@ -29,6 +31,11 @@ export default function Play() {
   const [targetTile, setTargetTile] = useState<string>("");
   const [currentConfig, setCurrentConfig] = useState<Tile[]>([]);
   const [nextConfig, setNextConfig] = useState<Tile[]>([]);
+
+  const [startTime, setStartTime] = useState<number>(0);
+  const [endTime, setEndTime] = useState<number>(0);
+
+  const [streak, setStreak] = useState<number>(0);
 
   useEffect(() => {
     const additionalTilePairs: Tile[] = [
@@ -60,18 +67,26 @@ export default function Play() {
     const lost: boolean = blackTiles !== whiteTiles;
 
     if (lost) {
+      setEndTime(Date.now());
       setHasLost(true);
       setIsOver(true);
+      setStreak(0);
       return;
     }
 
     setCurrentConfig(JSON.parse(JSON.stringify(nextConfig)));
     setSourceTile("");
-    setIsOver(!nextConfig.filter((tile) => tile.color !== WHITE && tile.color !== BLACK).length);
-  }, [nextConfig]);
+
+    const isOver = hasStarted && !nextConfig.filter((tile) => tile.color !== WHITE && tile.color !== BLACK).length;
+    if (isOver) {
+      setEndTime(Date.now());
+      setIsOver(true);
+      setStreak((s) => s + 1);
+    }
+  }, [hasStarted, nextConfig]);
 
   const selectColor = (id: string): void => {
-    if (isOver) {
+    if (isOver || !hasStarted) {
       return;
     }
 
@@ -146,20 +161,25 @@ export default function Play() {
 
     setCurrentConfig(shuffledTiles);
     setNextConfig(shuffledTiles);
+    setHasStarted(true);
+    setStartTime(Date.now());
   };
 
   return (
-    <div className="xs:pb-20 flex flex-1 flex-col items-center justify-center px-5 pb-32 sm:px-10">
-      <div className={cn("mb-8 text-2xl sm:mb-10 sm:text-5xl", isOver ? "text-black" : "text-transparent")}>
-        You {hasLost ? <span className="text-[#9F0003]"> lost...</span> : <span> won!</span>}
-      </div>
-
+    <div className="xs:pb-20 flex flex-1 flex-col items-center justify-center px-5 pb-32 pt-20 sm:px-10">
       <div
         className={cn(
-          "flex flex-wrap justify-center gap-4",
+          "relative flex flex-wrap justify-center gap-4",
           currentConfig.length === 6 ? "max-w-80 sm:max-w-96" : "max-w-[24rem] sm:max-w-[32rem]",
         )}
       >
+        <div className={cn("absolute -top-10 left-4 text-xl", hasLost ? "text-[#BA2D0B]" : "text-black")}>
+          Streak: {streak}
+        </div>
+        <StopWatch
+          className={cn("absolute -top-10 right-3 text-xl text-black", isOver && !hasLost ? "block" : "hidden")}
+          value={endTime - startTime}
+        />
         {currentConfig.map((tile) => (
           <div
             key={tile.id}
@@ -168,7 +188,7 @@ export default function Play() {
               sourceTile === tile.id ? "border-2 border-white outline outline-2 outline-black" : "",
               targetTile === tile.id && hasLost ? "border-4 border-white outline outline-4 outline-[#BA2D0B]" : "",
               lastMatch === tile.id && hasLost ? "border-4 border-white outline outline-4 outline-[#73BA9B]" : "",
-              isOver ? "cursor-default" : "cursor-pointer",
+              isOver || !hasStarted ? "cursor-default" : "cursor-pointer",
               [WHITE, "#FFF"].includes(tile.color) ? "border border-black" : "",
             )}
             onClick={() => selectColor(tile.id)}
