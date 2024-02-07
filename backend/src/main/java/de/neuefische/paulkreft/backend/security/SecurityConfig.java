@@ -1,6 +1,5 @@
 package de.neuefische.paulkreft.backend.security;
 
-import de.neuefische.paulkreft.backend.exception.OAuth2LoginException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +10,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
@@ -45,7 +45,7 @@ public class SecurityConfig {
                             c.defaultSuccessUrl("http://localhost:5173", true);
                         }
                     } catch (Exception e) {
-                        throw new OAuth2LoginException(e.getMessage());
+                        throw new OAuth2AuthenticationException(e.getMessage());
                     }
                 })
                 .exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)));

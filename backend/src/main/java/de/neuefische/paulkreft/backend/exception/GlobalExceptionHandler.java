@@ -3,6 +3,7 @@ package de.neuefische.paulkreft.backend.exception;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -36,9 +37,9 @@ public class GlobalExceptionHandler {
         return exception.getMessage();
     }
 
-    @ExceptionHandler({OAuth2LoginException.class})
+    @ExceptionHandler({OAuth2AuthenticationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleException(OAuth2LoginException exception) {
+    public String handleException(OAuth2AuthenticationException exception) {
         return exception.getMessage();
     }
 
