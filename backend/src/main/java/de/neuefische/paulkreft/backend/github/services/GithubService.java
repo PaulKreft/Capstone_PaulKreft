@@ -1,5 +1,6 @@
 package de.neuefische.paulkreft.backend.github.services;
 
+import de.neuefische.paulkreft.backend.exception.GithubEmailNotFoundException;
 import de.neuefische.paulkreft.backend.github.models.GithubEmailResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,7 @@ public class GithubService {
                 .body(GithubEmailResponse[].class);
 
         if(response == null || response.length == 0) {
-            throw new RuntimeException();
+            throw new GithubEmailNotFoundException("Could not retrieve GitHub email information!");
         }
 
         return response[0].email();

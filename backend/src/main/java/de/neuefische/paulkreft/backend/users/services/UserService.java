@@ -1,5 +1,6 @@
 package de.neuefische.paulkreft.backend.users.services;
 
+import de.neuefische.paulkreft.backend.exception.GithubEmailNotFoundException;
 import de.neuefische.paulkreft.backend.github.services.GithubService;
 import de.neuefische.paulkreft.backend.services.IdService;
 import de.neuefische.paulkreft.backend.services.TimeService;
@@ -62,7 +63,7 @@ public class UserService {
         String email = githubService.getUserEmail(request, auth);
 
         if (email == null) {
-            throw new RuntimeException();
+            throw new GithubEmailNotFoundException("Could not get GitHub email!");
         }
 
         boolean isReturningUser = usersRepo.existsUserByEmail(email);

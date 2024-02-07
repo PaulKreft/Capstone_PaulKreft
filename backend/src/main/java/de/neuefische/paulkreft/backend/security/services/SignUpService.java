@@ -1,5 +1,6 @@
 package de.neuefische.paulkreft.backend.security.services;
 
+import de.neuefische.paulkreft.backend.exception.EmailAlreadyRegisteredException;
 import de.neuefische.paulkreft.backend.security.models.SignUpRequest;
 import de.neuefische.paulkreft.backend.users.models.UserGet;
 import de.neuefische.paulkreft.backend.users.services.UserService;
@@ -19,7 +20,7 @@ import java.util.regex.Pattern;
 public class SignUpService {
     private final UserService userService;
 
-    public UserGet signUpWithEmail(SignUpRequest request) {
+    public UserGet signUpWithEmail(SignUpRequest request) throws EmailAlreadyRegisteredException {
         String email = request.email();
         String password = request.password();
 
@@ -27,11 +28,11 @@ public class SignUpService {
         boolean isPasswordValid = validatePassword(password);
 
         if (!(isEmailValid && isPasswordValid)) {
-            return null;
+            throw new IllegalArgumentException("Email or password invalid!");
         }
 
         if (userService.existsByEmail(email)) {
-            return null;
+            throw new EmailAlreadyRegisteredException("Email already taken!");
         }
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
