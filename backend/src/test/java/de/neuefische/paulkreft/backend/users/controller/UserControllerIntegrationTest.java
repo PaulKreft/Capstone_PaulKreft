@@ -4,7 +4,7 @@ import de.neuefische.paulkreft.backend.github.services.GithubService;
 import de.neuefische.paulkreft.backend.services.IdService;
 import de.neuefische.paulkreft.backend.services.TimeService;
 import de.neuefische.paulkreft.backend.users.models.User;
-import de.neuefische.paulkreft.backend.users.repositories.UsersRepo;
+import de.neuefische.paulkreft.backend.users.repository.UsersRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

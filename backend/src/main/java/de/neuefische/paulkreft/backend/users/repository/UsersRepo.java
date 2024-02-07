@@ -1,4 +1,4 @@
-package de.neuefische.paulkreft.backend.users.repositories;
+package de.neuefische.paulkreft.backend.users.repository;
 
 import de.neuefische.paulkreft.backend.users.models.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
