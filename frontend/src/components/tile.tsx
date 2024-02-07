@@ -18,10 +18,10 @@ export const Tile: React.FC<TileProps> = ({ color, isClickable, isSelected, isWr
         isSelected ? "border-2 border-white outline outline-2 outline-black" : "",
         isWrong ? "border-4 border-white outline outline-4 outline-[#BA2D0B]" : "",
         isCorrect ? "border-4 border-white outline outline-4 outline-[#73BA9B]" : "",
-        isClickable ? "cursor-default" : "cursor-pointer",
+        isClickable ? "cursor-pointer" : "cursor-default",
         ["#fff", "#FFFFFF", "#ffffff", "#FFF"].includes(color) ? "border border-black" : "",
       )}
-      onClick={onClick}
+      onClick={isClickable ? onClick : () => {}}
       style={{ backgroundColor: color }}
     />
   );
