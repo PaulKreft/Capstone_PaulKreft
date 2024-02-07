@@ -43,7 +43,7 @@ function App() {
       <Header isLoggedIn={!!user} logout={logout} />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/play" element={<Play userId={user?.id}/>} />
+        <Route path="/play" element={<Play userId={user?.id} />} />
         <Route path="/login" element={<Login />} />
         <Route path="/login/email" element={<EmailLogin login={login} />} />
         <Route path="/signup" element={<SignUp />} />
