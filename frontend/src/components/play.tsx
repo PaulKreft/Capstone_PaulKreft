@@ -3,6 +3,8 @@ import { addHexColors, getRandomHexColor, subtractHexColors } from "../lib/hexUt
 import { shuffleArray } from "../lib/shuffleArray.tsx";
 import { cn } from "../lib/utils.ts";
 import { StopWatch } from "./stop-watch.tsx";
+import { Button } from "./Button.tsx";
+import { Tile } from "./Tile.tsx";
 
 const WHITE = "#ffffff";
 const BLACK = "#000000";
