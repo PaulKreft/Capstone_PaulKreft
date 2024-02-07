@@ -1,5 +1,6 @@
 package de.neuefische.paulkreft.backend.security;
 
+import de.neuefische.paulkreft.backend.exception.OAuth2LoginException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +29,10 @@ public class SecurityConfig {
                         .anyRequest().permitAll()
                 )
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
-                .httpBasic(login -> login.init(http))
+                .httpBasic(c -> {
+                    c.authenticationEntryPoint((request, response, authException) -> response.sendError(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase()));
+                    c.init(http);
+                })
                 .logout(l -> l.logoutUrl("/api/logout")
                         .logoutSuccessHandler(((request, response, authentication) -> response.setStatus(200)))
                 )
@@ -41,7 +45,7 @@ public class SecurityConfig {
                             c.defaultSuccessUrl("http://localhost:5173", true);
                         }
                     } catch (Exception e) {
-                        throw new RuntimeException(e);
+                        throw new OAuth2LoginException(e.getMessage());
                     }
                 })
                 .exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)));
