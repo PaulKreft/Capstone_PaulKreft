@@ -17,16 +17,14 @@ import static org.mockito.Mockito.*;
 
 class GameServiceTest {
 
-    private GameRepo gameRepo;
+    private final GameRepo gameRepo = mock(GameRepo.class);
+    private final IdService idService = mock(IdService.class);
+    private final TimeService timeService = mock(TimeService.class);
+
     private GameService gameService;
-    private IdService idService;
-    private TimeService timeService;
 
     @BeforeEach
     void setUp() {
-        gameRepo = mock(GameRepo.class);
-        idService = mock(IdService.class);
-        timeService = mock(TimeService.class);
         gameService = new GameService(gameRepo, idService, timeService);
     }
 
