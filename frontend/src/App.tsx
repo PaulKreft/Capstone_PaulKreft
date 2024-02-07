@@ -1,5 +1,5 @@
 import "./App.css";
-import Play from "./components/play.tsx";
+import { Play } from "./components/play.tsx";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Home from "./components/home.tsx";
 import Login from "./components/login.tsx";
@@ -43,7 +43,7 @@ function App() {
       <Header isLoggedIn={!!user} logout={logout} />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/play" element={<Play />} />
+        <Route path="/play" element={<Play userId={user?.id}/>} />
         <Route path="/login" element={<Login />} />
         <Route path="/login/email" element={<EmailLogin login={login} />} />
         <Route path="/signup" element={<SignUp />} />
