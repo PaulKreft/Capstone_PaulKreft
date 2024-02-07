@@ -119,4 +119,26 @@ class UserControllerIntegrationTest {
         Mockito.verify(githubService, Mockito.times(1)).getUserEmail(Mockito.any(),Mockito.any());
         verifyNoMoreInteractions(idService, timeService, githubService);
     }
+
+    @Test
+    void testGetUser_whenGithubEmailNotFound_throwException() throws Exception {
+        usersRepo.save(testUser);
+
+        // Given
+        Instant now = Instant.parse("2016-06-09T00:00:00Z");
+        when(timeService.getNow()).thenReturn(now);
+        when(idService.generateUUID()).thenReturn("123");
+        when(githubService.getUserEmail(Mockito.any(),Mockito.any())).thenReturn(null);
+
+        // When
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user")
+                        .with(oidcLogin().userInfoToken(token -> token.claim("login", "Paul"))))
+                // Then
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(""));
+
+
+        Mockito.verify(githubService, Mockito.times(1)).getUserEmail(Mockito.any(),Mockito.any());
+        verifyNoMoreInteractions(timeService, githubService);
+    }
 }
