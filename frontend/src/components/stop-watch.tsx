@@ -3,13 +3,17 @@ import React, { useEffect, useState } from "react";
 
 type StopWatchProps = {
   className: string;
-  value: number;
+  value: number | null;
 };
 
 export const StopWatch: React.FC<StopWatchProps> = ({ className, value }) => {
   const [displayTime, setDisplayTime] = useState<string>("00:00:00");
 
   useEffect(() => {
+    if (!value) {
+      setDisplayTime("99:99:99");
+      return;
+    }
     const minutes: number = Math.floor(value / 60000);
     const seconds: number = (value % 60000) / 1000;
     const centiseconds: number = Math.floor((value % 1000) / 10);
