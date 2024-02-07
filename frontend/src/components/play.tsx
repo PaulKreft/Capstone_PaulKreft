@@ -181,19 +181,15 @@ export default function Play() {
           value={endTime - startTime}
         />
         {currentConfig.map((tile) => (
-          <div
+          <Tile
             key={tile.id}
-            className={cn(
-              "h-20 w-20 rounded-xl text-blue-600 sm:h-28 sm:w-28",
-              sourceTile === tile.id ? "border-2 border-white outline outline-2 outline-black" : "",
-              targetTile === tile.id && hasLost ? "border-4 border-white outline outline-4 outline-[#BA2D0B]" : "",
-              lastMatch === tile.id && hasLost ? "border-4 border-white outline outline-4 outline-[#73BA9B]" : "",
-              isOver || !hasStarted ? "cursor-default" : "cursor-pointer",
-              [WHITE, "#FFF"].includes(tile.color) ? "border border-black" : "",
-            )}
             onClick={() => selectColor(tile.id)}
-            style={{ backgroundColor: tile.color }}
-          ></div>
+            color={tile.color}
+            isSelected={sourceTile === tile.id}
+            isWrong={targetTile === tile.id && hasLost}
+            isCorrect={lastMatch === tile.id && hasLost}
+            isClickable={isOver || !hasStarted}
+          />
         ))}
       </div>
 
@@ -201,7 +197,7 @@ export default function Play() {
         New Puzzle
       </button>
 
-      <div className="xs:gap-5 mt-10 flex gap-3">
+      <div className="mt-10 flex gap-3 xs:gap-5">
         <Button color="#73BA9B" onClick={() => setDifficulty(EASY)} isActive={difficulty === 1}>
           Easy
         </Button>
