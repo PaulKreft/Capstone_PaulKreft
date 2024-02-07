@@ -202,33 +202,15 @@ export default function Play() {
       </button>
 
       <div className="xs:gap-5 mt-10 flex gap-3">
-        <button
-          className={cn(
-            "xs:px-5 xs:py-2 xs:text-xl rounded-2xl px-3 py-1 text-lg",
-            difficulty === 1 ? "bg-[#73BA9B] text-white" : "border-2 border-[#73BA9B] text-[#73BA9B]",
-          )}
-          onClick={() => setDifficulty(EASY)}
-        >
+        <Button color="#73BA9B" onClick={() => setDifficulty(EASY)} isActive={difficulty === 1}>
           Easy
-        </button>
-        <button
-          className={cn(
-            "xs:px-5 xs:py-2 xs:text-xl rounded-2xl px-3 py-1 text-lg",
-            difficulty === 2 ? "bg-[#6D98BA] text-white" : "border-2 border-[#6D98BA] text-[#6D98BA]",
-          )}
-          onClick={() => setDifficulty(MEDIUM)}
-        >
+        </Button>
+        <Button color="#6D98BA" onClick={() => setDifficulty(MEDIUM)} isActive={difficulty === 2}>
           Medium
-        </button>
-        <button
-          className={cn(
-            "xs:px-5 xs:py-2 xs:text-xl rounded-2xl px-3 py-1 text-lg",
-            difficulty === 4 ? "bg-[#BA2D0B] text-white" : "border-2 border-[#BA2D0B] text-[#BA2D0B]",
-          )}
-          onClick={() => setDifficulty(HARD)}
-        >
+        </Button>
+        <Button color="#BA2D0B" onClick={() => setDifficulty(HARD)} isActive={difficulty === 4}>
           Hard
-        </button>
+        </Button>
       </div>
     </div>
   );
