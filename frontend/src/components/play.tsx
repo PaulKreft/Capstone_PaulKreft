@@ -34,8 +34,8 @@ export default function Play() {
   const [currentConfig, setCurrentConfig] = useState<Tile[]>([]);
   const [nextConfig, setNextConfig] = useState<Tile[]>([]);
 
-  const [startTime, setStartTime] = useState<number>(0);
-  const [endTime, setEndTime] = useState<number>(0);
+  const [startTime, setStartTime] = useState<number>();
+  const [endTime, setEndTime] = useState<number>();
 
   const [streak, setStreak] = useState<number>(0);
 
@@ -168,7 +168,7 @@ export default function Play() {
   };
 
   return (
-    <div className="xs:pb-20 flex flex-1 flex-col items-center justify-center px-5 pb-32 pt-20 sm:px-10">
+    <div className="flex flex-1 flex-col items-center justify-center px-5 pb-32 pt-20 xs:pb-20 sm:px-10">
       <div
         className={cn(
           "relative flex flex-wrap justify-center gap-4",
@@ -180,7 +180,7 @@ export default function Play() {
         </div>
         <StopWatch
           className={cn("absolute -top-10 right-3 text-xl text-black", isOver && !hasLost ? "block" : "hidden")}
-          value={endTime - startTime}
+          value={endTime && startTime ? endTime - startTime : 5999999}
         />
         {currentConfig.map((tile) => (
           <Tile
