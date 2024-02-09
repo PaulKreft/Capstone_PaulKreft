@@ -14,7 +14,6 @@ export const Profile: React.FC<PlayProps> = ({ user }) => {
     if (!user) {
       return;
     }
-    axios;
     axios.get(`api/user/${user.id}/statistics`).then((response) => setStatistics(response.data));
   }, [user]);
 
