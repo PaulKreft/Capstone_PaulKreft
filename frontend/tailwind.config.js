@@ -10,7 +10,7 @@ export default {
     },
     extend: {
       cursor: {
-        magic: "url(./src/assets/wand.cur), default",
+        magic: "url(wand.cur), default",
       },
     },
   },

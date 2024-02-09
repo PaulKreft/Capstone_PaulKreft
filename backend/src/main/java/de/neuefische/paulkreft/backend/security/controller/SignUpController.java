@@ -1,5 +1,6 @@
 package de.neuefische.paulkreft.backend.security.controller;
 
+import de.neuefische.paulkreft.backend.exception.EmailAlreadyRegisteredException;
 import de.neuefische.paulkreft.backend.security.models.SignUpRequest;
 import de.neuefische.paulkreft.backend.security.services.SignUpService;
 import de.neuefische.paulkreft.backend.users.models.UserGet;
@@ -18,7 +19,7 @@ public class SignUpController {
     }
 
     @PostMapping("/email")
-    public UserGet signUpWithEmail(@RequestBody SignUpRequest request) {
+    public UserGet signUpWithEmail(@RequestBody SignUpRequest request) throws EmailAlreadyRegisteredException, IllegalArgumentException {
         return signUpService.signUpWithEmail(request);
     }
 }

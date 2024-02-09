@@ -26,9 +26,12 @@ export const EmailSignUp: React.FC<EmailSignUpProps> = ({ login }) => {
   const signUpWithEmail = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    axios.post("/api/signup/email", { email, password }).then(() => {
-      login(email, password);
-    });
+    axios
+      .post("/api/signup/email", { email, password })
+      .then(() => {
+        login(email, password);
+      })
+      .catch((e) => console.log(e));
   };
 
   return (

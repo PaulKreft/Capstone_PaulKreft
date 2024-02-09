@@ -123,4 +123,62 @@ class UserServiceTest {
         verify(githubService, times(1)).getUserEmail(Mockito.any(), Mockito.any());
         verifyNoMoreInteractions(idService, usersRepo, timeService, user, githubService);
     }
+
+    @Test
+    void createUserShouldReturnCreatedUser() {
+        // Given
+        Instant now = Instant.parse("2016-06-09T00:00:00.00Z");
+        when(timeService.getNow()).thenReturn(now);
+        when(idService.generateUUID()).thenReturn(testUser.id());
+        when(usersRepo.save(Mockito.any(User.class))).thenReturn(testUser);
+
+        String name = testUser.name();
+        String email = testUser.email();
+        String password = testUser.password();
+
+        // When
+        UserGet result = userService.createUser(name, email, password);
+
+        // Then
+        assertNotNull(result);
+        assertEquals(testUser.id(), result.id());
+        assertEquals(testUser.email(), result.email());
+        assertEquals(testUser.name(), result.name());
+        assertEquals(testUser.lastActive(), result.lastActive());
+        assertEquals(testUser.createdAt(), result.createdAt());
+        verify(usersRepo, times(1)).save(Mockito.any(User.class));
+        verify(timeService, times(1)).getNow();
+        verify(idService, times(1)).generateUUID();
+        verifyNoMoreInteractions(idService, usersRepo, timeService, githubService);
+    }
+
+    @Test
+    void existsByEmailTest_whenCheckExistingUser_returnTrue() {
+        // Given
+        when(usersRepo.existsUserByEmail(testUser.email())).thenReturn(true);
+
+        // When
+        boolean result = userService.existsByEmail(testUser.email());
+
+        // Then
+        assertTrue(result);
+        verify(usersRepo, times(1)).existsUserByEmail(testUser.email());
+        verifyNoMoreInteractions(idService, usersRepo, timeService, githubService);
+    }
+
+
+    @Test
+    void existsByEmailTest_whenCheckNonExistingUser_returnFalse() {
+        // Given
+        String nonExistingEmail = "not@exists.com";
+        when(usersRepo.existsUserByEmail(nonExistingEmail)).thenReturn(false);
+
+        // When
+        boolean result = userService.existsByEmail(nonExistingEmail);
+
+        // Then
+        assertFalse(result);
+        verify(usersRepo, times(1)).existsUserByEmail(nonExistingEmail);
+        verifyNoMoreInteractions(idService, usersRepo, timeService, githubService);
+    }
 }

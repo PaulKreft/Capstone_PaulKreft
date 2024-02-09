@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -59,6 +61,7 @@ class UserControllerIntegrationTest {
                 .andExpect(content().string(""));
     }
 
+    @DirtiesContext
     @Test
     void testGetUser_whenReturningUserIsLoggedIn_returnReturningUser() throws Exception {
         usersRepo.save(testUser);
@@ -118,5 +121,72 @@ class UserControllerIntegrationTest {
         Mockito.verify(timeService, Mockito.times(1)).getNow();
         Mockito.verify(githubService, Mockito.times(1)).getUserEmail(Mockito.any(),Mockito.any());
         verifyNoMoreInteractions(idService, timeService, githubService);
+    }
+
+    @DirtiesContext
+    @Test
+    void testGetUser_whenGithubEmailNotFound_throwGithubEmailNotFoundException() throws Exception {
+        usersRepo.save(testUser);
+
+        // Given
+        Instant now = Instant.parse("2016-06-09T00:00:00Z");
+        when(timeService.getNow()).thenReturn(now);
+        when(idService.generateUUID()).thenReturn("123");
+        when(githubService.getUserEmail(Mockito.any(),Mockito.any())).thenReturn(null);
+
+        // When
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user")
+                        .with(oidcLogin().userInfoToken(token -> token.claim("login", "Paul"))))
+                // Then
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(""));
+
+
+        Mockito.verify(githubService, Mockito.times(1)).getUserEmail(Mockito.any(),Mockito.any());
+        verifyNoMoreInteractions(timeService, githubService);
+    }
+
+    @DirtiesContext
+    @Test
+    @WithMockUser(username = "user1", password = "pwd", roles = "USER")
+    void testGetUser_whenEmailNotInDB_returnNull() throws Exception {
+        // Given & When
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user"))
+
+                // Then
+                .andExpect(status().isOk())
+                .andExpect(content().string(""));
+
+        verifyNoMoreInteractions(timeService, githubService);
+    }
+
+    @DirtiesContext
+    @Test
+    @WithMockUser(username = "testemail@at.de", password = "pwd", roles = "USER")
+    void testGetUser_whenReturningEmailUserIsLoggedIn_returnReturningUser() throws Exception {
+        usersRepo.save(testUser);
+
+        // Given
+        Instant now = Instant.parse("2016-06-09T00:00:00Z");
+        when(timeService.getNow()).thenReturn(now);
+        when(githubService.getUserEmail(Mockito.any(),Mockito.any())).thenReturn("testemail@at.de");
+
+        // When
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user"))
+                // Then
+                .andExpect(status().isOk())
+                .andExpect(content().json(
+                        """
+                                {"id":"123",
+                                "name":"Paul",
+                                "email":"testemail@at.de",
+                                "lastActive":"2016-06-09T00:00:00Z",
+                                "createdAt":"2016-06-09T00:00:00Z"
+                                }
+                                """));
+
+
+        Mockito.verify(timeService, Mockito.times(1)).getNow();
+        verifyNoMoreInteractions(timeService, githubService);
     }
 }
