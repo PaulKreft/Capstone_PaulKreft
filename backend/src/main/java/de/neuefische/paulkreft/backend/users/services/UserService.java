@@ -109,7 +109,6 @@ public class UserService {
         Map<String, Double> mediumStreaks = getStreaks(mediumGames);
         Map<String, Double> hardStreaks = getStreaks(hardGames);
 
-
         List<Double> easyDurations = easyGames.stream().map(game -> Double.valueOf(game.duration())).filter(d -> d != 0).toList();
         List<Double> mediumDurations = mediumGames.stream().map(game -> Double.valueOf(game.duration())).filter(d -> d != 0).toList();
         List<Double> hardDurations = hardGames.stream().map(game -> Double.valueOf(game.duration())).filter(d -> d != 0).toList();
@@ -156,13 +155,24 @@ public class UserService {
                 winningStreaks.add(winningStreak);
                 winningStreak = 0;
             }
+        }
 
+        if (winningStreak != 0) {
+            winningStreaks.add(winningStreak);
+        }
+
+        if (losingStreak != 0) {
+            losingStreaks.add(losingStreak);
         }
 
 
         streaks.put("win", !winningStreaks.isEmpty() ? Collections.max(winningStreaks) : null);
-        streaks.put("lose", !losingStreaks.isEmpty() ? Collections.max(winningStreaks) : null);
+        streaks.put("lose", !losingStreaks.isEmpty() ? Collections.max(losingStreaks) : null);
 
         return streaks;
     }
 }
+
+
+
+
