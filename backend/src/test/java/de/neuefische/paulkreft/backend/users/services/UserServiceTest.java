@@ -192,7 +192,7 @@ class UserServiceTest {
 
 
     @Test
-    void getStatisticsTest_whenAllStatisticsCalculatable_returnCorrectValues() {
+    void getStatisticsTest_whenAllStatisticsCalculable_returnCorrectValues() {
         // Given
         Game game1 = new Game("7b6cc6c8-b98f-428a-bee5-2e4e804901cd", "f39e6614-8132-4f8e-bd98-6fdf50fed3b0", "", 1, false, 0, List.of("#f1da9b", "#bb463d", "#0e2564", "#237dc9", "#44b9c2", "#dc8236"), Instant.parse("2024-02-09T15:18:59.426Z"));
         Game game2 = new Game("51e74bcd-d341-4ac9-8311-2513a86e9261", "f39e6614-8132-4f8e-bd98-6fdf50fed3b0", "", 1, true, 8515, List.of("#05a928", "#adbb2f", "#0c58b8", "#5244d0", "#f3a747", "#fa56d7"), Instant.parse("2024-02-09T15:19:09.388Z"));
