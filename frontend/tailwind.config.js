@@ -12,6 +12,11 @@ export default {
       cursor: {
         magic: "url(wand.cur), default",
       },
+      colors: {
+        green: "#73BA9B",
+        blue: "#6D98BA",
+        red: "#BA2D0B",
+      },
     },
   },
   plugins: [],

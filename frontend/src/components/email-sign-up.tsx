@@ -36,14 +36,14 @@ export const EmailSignUp: React.FC<EmailSignUpProps> = ({ login }) => {
 
   return (
     <div className="mx-auto flex flex-1 flex-col items-center justify-center pb-20">
-      <div className="flex flex-col items-center  rounded-2xl border-2 border-black px-20 pb-24 pt-12">
+      <div className="flex flex-col items-center rounded-2xl border-2 border-black px-20 pb-24 pt-12">
         <h2 className="pb-16 text-4xl">Sign up with Email</h2>
         <form className="" onSubmit={signUpWithEmail} noValidate>
           <div className="mb-1 pl-1 text-lg">Email</div>
           <input
             className={cn(
               "flex h-max items-center rounded-lg border-2 border-black px-5 py-4 text-lg font-light",
-              email ? (isEmailValid ? "focus:border-[#73BA9B]" : "border-[#BA2D0B]") : "focus:border-black",
+              email ? (isEmailValid ? "focus:border-green" : "border-red") : "focus:border-black",
             )}
             type="email"
             placeholder="example@domain.com"
@@ -52,7 +52,7 @@ export const EmailSignUp: React.FC<EmailSignUpProps> = ({ login }) => {
             required
           />
           <div
-            className={cn("mt-1 text-center text-sm", email && !isEmailValid ? "text-[#BA2D0B]" : "text-transparent")}
+            className={cn("mt-1 text-center text-sm", email && !isEmailValid ? "text-red" : "text-transparent")}
           >
             Invalid email format
           </div>
@@ -61,7 +61,7 @@ export const EmailSignUp: React.FC<EmailSignUpProps> = ({ login }) => {
           <input
             className={cn(
               "flex h-max items-center rounded-lg border-2 border-black px-5 py-4 text-lg font-light",
-              password ? (isPasswordValid ? "focus:border-[#73BA9B]" : "border-[#BA2D0B]") : "focus:border-black",
+              password ? (isPasswordValid ? "focus:border-green" : "border-red") : "focus:border-black",
             )}
             type="password"
             placeholder="••••••••"
@@ -72,7 +72,7 @@ export const EmailSignUp: React.FC<EmailSignUpProps> = ({ login }) => {
           <div
             className={cn(
               "mt-1 text-center text-sm",
-              password && !isPasswordValid ? "text-[#BA2D0B]" : "text-transparent",
+              password && !isPasswordValid ? "text-red" : "text-transparent",
             )}
           >
             Invalid password format

@@ -37,7 +37,7 @@ export const EmailLogin: React.FC<EmailLoginProps> = ({ login }) => {
           <input
             className={cn(
               "flex h-max items-center rounded-lg border-2 border-black px-5 py-4 text-lg font-light",
-              email ? (isEmailValid ? "focus:border-[#73BA9B]" : "border-[#BA2D0B]") : "focus:border-black",
+              email ? (isEmailValid ? "focus:border-green" : "border-red") : "focus:border-black",
             )}
             type="email"
             placeholder="example@domain.com"
@@ -46,7 +46,7 @@ export const EmailLogin: React.FC<EmailLoginProps> = ({ login }) => {
             required
           />
           <div
-            className={cn("mt-1 text-center text-sm", email && !isEmailValid ? "text-[#BA2D0B]" : "text-transparent")}
+            className={cn("mt-1 text-center text-sm", email && !isEmailValid ? "text-red" : "text-transparent")}
           >
             Invalid email format
           </div>
@@ -55,7 +55,7 @@ export const EmailLogin: React.FC<EmailLoginProps> = ({ login }) => {
           <input
             className={cn(
               "flex h-max items-center rounded-lg border-2 border-black px-5 py-4 text-lg font-light",
-              password ? (isPasswordValid ? "focus:border-[#73BA9B]" : "border-[#BA2D0B]") : "focus:border-black",
+              password ? (isPasswordValid ? "focus:border-green" : "border-red") : "focus:border-black",
             )}
             type="password"
             placeholder="••••••••"
@@ -66,7 +66,7 @@ export const EmailLogin: React.FC<EmailLoginProps> = ({ login }) => {
           <div
             className={cn(
               "mt-1 text-center text-sm",
-              password && !isPasswordValid ? "text-[#BA2D0B]" : "text-transparent",
+              password && !isPasswordValid ? "text-red" : "text-transparent",
             )}
           >
             Invalid password format
