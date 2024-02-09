@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-class HexHexUserDetailsServiceTest {
+class CustomUserDetailsServiceTest {
 
     @Test
     void loadUserByUsernameTest_whenUserFound_returnUserDetails() {
@@ -26,7 +26,7 @@ class HexHexUserDetailsServiceTest {
         User user = new User("1", "", email, password, Instant.now(), Instant.now());
         when(usersRepo.findUserByEmail(email)).thenReturn(user);
 
-        HexHexUserDetailsService userDetailsService = new HexHexUserDetailsService(usersRepo);
+        CustomUserDetailsService userDetailsService = new CustomUserDetailsService(usersRepo);
 
         // When
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
@@ -44,7 +44,7 @@ class HexHexUserDetailsServiceTest {
 
         when(usersRepo.findUserByEmail("testemail@as.de")).thenReturn(null);
 
-        HexHexUserDetailsService userDetailsService = new HexHexUserDetailsService(usersRepo);
+        CustomUserDetailsService userDetailsService = new CustomUserDetailsService(usersRepo);
 
         // When
         Executable executable = () -> userDetailsService.loadUserByUsername(email);
