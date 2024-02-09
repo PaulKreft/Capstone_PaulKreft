@@ -1,5 +1,6 @@
 package de.neuefische.paulkreft.backend.users.services;
 
+import de.neuefische.paulkreft.backend.game.repository.GameRepo;
 import de.neuefische.paulkreft.backend.github.services.GithubService;
 import de.neuefische.paulkreft.backend.services.IdService;
 import de.neuefische.paulkreft.backend.services.TimeService;
@@ -30,15 +31,18 @@ class UserServiceTest {
 
     private GithubService githubService;
 
+    private GameRepo gameRepo;
+
     private User testUser;
 
     @BeforeEach
     public void instantiateTestUser() {
         usersRepo = Mockito.mock(UsersRepo.class);
+        gameRepo = Mockito.mock(GameRepo.class);
         idService = Mockito.mock(IdService.class);
         timeService = Mockito.mock(TimeService.class);
         githubService = Mockito.mock(GithubService.class);
-        userService = new UserService(usersRepo, idService, timeService, githubService);
+        userService = new UserService(usersRepo, gameRepo, idService, timeService, githubService);
 
         testUser = new User("Some UUID", "Some Name", "someemail@soem.de", "", Instant.now(), Instant.now());
     }
