@@ -23,7 +23,9 @@ export const Header: React.FC<HeaderProps> = ({ isLoggedIn, logout }) => {
     { name: "Play", href: "/play" },
   ];
 
-  const loggedInMenuItems: MenuItem[] = [];
+  const loggedInMenuItems: MenuItem[] = [
+    { name: "Profile", href: "/profile" },
+  ];
 
   if (isLoggedIn) {
     menuItems.push(...loggedInMenuItems);
