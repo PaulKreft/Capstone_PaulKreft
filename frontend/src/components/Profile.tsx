@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { User } from "../types/User.ts";
 import axios from "axios";
 import { Statistics } from "../types/Statistics.ts";
+import {ProfileUserInfo} from "./ProfileUserInfo.tsx";
 
 type PlayProps = {
   user: User;
@@ -17,7 +18,7 @@ export const Profile: React.FC<PlayProps> = ({ user }) => {
     axios.get(`api/user/${user.id}/statistics`).then((response) => setStatistics(response.data));
   }, [user]);
 
-  if (user == null || !statistics) {
+  if (!user || !statistics) {
     return <div>loading</div>;
   }
 
@@ -25,6 +26,9 @@ export const Profile: React.FC<PlayProps> = ({ user }) => {
     <div className="flex h-max flex-1 flex-col items-center px-5 pb-32 pt-20 xs:pb-20 sm:px-10">
       <div className="w-5/6">
         <div className="flex h-min w-full flex-col gap-2 rounded-2xl border-2 border-black px-6 py-4">
+          <h3 className="mb-2 font-bold">User Information</h3>
+          <ProfileUserInfo className="mb-5" user={user}/>
+
           <h3 className="mb-2 font-bold">Statistics</h3>
 
           <div className="flex max-w-96 justify-between">
