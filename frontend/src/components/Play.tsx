@@ -103,13 +103,13 @@ export const Play: React.FC<PlayProps> = ({ userId }) => {
         New Puzzle
       </button>
       <div className="mt-10 flex gap-3 xs:gap-5">
-        <Button color="#73BA9B" onClick={() => setDifficulty(EASY)} isActive={difficulty === 1}>
+        <Button color="#73BA9B" onClick={() => setDifficulty(EASY)} isActive={difficulty === EASY}>
           Easy
         </Button>
-        <Button color="#6D98BA" onClick={() => setDifficulty(MEDIUM)} isActive={difficulty === 2}>
+        <Button color="#6D98BA" onClick={() => setDifficulty(MEDIUM)} isActive={difficulty === MEDIUM}>
           Medium
         </Button>
-        <Button color="#BA2D0B" onClick={() => setDifficulty(HARD)} isActive={difficulty === 4}>
+        <Button color="#BA2D0B" onClick={() => setDifficulty(HARD)} isActive={difficulty === HARD}>
           Hard
         </Button>
       </div>

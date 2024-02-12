@@ -23,6 +23,8 @@ import java.security.Principal;
 import java.time.Instant;
 import java.util.*;
 
+
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -31,6 +33,10 @@ public class UserService {
     private final IdService idService;
     private final TimeService timeService;
     private final GithubService githubService;
+
+    private static final int EASY = 1;
+    private static final int MEDIUM = 2;
+    private static final int HARD = 4;
 
     public UserGet getLoggedInUser(Principal user, HttpServletRequest request) {
         if (user == null) {
@@ -101,9 +107,9 @@ public class UserService {
     public Statistics getStatistics(String id) {
         List<Game> allGames = gameRepo.findAllByUserIdOrderByCreatedAtAsc(id);
 
-        List<Game> easyGames = allGames.stream().filter(game -> game.difficulty() == 1).toList();
-        List<Game> mediumGames = allGames.stream().filter(game -> game.difficulty() == 2).toList();
-        List<Game> hardGames = allGames.stream().filter(game -> game.difficulty() == 4).toList();
+        List<Game> easyGames = allGames.stream().filter(game -> game.difficulty() == EASY).toList();
+        List<Game> mediumGames = allGames.stream().filter(game -> game.difficulty() == MEDIUM).toList();
+        List<Game> hardGames = allGames.stream().filter(game -> game.difficulty() == HARD).toList();
 
         Map<String, Double> easyStreaks = getStreaks(easyGames);
         Map<String, Double> mediumStreaks = getStreaks(mediumGames);
