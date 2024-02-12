@@ -42,7 +42,7 @@ export const Profile: React.FC<PlayProps> = ({ user }) => {
 
   return (
     <div className="flex h-max flex-1 px-5 pb-32 pt-20 xs:pb-20 sm:px-10">
-      <div className="flex h-min w-full flex-col gap-2 rounded-2xl border-2 border-black px-10 py-8">
+      <div className="flex h-min w-full flex-col gap-2 rounded-2xl border border-black px-10 py-8">
         <h3 className="mb-2 text-xl">User Information</h3>
         <ProfileUserInfo className="mb-16 flex flex-col gap-2" user={user} />
 
