@@ -13,6 +13,7 @@ import axios from "axios";
 import Footer from "./components/footer.tsx";
 import { EmailLogin } from "./components/email-login.tsx";
 import { EmailSignUp } from "./components/email-sign-up.tsx";
+import {Profile} from "./components/profile.tsx";
 
 function App() {
   const navigate = useNavigate();
@@ -44,6 +45,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/play" element={<Play userId={user?.id} />} />
+        <Route path="/profile" element={<Profile user={user} />} />
         <Route path="/login" element={<Login />} />
         <Route path="/login/email" element={<EmailLogin login={login} />} />
         <Route path="/signup" element={<SignUp />} />

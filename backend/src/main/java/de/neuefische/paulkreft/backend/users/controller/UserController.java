@@ -1,5 +1,6 @@
 package de.neuefische.paulkreft.backend.users.controller;
 
+import de.neuefische.paulkreft.backend.users.models.Statistics;
 import de.neuefische.paulkreft.backend.users.models.User;
 import de.neuefische.paulkreft.backend.users.models.UserGet;
 import de.neuefische.paulkreft.backend.users.services.UserService;
@@ -23,5 +24,10 @@ public class UserController {
     @PutMapping
     public UserGet updateUser(@RequestBody User user) {
         return userService.updateUser(user);
+    }
+
+    @GetMapping("{id}/statistics")
+    public Statistics getUserStatistics(@PathVariable String id) {
+        return userService.getStatistics(id);
     }
 }

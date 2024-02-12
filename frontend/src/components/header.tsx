@@ -23,7 +23,9 @@ export const Header: React.FC<HeaderProps> = ({ isLoggedIn, logout }) => {
     { name: "Play", href: "/play" },
   ];
 
-  const loggedInMenuItems: MenuItem[] = [];
+  const loggedInMenuItems: MenuItem[] = [
+    { name: "Profile", href: "/profile" },
+  ];
 
   if (isLoggedIn) {
     menuItems.push(...loggedInMenuItems);
@@ -138,7 +140,7 @@ export const Header: React.FC<HeaderProps> = ({ isLoggedIn, logout }) => {
           </div>
         </div>
       </StickyHeader>
-      <div className={cn("fixed bottom-0 left-0 right-0 top-16 bg-white px-6", isMenuClicked || "hidden")}>
+      <div className={cn("fixed bottom-0 left-0 right-0 top-16 bg-white px-6 z-10", isMenuClicked || "hidden")}>
         <UserMenu
           className="mb-5 flex flex-col"
           isLoggedIn={isLoggedIn || false}

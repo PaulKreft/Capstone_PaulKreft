@@ -50,15 +50,14 @@ export const Play: React.FC<PlayProps> = ({ userId }) => {
     }
 
     axios
-      .post("api/games", {
-        userId,
-        type: "",
-        difficulty,
-        isSuccess: hasWon,
-        duration: hasWon && startTime ? now - startTime : null,
-        configuration: colorConfig,
-      })
-      .then((response) => console.log(response));
+        .post("api/games", {
+          userId,
+          type: "",
+          difficulty,
+          isSuccess: hasWon,
+          duration: hasWon && startTime ? now - startTime : null,
+          configuration: colorConfig,
+         }).then(() => {});
   };
 
   const resetClock = (): void => {

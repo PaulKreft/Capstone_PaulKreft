@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface GameRepo extends MongoRepository<Game, String> {
     List<Game> findAllByUserId(String id);
+    List<Game> findAllByUserIdOrderByCreatedAtAsc(String id);
 }
