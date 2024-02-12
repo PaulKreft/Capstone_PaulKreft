@@ -6,6 +6,8 @@ type EmailLoginProps = {
 };
 
 export const EmailLogin: React.FC<EmailLoginProps> = ({ login }) => {
+  const [isSigningUp, setIsSigningUp] = useState<boolean>(false);
+
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
@@ -24,7 +26,7 @@ export const EmailLogin: React.FC<EmailLoginProps> = ({ login }) => {
 
   const loginWithEmail = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
+    setIsSigningUp(true);
     login(email, password);
   };
 
@@ -74,7 +76,7 @@ export const EmailLogin: React.FC<EmailLoginProps> = ({ login }) => {
           <button
             className="mt-4 w-full rounded-lg bg-black px-3 py-2 text-white disabled:bg-black/20"
             type="submit"
-            disabled={!isEmailValid || !isPasswordValid}
+            disabled={!isEmailValid || !isPasswordValid || isSigningUp}
           >
             Log In
           </button>
