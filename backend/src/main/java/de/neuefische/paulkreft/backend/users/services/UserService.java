@@ -159,7 +159,7 @@ public class UserService {
         Map<String, Double> hardStreaks = getStreaks(hardGames);
 
 
-        return new ScoreMap(easyStreaks.getOrDefault("win", null), mediumStreaks.getOrDefault("win", null), hardStreaks.getOrDefault("win", null));
+        return new ScoreMap(easyStreaks.get("win"), mediumStreaks.get("win"), hardStreaks.get("win"));
     }
 
     private ScoreMap getLongestLosingStreaks(List<Game> easyGames, List<Game> mediumGames, List<Game> hardGames) {
@@ -168,7 +168,7 @@ public class UserService {
         Map<String, Double> hardStreaks = getStreaks(hardGames);
 
 
-        return new ScoreMap(easyStreaks.getOrDefault("lose", null), mediumStreaks.getOrDefault("lose", null), hardStreaks.getOrDefault("lose", null));
+        return new ScoreMap(easyStreaks.get("lose"), mediumStreaks.get("lose"), hardStreaks.get("lose"));
     }
 
     private Map<String, Double> getStreaks(List<Game> games) {
@@ -206,8 +206,8 @@ public class UserService {
         }
 
 
-        streaks.put("win", !winningStreaks.isEmpty() ? Collections.max(winningStreaks) : null);
-        streaks.put("lose", !losingStreaks.isEmpty() ? Collections.max(losingStreaks) : null);
+        streaks.put("win", !winningStreaks.isEmpty() ? Collections.max(winningStreaks) : 0.0);
+        streaks.put("lose", !losingStreaks.isEmpty() ? Collections.max(losingStreaks) : 0.0);
 
         return streaks;
     }

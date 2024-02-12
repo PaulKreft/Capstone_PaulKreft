@@ -49,9 +49,9 @@ export const Profile: React.FC<PlayProps> = ({ user }) => {
             <Statistic
               key={statistic.name}
               name={statistic.name}
-              easy={statistic.easy.toString()}
-              medium={statistic.medium.toString()}
-              hard={statistic.hard.toString()}
+              easy={statistic.easy}
+              medium={statistic.medium}
+              hard={statistic.hard}
             />
           ))}
         </div>
