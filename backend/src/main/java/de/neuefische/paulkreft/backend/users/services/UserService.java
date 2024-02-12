@@ -24,7 +24,6 @@ import java.time.Instant;
 import java.util.*;
 
 
-
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -105,16 +104,36 @@ public class UserService {
     }
 
     public Statistics getStatistics(String id) {
-        List<Game> allGames = gameRepo.findAllByUserIdOrderByCreatedAtAsc(id);
+        List<Game> games = gameRepo.findAllByUserIdOrderByCreatedAtAsc(id);
 
-        List<Game> easyGames = allGames.stream().filter(game -> game.difficulty() == EASY).toList();
-        List<Game> mediumGames = allGames.stream().filter(game -> game.difficulty() == MEDIUM).toList();
-        List<Game> hardGames = allGames.stream().filter(game -> game.difficulty() == HARD).toList();
+        List<Game> easyGames = games.stream().filter(game -> game.difficulty() == EASY).toList();
+        List<Game> mediumGames = games.stream().filter(game -> game.difficulty() == MEDIUM).toList();
+        List<Game> hardGames = games.stream().filter(game -> game.difficulty() == HARD).toList();
 
-        Map<String, Double> easyStreaks = getStreaks(easyGames);
-        Map<String, Double> mediumStreaks = getStreaks(mediumGames);
-        Map<String, Double> hardStreaks = getStreaks(hardGames);
+        ScoreMap longestWinningStreaks = getLongestWinningStreaks(easyGames, mediumGames, hardGames);
+        ScoreMap longestLosingStreaks = getLongestLosingStreaks(easyGames, mediumGames, hardGames);
+        ScoreMap totalGames = getTotalGames(easyGames, mediumGames, hardGames);
+        ScoreMap totalGamesWon = getGamesWon(easyGames, mediumGames, hardGames);
+        ScoreMap fastestSolve = getFastestSolves(easyGames, mediumGames, hardGames);
+        ScoreMap averageDuration = getAverageDurations(easyGames, mediumGames, hardGames);
 
+        return new Statistics(longestWinningStreaks, longestLosingStreaks, totalGames, totalGamesWon, fastestSolve, averageDuration);
+    }
+
+
+    private ScoreMap getAverageDurations(List<Game> easyGames, List<Game> mediumGames, List<Game> hardGames) {
+        List<Double> easyDurations = easyGames.stream().map(game -> Double.valueOf(game.duration())).filter(d -> d != 0).toList();
+        List<Double> mediumDurations = mediumGames.stream().map(game -> Double.valueOf(game.duration())).filter(d -> d != 0).toList();
+        List<Double> hardDurations = hardGames.stream().map(game -> Double.valueOf(game.duration())).filter(d -> d != 0).toList();
+
+        Double averageDurationEasy = !easyDurations.isEmpty() ? easyDurations.stream().mapToDouble(v -> v).sum() / easyDurations.size() : null;
+        Double averageDurationMedium = !mediumDurations.isEmpty() ? mediumDurations.stream().mapToDouble(v -> v).sum() : null;
+        Double averageDurationHard = !hardDurations.isEmpty() ? hardDurations.stream().mapToDouble(v -> v).sum() : null;
+
+        return new ScoreMap(averageDurationEasy, averageDurationMedium, averageDurationHard);
+    }
+
+    private ScoreMap getFastestSolves(List<Game> easyGames, List<Game> mediumGames, List<Game> hardGames) {
         List<Double> easyDurations = easyGames.stream().map(game -> Double.valueOf(game.duration())).filter(d -> d != 0).toList();
         List<Double> mediumDurations = mediumGames.stream().map(game -> Double.valueOf(game.duration())).filter(d -> d != 0).toList();
         List<Double> hardDurations = hardGames.stream().map(game -> Double.valueOf(game.duration())).filter(d -> d != 0).toList();
@@ -123,18 +142,33 @@ public class UserService {
         Double fastestSolveMedium = !mediumDurations.isEmpty() ? Collections.min(mediumDurations) : null;
         Double fastestSolveHard = !hardDurations.isEmpty() ? Collections.min(hardDurations) : null;
 
-        Double averageDurationEasy = !easyDurations.isEmpty() ? easyDurations.stream().mapToDouble(v -> v).sum() / easyDurations.size() : null;
-        Double averageDurationMedium = !mediumDurations.isEmpty() ? mediumDurations.stream().mapToDouble(v -> v).sum() : null;
-        Double averageDurationHard = !hardDurations.isEmpty() ? hardDurations.stream().mapToDouble(v -> v).sum() : null;
+        return new ScoreMap(fastestSolveEasy, fastestSolveMedium, fastestSolveHard);
+    }
 
-        ScoreMap longestWinningStreaks = new ScoreMap(easyStreaks.getOrDefault("win", null), mediumStreaks.getOrDefault("win", null), hardStreaks.getOrDefault("win", null));
-        ScoreMap longestLosingStreaks = new ScoreMap(easyStreaks.getOrDefault("lose", null), mediumStreaks.getOrDefault("lose", null), hardStreaks.getOrDefault("lose", null));
-        ScoreMap totalGames = new ScoreMap((double) easyGames.size(), (double) mediumGames.size(), (double) hardGames.size());
-        ScoreMap totalGamesWon = new ScoreMap((double) easyGames.stream().filter(Game::isSuccess).toList().size(), (double) mediumGames.stream().filter(Game::isSuccess).toList().size(), (double) hardGames.stream().filter(Game::isSuccess).toList().size());
-        ScoreMap fastestSolve = new ScoreMap(fastestSolveEasy, fastestSolveMedium, fastestSolveHard);
-        ScoreMap averageDuration = new ScoreMap(averageDurationEasy, averageDurationMedium, averageDurationHard);
+    private ScoreMap getTotalGames(List<Game> easyGames, List<Game> mediumGames, List<Game> hardGames) {
+        return new ScoreMap((double) easyGames.size(), (double) mediumGames.size(), (double) hardGames.size());
+    }
 
-        return new Statistics(longestWinningStreaks, longestLosingStreaks, totalGames, totalGamesWon, fastestSolve, averageDuration);
+    private ScoreMap getGamesWon(List<Game> easyGames, List<Game> mediumGames, List<Game> hardGames) {
+        return new ScoreMap((double) easyGames.stream().filter(Game::isSuccess).toList().size(), (double) mediumGames.stream().filter(Game::isSuccess).toList().size(), (double) hardGames.stream().filter(Game::isSuccess).toList().size());
+    }
+
+    private ScoreMap getLongestWinningStreaks(List<Game> easyGames, List<Game> mediumGames, List<Game> hardGames) {
+        Map<String, Double> easyStreaks = getStreaks(easyGames);
+        Map<String, Double> mediumStreaks = getStreaks(mediumGames);
+        Map<String, Double> hardStreaks = getStreaks(hardGames);
+
+
+        return new ScoreMap(easyStreaks.getOrDefault("win", null), mediumStreaks.getOrDefault("win", null), hardStreaks.getOrDefault("win", null));
+    }
+
+    private ScoreMap getLongestLosingStreaks(List<Game> easyGames, List<Game> mediumGames, List<Game> hardGames) {
+        Map<String, Double> easyStreaks = getStreaks(easyGames);
+        Map<String, Double> mediumStreaks = getStreaks(mediumGames);
+        Map<String, Double> hardStreaks = getStreaks(hardGames);
+
+
+        return new ScoreMap(easyStreaks.getOrDefault("lose", null), mediumStreaks.getOrDefault("lose", null), hardStreaks.getOrDefault("lose", null));
     }
 
     private Map<String, Double> getStreaks(List<Game> games) {

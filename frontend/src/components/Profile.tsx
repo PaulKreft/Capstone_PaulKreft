@@ -11,29 +11,28 @@ type PlayProps = {
 export const Profile: React.FC<PlayProps> = ({ user }) => {
   const [statistics, setStatistics] = useState<Statistics>();
 
-  const statisticKeyToDisplayNameMap: object = {
-    longestWinningStreak: "Longest winning streak",
-    longestLosingStreak: "Longest losing streak",
-    gamesPlayed: "Games played",
-    gamesWon: "Games won",
-    fastestSolve: "Fastest solve",
-    averageTime: "Average solving time",
-  };
-
   useEffect(() => {
     if (!user) {
       return;
     }
-    axios.get(`api/user/${user.id}/statistics`).then((response) => {
-      console.log(response);
 
+    const statisticKeyToDisplayNameMap: object = {
+      longestWinningStreak: "Longest winning streak",
+      longestLosingStreak: "Longest losing streak",
+      gamesPlayed: "Games played",
+      gamesWon: "Games won",
+      fastestSolve: "Fastest solve",
+      averageTime: "Average solving time",
+    };
+
+    axios.get(`api/user/${user.id}/statistics`).then((response) =>
       setStatistics(
         (Object.keys(response.data) as [keyof typeof statisticKeyToDisplayNameMap]).map((statistic) => ({
           ...response.data[statistic],
           name: statisticKeyToDisplayNameMap[statistic],
         })),
-      );
-    });
+      ),
+    );
   }, [user]);
 
   if (user == null || !statistics) {
@@ -46,17 +45,15 @@ export const Profile: React.FC<PlayProps> = ({ user }) => {
         <div className="flex h-min w-full flex-col gap-2 rounded-2xl border-2 border-black px-6 py-4">
           <h3 className="mb-2 font-bold">Statistics</h3>
 
-          {statistics.map(
-            (statistic) => (
-              <Statistic
-                key={statistic.name}
-                name={statistic.name}
-                easy={statistic.easy.toFixed()}
-                medium={statistic.medium.toFixed()}
-                hard={statistic.hard.toFixed()}
-              />
-            ),
-          )}
+          {statistics.map((statistic) => (
+            <Statistic
+              key={statistic.name}
+              name={statistic.name}
+              easy={statistic.easy.toString()}
+              medium={statistic.medium.toString()}
+              hard={statistic.hard.toString()}
+            />
+          ))}
         </div>
       </div>
     </div>
