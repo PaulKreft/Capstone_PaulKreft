@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { User } from "../types/User.ts";
 import axios from "axios";
 import { Statistics } from "../types/Statistics.ts";
-import {ProfileUserInfo} from "./ProfileUserInfo.tsx";
+import { ProfileUserInfo } from "./ProfileUserInfo.tsx";
 import { Statistic } from "./Statistic.tsx";
 
 type PlayProps = {
@@ -45,7 +45,7 @@ export const Profile: React.FC<PlayProps> = ({ user }) => {
       <div className="w-5/6">
         <div className="flex h-min w-full flex-col gap-2 rounded-2xl border-2 border-black px-6 py-4">
           <h3 className="mb-2 font-bold">User Information</h3>
-          <ProfileUserInfo className="mb-5" user={user}/>
+          <ProfileUserInfo className="mb-5" user={user} />
 
           <h3 className="mb-2 font-bold">Statistics</h3>
 
@@ -53,9 +53,9 @@ export const Profile: React.FC<PlayProps> = ({ user }) => {
             <Statistic
               key={statistic.name}
               name={statistic.name}
-              easy={statistic.easy.toString()}
-              medium={statistic.medium.toString()}
-              hard={statistic.hard.toString()}
+              easy={statistic.easy.toFixed()}
+              medium={statistic.medium.toFixed()}
+              hard={statistic.hard.toFixed()}
             />
           ))}
         </div>
