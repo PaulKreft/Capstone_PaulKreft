@@ -3,9 +3,9 @@
 import logoUrl from "./../assets/_e9143fb5-fffe-41b2-b320-9b00cc908ff5.jpeg";
 
 import { Link } from "react-router-dom";
-import { StickyHeader } from "./sticky-header";
-import { HamburgerTwo } from "./hamburger-two";
-import { UserMenu } from "./user-menu.tsx";
+import { StickyHeader } from "./StickyHeader.tsx";
+import { HamburgerTwo } from "./HamburgerTwo.tsx";
+import { UserMenu } from "./UserMenu.tsx";
 
 import React, { MouseEvent, useEffect, useState } from "react";
 import { cn } from "../lib/utils.ts";

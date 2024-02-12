@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { cn } from "../lib/utils.ts";
-import { StopWatch } from "./stop-watch.tsx";
-import { Button } from "./button.tsx";
-import { TileConfiguration } from "./tile-configuration.tsx";
+import { StopWatch } from "./StopWatch.tsx";
+import { Button } from "./Button.tsx";
+import { TileConfiguration } from "./TileConfiguration.tsx";
 import { addHexColors, getRandomHexColor, subtractHexColors } from "../lib/hexUtils.ts";
 import { shuffleArray } from "../lib/shuffleArray.tsx";
 import axios from "axios";

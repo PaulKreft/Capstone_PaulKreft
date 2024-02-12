@@ -1,19 +1,19 @@
 import "./App.css";
-import { Play } from "./components/play.tsx";
+import { Play } from "./components/Play.tsx";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import Home from "./components/home.tsx";
-import Login from "./components/login.tsx";
-import SignUp from "./components/sign-up.tsx";
-import NotFound from "./components/not-found.tsx";
-import { Header } from "./components/header.tsx";
+import Home from "./components/Home.tsx";
+import Login from "./components/Login.tsx";
+import SignUp from "./components/SignUp.tsx";
+import NotFound from "./components/NotFound.tsx";
+import { Header } from "./components/Header.tsx";
 import { useEffect, useState } from "react";
 import { User } from "./types/User.ts";
 
 import axios from "axios";
-import Footer from "./components/footer.tsx";
-import { EmailLogin } from "./components/email-login.tsx";
-import { EmailSignUp } from "./components/email-sign-up.tsx";
-import { Profile } from "./components/profile.tsx";
+import Footer from "./components/Footer.tsx";
+import { EmailLogin } from "./components/EmailLogin.tsx";
+import { EmailSignUp } from "./components/EmailSignUp.tsx";
+import { Profile } from "./components/Profile.tsx";
 
 function App() {
   const navigate = useNavigate();
