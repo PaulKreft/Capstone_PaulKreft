@@ -41,7 +41,7 @@ function App() {
 
   return (
     <div className="flex min-h-screen w-screen flex-col">
-      <Header isLoggedIn={!!user} logout={logout} />
+      <Header isLoggedIn={!!user} logout={logout} userName={user?.name} />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/play" element={<Play userId={user?.id} />} />
