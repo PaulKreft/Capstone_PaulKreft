@@ -13,14 +13,19 @@ import axios from "axios";
 import Footer from "./components/footer.tsx";
 import { EmailLogin } from "./components/email-login.tsx";
 import { EmailSignUp } from "./components/email-sign-up.tsx";
-import {Profile} from "./components/profile.tsx";
+import { Profile } from "./components/profile.tsx";
 
 function App() {
   const navigate = useNavigate();
   const [user, setUser] = useState<User>(null);
 
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   useEffect(() => {
-    axios.get("/api/user").then((response) => setUser(response.data));
+    axios.get("/api/user").then((response) => {
+      setUser(response.data);
+      setIsLoading(false);
+    });
   }, []);
 
   const login = (email: string, password: string) =>
@@ -38,6 +43,10 @@ function App() {
       setUser(null);
       navigate("/");
     });
+
+  if (isLoading) {
+    return <></>;
+  }
 
   return (
     <div className="flex min-h-screen w-screen flex-col">
