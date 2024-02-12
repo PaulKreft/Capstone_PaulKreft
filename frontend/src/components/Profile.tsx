@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { User } from "../types/User.ts";
 import axios from "axios";
 import { Statistics } from "../types/Statistics.ts";
+import { Statistic } from "./Statistic.tsx";
 
 type PlayProps = {
   user: User;
@@ -10,11 +11,29 @@ type PlayProps = {
 export const Profile: React.FC<PlayProps> = ({ user }) => {
   const [statistics, setStatistics] = useState<Statistics>();
 
+  const statisticKeyToDisplayNameMap: object = {
+    longestWinningStreak: "Longest winning streak",
+    longestLosingStreak: "Longest losing streak",
+    gamesPlayed: "Games played",
+    gamesWon: "Games won",
+    fastestSolve: "Fastest solve",
+    averageTime: "Average solving time",
+  };
+
   useEffect(() => {
     if (!user) {
       return;
     }
-    axios.get(`api/user/${user.id}/statistics`).then((response) => setStatistics(response.data));
+    axios.get(`api/user/${user.id}/statistics`).then((response) => {
+      console.log(response);
+
+      setStatistics(
+        (Object.keys(response.data) as [keyof typeof statisticKeyToDisplayNameMap]).map((statistic) => ({
+          ...response.data[statistic],
+          name: statisticKeyToDisplayNameMap[statistic],
+        })),
+      );
+    });
   }, [user]);
 
   if (user == null || !statistics) {
@@ -27,59 +46,17 @@ export const Profile: React.FC<PlayProps> = ({ user }) => {
         <div className="flex h-min w-full flex-col gap-2 rounded-2xl border-2 border-black px-6 py-4">
           <h3 className="mb-2 font-bold">Statistics</h3>
 
-          <div className="flex max-w-96 justify-between">
-            <div>Longest winning streak:</div>
-            <div className="flex gap-5">
-              <span className="text-green">{statistics?.longestWinningStreak?.easy || "N/A"}</span>
-              <span className="text-blue">{statistics?.longestWinningStreak?.medium || "N/A"}</span>
-              <span className="text-red">{statistics?.longestWinningStreak?.hard || "N/A"}</span>
-            </div>
-          </div>
-
-          <div className="flex max-w-96 justify-between">
-            <div>Longest losing streak:</div>
-            <div className="flex gap-5">
-              <span className="text-green">{statistics?.longestLosingStreak?.easy || "N/A"}</span>
-              <span className="text-blue">{statistics?.longestLosingStreak?.medium || "N/A"}</span>
-              <span className="text-red">{statistics?.longestLosingStreak?.hard || "N/A"}</span>
-            </div>
-          </div>
-
-          <div className="flex max-w-96 justify-between">
-            <div>Games played:</div>
-            <div className="flex gap-5">
-              <span className="text-green">{statistics?.gamesPlayed?.easy || "N/A"}</span>
-              <span className="text-blue">{statistics?.gamesPlayed?.medium || "N/A"}</span>
-              <span className="text-red">{statistics?.gamesPlayed?.hard || "N/A"}</span>
-            </div>
-          </div>
-
-          <div className="flex max-w-96 justify-between">
-            <div>Games won:</div>
-            <div className="flex gap-5">
-              <span className="text-green">{statistics?.gamesWon?.easy || "N/A"}</span>
-              <span className="text-blue">{statistics?.gamesWon?.medium || "N/A"}</span>
-              <span className="text-red">{statistics?.gamesWon?.hard || "N/A"}</span>
-            </div>
-          </div>
-
-          <div className="flex max-w-96 justify-between">
-            <div>Fastest solve:</div>
-            <div className="flex gap-5">
-              <span className="text-green">{statistics?.fastestSolve?.easy || "N/A"}</span>
-              <span className="text-blue">{statistics?.fastestSolve?.medium || "N/A"}</span>
-              <span className="text-red">{statistics?.fastestSolve?.hard || "N/A"}</span>
-            </div>
-          </div>
-
-          <div className="flex max-w-96 justify-between">
-            <div>Average solving time:</div>
-            <div className="flex gap-5">
-              <span className="text-green">{statistics?.averageTime?.easy?.toFixed() || "N/A"}</span>
-              <span className="text-blue">{statistics?.averageTime?.medium?.toFixed() || "N/A"}</span>
-              <span className="text-red">{statistics?.averageTime?.hard?.toFixed() || "N/A"}</span>
-            </div>
-          </div>
+          {statistics.map(
+            (statistic) => (
+              <Statistic
+                key={statistic.name}
+                name={statistic.name}
+                easy={statistic.easy.toFixed()}
+                medium={statistic.medium.toFixed()}
+                hard={statistic.hard.toFixed()}
+              />
+            ),
+          )}
         </div>
       </div>
     </div>
