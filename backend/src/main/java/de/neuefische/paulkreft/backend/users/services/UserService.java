@@ -113,9 +113,9 @@ public class UserService {
         List<Double> mediumDurations = mediumGames.stream().map(game -> Double.valueOf(game.duration())).filter(d -> d != 0).toList();
         List<Double> hardDurations = hardGames.stream().map(game -> Double.valueOf(game.duration())).filter(d -> d != 0).toList();
 
-        Double fastestSolveEasy = !easyDurations.isEmpty() ? easyDurations.getFirst() : null;
-        Double fastestSolveMedium = !mediumDurations.isEmpty() ? mediumDurations.getFirst() : null;
-        Double fastestSolveHard = !hardDurations.isEmpty() ? hardDurations.getFirst() : null;
+        Double fastestSolveEasy = !easyDurations.isEmpty() ? Collections.min(easyDurations) : null;
+        Double fastestSolveMedium = !mediumDurations.isEmpty() ? Collections.min(mediumDurations) : null;
+        Double fastestSolveHard = !hardDurations.isEmpty() ? Collections.min(hardDurations) : null;
 
         Double averageDurationEasy = !easyDurations.isEmpty() ? easyDurations.stream().mapToDouble(v -> v).sum() / easyDurations.size() : null;
         Double averageDurationMedium = !mediumDurations.isEmpty() ? mediumDurations.stream().mapToDouble(v -> v).sum() : null;

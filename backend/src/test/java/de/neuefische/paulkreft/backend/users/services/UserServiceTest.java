@@ -225,7 +225,7 @@ class UserServiceTest {
                 new ScoreMap(1.0, 1.0, 4.0),
                 new ScoreMap(12.0, 3.0, 6.0),
                 new ScoreMap(7.0, 2.0, 1.0),
-                new ScoreMap(8515.0, 8578.0, 15833.0),
+                new ScoreMap(3632.0, 8578.0, 15833.0),
                 new ScoreMap(6866.285714285715, 25277.0, 15833.0)
         );
 
@@ -234,6 +234,30 @@ class UserServiceTest {
 
         // Then
         assertNotNull(actual);
+        assertEquals(expected.longestWinningStreak().easy(), actual.longestWinningStreak().easy());
+        assertEquals(expected.longestWinningStreak().medium(), actual.longestWinningStreak().medium());
+        assertEquals(expected.longestWinningStreak().hard(), actual.longestWinningStreak().hard());
+
+        assertEquals(expected.longestLosingStreak().easy(), actual.longestLosingStreak().easy());
+        assertEquals(expected.longestLosingStreak().medium(), actual.longestLosingStreak().medium());
+        assertEquals(expected.longestLosingStreak().hard(), actual.longestLosingStreak().hard());
+
+        assertEquals(expected.gamesPlayed().easy(), actual.gamesPlayed().easy());
+        assertEquals(expected.gamesPlayed().medium(), actual.gamesPlayed().medium());
+        assertEquals(expected.gamesPlayed().hard(), actual.gamesPlayed().hard());
+
+        assertEquals(expected.gamesWon().easy(), actual.gamesWon().easy());
+        assertEquals(expected.gamesWon().medium(), actual.gamesWon().medium());
+        assertEquals(expected.gamesWon().hard(), actual.gamesWon().hard());
+
+        assertEquals(expected.fastestSolve().easy(), actual.fastestSolve().easy());
+        assertEquals(expected.fastestSolve().medium(), actual.fastestSolve().medium());
+        assertEquals(expected.fastestSolve().hard(), actual.fastestSolve().hard());
+
+        assertEquals(expected.averageTime().easy(), actual.averageTime().easy());
+        assertEquals(expected.averageTime().medium(), actual.averageTime().medium());
+        assertEquals(expected.averageTime().hard(), actual.averageTime().hard());
+
         assertEquals(expected, actual);
         verify(gameRepo, times(1)).findAllByUserIdOrderByCreatedAtAsc(any());
         verifyNoMoreInteractions(idService, usersRepo, timeService, githubService, gameRepo);
