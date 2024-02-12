@@ -3,21 +3,23 @@
 import logoUrl from "./../assets/_e9143fb5-fffe-41b2-b320-9b00cc908ff5.jpeg";
 
 import { Link } from "react-router-dom";
-import { StickyHeader } from "./sticky-header";
-import { HamburgerTwo } from "./hamburger-two";
-import { UserMenu } from "./user-menu.tsx";
+import { StickyHeader } from "./StickyHeader.tsx";
+import { HamburgerTwo } from "./HamburgerTwo.tsx";
+import { UserMenu } from "./UserMenu.tsx";
 
 import React, { MouseEvent, useEffect, useState } from "react";
 import { cn } from "../lib/utils.ts";
+import {UserDropdown} from "./UserDropdown.tsx";
 
 type HeaderProps = {
   isLoggedIn?: boolean;
   logout?: () => void;
+  userName?: string;
 };
 
 type MenuItem = { name: string; href: string };
 
-export const Header: React.FC<HeaderProps> = ({ isLoggedIn, logout }) => {
+export const Header: React.FC<HeaderProps> = ({ isLoggedIn, logout, userName }) => {
   const menuItems: MenuItem[] = [
     { name: "Home", href: "/" },
     { name: "Play", href: "/play" },
@@ -136,11 +138,13 @@ export const Header: React.FC<HeaderProps> = ({ isLoggedIn, logout }) => {
           </div>
           <UserMenu className="hidden lg:flex" isLoggedIn={isLoggedIn || false} logout={logout || (() => {})} />
           <div className="flex justify-self-end lg:hidden">
-            <HamburgerTwo onHamburgerClick={toggleMenu} isActive={isMenuClicked} />
+            {isLoggedIn ?
+                <UserDropdown toggleDropdown={toggleMenu} isActive={isMenuClicked} userName={userName} />:
+            <HamburgerTwo onHamburgerClick={toggleMenu} isActive={isMenuClicked} /> }
           </div>
         </div>
       </StickyHeader>
-      <div className={cn("fixed bottom-0 left-0 right-0 top-16 bg-white px-6 z-10", isMenuClicked || "hidden")}>
+      <div className={cn("fixed bottom-0 left-0 right-0 top-16 z-10 bg-white px-6", isMenuClicked || "hidden")}>
         <UserMenu
           className="mb-5 flex flex-col"
           isLoggedIn={isLoggedIn || false}

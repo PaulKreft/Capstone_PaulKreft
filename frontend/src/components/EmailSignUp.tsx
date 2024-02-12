@@ -1,11 +1,14 @@
 import React, { FormEvent, useEffect, useState } from "react";
 import { cn } from "../lib/utils.ts";
+import axios from "axios";
 
-type EmailLoginProps = {
+type EmailSignUpProps = {
   login: (email: string, password: string) => void;
 };
 
-export const EmailLogin: React.FC<EmailLoginProps> = ({ login }) => {
+export const EmailSignUp: React.FC<EmailSignUpProps> = ({ login }) => {
+  const [isSigningUp, setIsSigningUp] = useState<boolean>(false);
+
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
@@ -22,17 +25,23 @@ export const EmailLogin: React.FC<EmailLoginProps> = ({ login }) => {
     setIsPasswordValid(regX.test(password));
   }, [password]);
 
-  const loginWithEmail = (event: FormEvent<HTMLFormElement>) => {
+  const signUpWithEmail = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    login(email, password);
+    setIsSigningUp(true);
+    axios
+      .post("/api/signup/email", { email, password })
+      .then(() => {
+        login(email, password);
+      })
+      .catch((e) => console.log(e));
   };
 
   return (
     <div className="mx-auto flex flex-1 flex-col items-center justify-center pb-20">
-      <div className="flex flex-col items-center  rounded-2xl border-2 border-black px-20 pb-24 pt-12">
-        <h2 className="pb-16 text-4xl">Log in with Email</h2>
-        <form className="" onSubmit={loginWithEmail} noValidate>
+      <div className="flex flex-col items-center rounded-2xl border-2 border-black px-20 pb-24 pt-12">
+        <h2 className="pb-16 text-4xl">Sign up with Email</h2>
+        <form className="" onSubmit={signUpWithEmail} noValidate>
           <div className="mb-1 pl-1 text-lg">Email</div>
           <input
             className={cn(
@@ -74,9 +83,9 @@ export const EmailLogin: React.FC<EmailLoginProps> = ({ login }) => {
           <button
             className="mt-4 w-full rounded-lg bg-black px-3 py-2 text-white disabled:bg-black/20"
             type="submit"
-            disabled={!isEmailValid || !isPasswordValid}
+            disabled={!isEmailValid || !isPasswordValid || isSigningUp}
           >
-            Log In
+            Sign Up
           </button>
         </form>
       </div>

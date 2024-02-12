@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { cn } from "../lib/utils.ts";
 
-import { Tile } from "./tile.tsx";
+import { Tile } from "./Tile.tsx";
 import { addHexColors } from "../lib/hexUtils.ts";
 
 type TileConfigurationProps = {
