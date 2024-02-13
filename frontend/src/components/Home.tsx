@@ -12,9 +12,14 @@ export default function Home() {
         <span className="cursor-magic text-[#F8F991] hover:text-[#07066e]">x</span>
         <span className="cursor-magic text-[#720026] hover:text-[#8dffd9]">!</span>
       </h1>
-      <Link to="/play">
-        <button className="mt-32 rounded-3xl bg-black px-16 py-6 text-4xl text-white">Play!</button>
-      </Link>
+      <div className="flex gap-20">
+        <Link to="/play">
+          <button className="mt-32 rounded-3xl bg-black px-16 py-6 text-4xl text-white">Classic</button>
+        </Link>
+        <Link to="/multiplayer">
+          <button className="mt-32 rounded-3xl bg-black px-16 py-6 text-4xl text-white">Multiplayer</button>
+        </Link>
+      </div>
     </div>
   );
 }

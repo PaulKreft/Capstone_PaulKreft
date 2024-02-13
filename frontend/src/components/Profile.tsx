@@ -25,7 +25,7 @@ export const Profile: React.FC<PlayProps> = ({ user }) => {
       averageTime: "Average solving time",
     };
 
-    axios.get(`api/user/${user.id}/statistics`).then((response) =>
+    axios.get(`/api/user/${user.id}/statistics`).then((response) =>
       setStatistics(
         (Object.keys(response.data) as [keyof typeof statisticKeyToDisplayNameMap]).map((statistic) => ({
           ...response.data[statistic],
