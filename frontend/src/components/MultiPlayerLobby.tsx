@@ -30,10 +30,8 @@ export const MultiPlayerLobby: React.FC<ActiveLobbyProps> = ({ user }) => {
   }, [id]);
 
   useEffect(() => {
-    if (lobby?.isGameInProgress && !startTime) {
       setStartTime(Date.now());
-    }
-  }, [lobby?.isGameInProgress, startTime]);
+  }, [lobby?.lastGameStarted]);
 
   const startGame = (): void => {
     axios
@@ -44,12 +42,11 @@ export const MultiPlayerLobby: React.FC<ActiveLobbyProps> = ({ user }) => {
         timeToBeat: null,
         winner: null,
         losers: [],
+        lastGameStarted: Date.now()
       })
       .then((response) => {
         setLobby(response.data);
       });
-
-    setStartTime(Date.now());
   };
 
   const backToLobby = (): void => {
