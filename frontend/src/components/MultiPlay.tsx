@@ -17,6 +17,7 @@ type MultiPlayProps = {
   gameStartTime: number;
   onLose: () => void;
   onSuccess: (time: number) => void;
+  streakToWin: number;
 };
 
 export const MultiPlay: React.FC<MultiPlayProps> = ({
@@ -26,6 +27,7 @@ export const MultiPlay: React.FC<MultiPlayProps> = ({
   gameStartTime,
   onLose,
   onSuccess,
+  streakToWin,
 }) => {
   const [colorConfig, setColorConfig] = useState<string[]>([]);
   const [streak, setStreak] = useState<number>(0);
@@ -44,7 +46,7 @@ export const MultiPlay: React.FC<MultiPlayProps> = ({
   }, [difficulty]);
 
   useEffect(() => {
-    if(isOver) {
+    if (isOver) {
       return;
     }
 
@@ -58,7 +60,7 @@ export const MultiPlay: React.FC<MultiPlayProps> = ({
   }, [gameStartTime, timeToBeat]);
 
   useEffect(() => {
-    if (streak === 5) {
+    if (streak === streakToWin) {
       onSuccess(Date.now() - gameStartTime);
       setIsOver(true);
     }
@@ -114,8 +116,8 @@ export const MultiPlay: React.FC<MultiPlayProps> = ({
     setPuzzleStartTime(Date.now());
   };
 
-  if(isOver) {
-    return <div className="flex flex-1 items-center justify-center text-3xl font-extrabold">Determining Winner...</div>
+  if (isOver) {
+    return <div className="flex flex-1 items-center justify-center text-3xl font-extrabold">Determining Winner...</div>;
   }
 
   return (

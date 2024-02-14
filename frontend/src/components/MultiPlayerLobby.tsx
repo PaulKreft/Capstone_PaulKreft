@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { Lobby } from "../types/Lobby.ts";
 import Spinner from "./Spinner.tsx";
 import axios from "axios";
@@ -15,6 +15,8 @@ export const MultiPlayerLobby: React.FC<ActiveLobbyProps> = ({ user }) => {
   const { id } = useParams();
   const [lobby, setLobby] = useState<Lobby>();
 
+  const [streakToWin, setStreakToWin] = useState<number>(3);
+
   const [startTime, setStartTime] = useState<number>();
 
   const player: Player = { id: user ? user.id : "", name: user ? user.name : "" };
@@ -22,7 +24,7 @@ export const MultiPlayerLobby: React.FC<ActiveLobbyProps> = ({ user }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       axios.get(`/api/lobby/${id}`).then((response) => setLobby(response.data));
-    }, 1000);
+    }, 3000);
     return () => {
       axios.put(`/api/lobby/${id}/leave`, player).then((response) => setLobby(response.data));
       clearInterval(interval);
@@ -30,7 +32,7 @@ export const MultiPlayerLobby: React.FC<ActiveLobbyProps> = ({ user }) => {
   }, [id]);
 
   useEffect(() => {
-      setStartTime(Date.now());
+    setStartTime(Date.now());
   }, [lobby?.lastGameStarted]);
 
   const startGame = (): void => {
@@ -42,7 +44,7 @@ export const MultiPlayerLobby: React.FC<ActiveLobbyProps> = ({ user }) => {
         timeToBeat: null,
         winner: null,
         losers: [],
-        lastGameStarted: Date.now()
+        lastGameStarted: Date.now(),
       })
       .then((response) => {
         setLobby(response.data);
@@ -113,8 +115,17 @@ export const MultiPlayerLobby: React.FC<ActiveLobbyProps> = ({ user }) => {
             {lobby.players.map((player) => (
               <div key={player.id}> {player.name}</div>
             ))}
+            <div className="mt-10">
+              <span className="font-medium mr-5">Streak to win</span>
+              <input
+                className="h-max w-20 items-center rounded-lg border-2 border-black bg-white px-3 py-1 font-light text-black"
+                value={streakToWin}
+                onChange={(event: ChangeEvent<HTMLInputElement>) => setStreakToWin(parseInt(event.target.value))}
+                type="number"
+              />
+            </div>
             <button
-              className="mt-10 h-max items-center rounded-lg border-2 border-black bg-black px-9 py-3 text-xl font-light text-white hover:bg-white hover:text-black disabled:bg-black disabled:text-white"
+              className="mt-6 h-max items-center rounded-lg border-2 border-black bg-black px-9 py-3 text-xl font-light text-white hover:bg-white hover:text-black disabled:bg-black disabled:text-white"
               onClick={startGame}
               disabled={lobby.players.length <= 1}
             >
@@ -138,6 +149,7 @@ export const MultiPlayerLobby: React.FC<ActiveLobbyProps> = ({ user }) => {
       gameStartTime={startTime}
       onLose={onLose}
       onSuccess={onSuccess}
+      streakToWin={streakToWin}
     />
   );
 };
