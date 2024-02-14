@@ -58,7 +58,7 @@ export const MultiPlay: React.FC<MultiPlayProps> = ({
   }, [gameStartTime, timeToBeat]);
 
   useEffect(() => {
-    if (streak === 1) {
+    if (streak === 5) {
       onSuccess(Date.now() - gameStartTime);
       setIsOver(true);
     }
@@ -77,7 +77,7 @@ export const MultiPlay: React.FC<MultiPlayProps> = ({
 
     axios
       .post("/api/games", {
-        playerId,
+        userId: playerId,
         type: "",
         difficulty,
         isSuccess: hasWon,
