@@ -25,7 +25,7 @@ public class LobbyService {
     }
 
     public Lobby joinLobby(String id, @RequestBody Player player) {
-        Lobby lobby = lobbyRepo.findById(id).orElseThrow(RuntimeException::new);
+        Lobby lobby = getLobbyById(id);
 
         lobby.players().add(player);
         return lobbyRepo.save(lobby);
@@ -40,21 +40,21 @@ public class LobbyService {
     }
 
     public Lobby leaveLobby(String id, @RequestBody Player player) {
-        Lobby lobby = lobbyRepo.findById(id).orElseThrow(RuntimeException::new);
+        Lobby lobby = getLobbyById(id);
 
         lobby.players().remove(player);
         return lobbyRepo.save(lobby);
     }
 
     public Lobby deleteLobby(String id) {
-        Lobby lobby = lobbyRepo.findById(id).orElseThrow(RuntimeException::new);
+        Lobby lobby = getLobbyById(id);
 
         lobbyRepo.deleteById(id);
         return lobby;
     }
 
     public Lobby setWinner(String id, ObjectNode payload) throws JsonProcessingException {
-        Lobby lobby = lobbyRepo.findById(id).orElseThrow(RuntimeException::new);
+        Lobby lobby = getLobbyById(id);
 
         Player player = new ObjectMapper().treeToValue(payload.get("player"), Player.class);
         Integer time = payload.get("time").asInt();
@@ -62,21 +62,21 @@ public class LobbyService {
 
         Player winner = lobby.winner();
 
-        if (winner != null) {
-            if (lobby.timeToBeat() <= time) {
-                lobby.losers().add(player);
-                return lobbyRepo.save(lobby);
-            } else {
-                lobby.losers().add(lobby.winner());
-                return lobbyRepo.save(lobby.withWinner(player).withTimeToBeat(time));
-            }
+        if (winner == null) {
+            lobbyRepo.save(lobby.withWinner(player).withTimeToBeat(time));
         }
 
+        if (lobby.timeToBeat() != null && lobby.timeToBeat() <= time) {
+            lobby.losers().add(player);
+            return lobbyRepo.save(lobby);
+        }
+
+        lobby.losers().add(lobby.winner());
         return lobbyRepo.save(lobby.withWinner(player).withTimeToBeat(time));
     }
 
     public Lobby setLoser(String id, Player loser) {
-        Lobby lobby = lobbyRepo.findById(id).orElseThrow(RuntimeException::new);
+        Lobby lobby = getLobbyById(id);
 
         lobby.losers().add(loser);
         return lobbyRepo.save(lobby);
