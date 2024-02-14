@@ -11,7 +11,7 @@ type ActiveLobbyProps = {
   user: User;
 };
 
-export const ActiveLobby: React.FC<ActiveLobbyProps> = ({ user }) => {
+export const MultiPlayerLobby: React.FC<ActiveLobbyProps> = ({ user }) => {
   const { id } = useParams();
   const [lobby, setLobby] = useState<Lobby>();
 
