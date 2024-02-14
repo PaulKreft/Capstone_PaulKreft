@@ -1,10 +1,12 @@
 package de.neuefische.paulkreft.backend.lobby.model;
 
 import de.neuefische.paulkreft.backend.users.models.Player;
+import lombok.With;
 import org.springframework.data.annotation.Id;
 
 import java.util.List;
 
+@With
 public record Lobby(
         @Id
         String id,
@@ -12,6 +14,8 @@ public record Lobby(
         boolean isGameInProgress,
         boolean isGameOver,
         int difficulty,
-        Player winner
+        Player winner,
+        List<Player> losers,
+        Integer timeToBeat
 ) {
 }
