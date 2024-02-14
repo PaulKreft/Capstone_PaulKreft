@@ -57,7 +57,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/play" element={<Play userId={user?.id} />} />
         <Route path="/multiplayer" element={<LobbyEntrance user={user} />} />
-        <Route path="/multiplayer/lobby/:id" element={<ActiveLobby />} />
+        <Route path="/multiplayer/lobby/:id" element={<ActiveLobby user={user} />} />
         <Route path="/profile" element={<Profile user={user} />} />
         <Route path="/login" element={<Login />} />
         <Route path="/login/email" element={<EmailLogin login={login} />} />
