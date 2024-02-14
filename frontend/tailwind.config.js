@@ -9,6 +9,9 @@ export default {
       ...defaultTheme.screens,
     },
     extend: {
+      animation: {
+        'spin-slow': 'spin 2s linear infinite',
+      },
       cursor: {
         magic: "url(wand.cur), default",
       },
