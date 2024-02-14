@@ -27,7 +27,7 @@ export const MultiPlayerLobby: React.FC<ActiveLobbyProps> = ({ user }) => {
       axios.put(`/api/lobby/${id}/leave`, player).then((response) => setLobby(response.data));
       clearInterval(interval);
     };
-  }, [id]);
+  }, [id, player]);
 
   useEffect(() => {
     if (lobby?.isGameInProgress && !startTime) {
