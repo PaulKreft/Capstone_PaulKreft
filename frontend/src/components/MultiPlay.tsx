@@ -1,35 +1,39 @@
 import React, { useEffect, useState } from "react";
 import { cn } from "../lib/utils.ts";
 import { StopWatch } from "./StopWatch.tsx";
-import { Button } from "./Button.tsx";
 import { TileConfiguration } from "./TileConfiguration.tsx";
 import { addHexColors, getRandomHexColor, subtractHexColors } from "../lib/hexUtils.ts";
 import { shuffleArray } from "../lib/shuffleArray.tsx";
 import axios from "axios";
-import {Difficulty} from "../types/Difficulty.ts";
+import { Difficulty } from "../types/Difficulty.ts";
 
 const WHITE = "#ffffff";
 const BLACK = "#000000";
 
-const EASY = 1;
-const MEDIUM = 2;
-const HARD = 4;
-
-type PlayProps = {
-  userId?: string;
+type MultiPlayProps = {
+  playerId?: string;
+  difficulty: Difficulty;
+  timeToBeat?: number;
+  gameStartTime: number;
+  onLose: () => void;
+  onSuccess: (time: number) => void;
 };
 
-export const Play: React.FC<PlayProps> = ({ userId }) => {
+export const MultiPlay: React.FC<MultiPlayProps> = ({
+  playerId,
+  difficulty,
+  timeToBeat,
+  gameStartTime,
+  onLose,
+  onSuccess,
+}) => {
   const [colorConfig, setColorConfig] = useState<string[]>([]);
-
-  const [difficulty, setDifficulty] = useState<Difficulty>(EASY);
-
   const [streak, setStreak] = useState<number>(0);
 
-  const [startTime, setStartTime] = useState<number>();
+  const [puzzleStartTime, setPuzzleStartTime] = useState<number>();
   const [endTime, setEndTime] = useState<number>();
 
-  console.log(typeof EASY)
+  const [isOver, setIsOver] = useState<boolean>(false);
 
   useEffect(() => {
     setColorConfig(
@@ -38,6 +42,27 @@ export const Play: React.FC<PlayProps> = ({ userId }) => {
         .map((_value, index) => (index % 2 === 0 ? BLACK : WHITE)),
     );
   }, [difficulty]);
+
+  useEffect(() => {
+    if(isOver) {
+      return;
+    }
+
+    const currentTime: number = Date.now() - gameStartTime;
+
+    if (!timeToBeat || timeToBeat > currentTime) {
+      return;
+    }
+
+    onLose();
+  }, [gameStartTime, timeToBeat]);
+
+  useEffect(() => {
+    if (streak === 1) {
+      onSuccess(Date.now() - gameStartTime);
+      setIsOver(true);
+    }
+  }, [gameStartTime, streak]);
 
   const handleOverEvent = (result: "lost" | "won"): void => {
     const now: number = Date.now();
@@ -51,18 +76,19 @@ export const Play: React.FC<PlayProps> = ({ userId }) => {
     }
 
     axios
-        .post("/api/games", {
-          userId,
-          type: "",
-          difficulty,
-          isSuccess: hasWon,
-          duration: hasWon && startTime ? now - startTime : null,
-          configuration: colorConfig,
-         }).then(() => {});
+      .post("/api/games", {
+        playerId,
+        type: "",
+        difficulty,
+        isSuccess: hasWon,
+        duration: hasWon && puzzleStartTime ? now - puzzleStartTime : null,
+        configuration: colorConfig,
+      })
+      .then(() => {});
   };
 
   const resetClock = (): void => {
-    setStartTime(undefined);
+    setPuzzleStartTime(undefined);
     setEndTime(undefined);
   };
 
@@ -85,8 +111,12 @@ export const Play: React.FC<PlayProps> = ({ userId }) => {
     });
 
     setColorConfig(shuffleArray<string>(newConfig));
-    setStartTime(Date.now());
+    setPuzzleStartTime(Date.now());
   };
+
+  if(isOver) {
+    return <div className="flex flex-1 items-center justify-center text-3xl font-extrabold">Determining Winner...</div>
+  }
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center px-5 pb-32 pt-20 xs:pb-20 sm:px-10">
@@ -95,25 +125,14 @@ export const Play: React.FC<PlayProps> = ({ userId }) => {
           Streak: {streak}
         </div>
         <StopWatch
-          className={cn("absolute -top-10 right-3 text-xl text-black", startTime && endTime ? "block" : "hidden")}
-          value={startTime && endTime ? endTime - startTime : null}
+          className={cn("absolute -top-10 right-3 text-xl text-black", puzzleStartTime && endTime ? "block" : "hidden")}
+          value={puzzleStartTime && endTime ? endTime - puzzleStartTime : null}
         />
       </TileConfiguration>
 
       <button className="mt-10 rounded-[20px] border-2 border-black px-12 py-4 text-2xl" onClick={shuffleColours}>
         New Puzzle
       </button>
-      <div className="mt-10 flex gap-3 xs:gap-5">
-        <Button color="#73BA9B" onClick={() => setDifficulty(EASY)} isActive={difficulty === EASY}>
-          Easy
-        </Button>
-        <Button color="#6D98BA" onClick={() => setDifficulty(MEDIUM)} isActive={difficulty === MEDIUM}>
-          Medium
-        </Button>
-        <Button color="#BA2D0B" onClick={() => setDifficulty(HARD)} isActive={difficulty === HARD}>
-          Hard
-        </Button>
-      </div>
     </div>
   );
 };
