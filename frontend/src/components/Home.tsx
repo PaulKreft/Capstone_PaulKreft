@@ -1,6 +1,12 @@
 import { Link } from "react-router-dom";
+import { User } from "../types/User.ts";
+import React from "react";
 
-export default function Home() {
+type HomeProps = {
+  user: User;
+};
+
+export const Home: React.FC<HomeProps> = ({ user }) => {
   return (
     <div className="flex flex-1 flex-col items-center justify-center pb-52">
       <h1 className="max-w-96 cursor-default text-center text-6xl font-extrabold leading-snug sm:max-w-none sm:text-8xl sm:leading-snug">
@@ -16,10 +22,12 @@ export default function Home() {
         <Link to="/play">
           <button className="mt-32 rounded-3xl bg-black px-16 py-6 text-4xl text-white">Classic</button>
         </Link>
-        <Link to="/multiplayer">
-          <button className="mt-32 rounded-3xl bg-black px-16 py-6 text-4xl text-white">Multiplayer</button>
-        </Link>
+        {user && (
+          <Link to="/multiplayer">
+            <button className="mt-32 rounded-3xl bg-black px-16 py-6 text-4xl text-white">Multiplayer</button>
+          </Link>
+        )}
       </div>
     </div>
   );
-}
+};

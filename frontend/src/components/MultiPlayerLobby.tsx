@@ -119,7 +119,7 @@ export const MultiPlayerLobby: React.FC<ActiveLobbyProps> = ({ user }) => {
               <span className="font-medium mr-5">Streak to win</span>
               <input
                 className="h-max w-20 items-center rounded-lg border-2 border-black bg-white px-3 py-1 font-light text-black"
-                value={streakToWin}
+                value={streakToWin.toString()}
                 onChange={(event: ChangeEvent<HTMLInputElement>) => setStreakToWin(parseInt(event.target.value))}
                 type="number"
               />
