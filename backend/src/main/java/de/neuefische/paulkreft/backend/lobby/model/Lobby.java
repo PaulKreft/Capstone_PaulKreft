@@ -4,6 +4,7 @@ import de.neuefische.paulkreft.backend.users.models.Player;
 import lombok.With;
 import org.springframework.data.annotation.Id;
 
+import java.time.Instant;
 import java.util.List;
 
 @With
@@ -16,6 +17,7 @@ public record Lobby(
         int difficulty,
         Player winner,
         List<Player> losers,
-        Integer timeToBeat
+        Integer timeToBeat,
+        Instant lastGameStarted
 ) {
 }

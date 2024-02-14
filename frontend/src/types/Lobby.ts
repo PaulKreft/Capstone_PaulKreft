@@ -10,4 +10,5 @@ export type Lobby = {
   winner?: Player;
   losers: Player[];
   timeToBeat?: number;
+  lastGameStarted?: string;
 };
