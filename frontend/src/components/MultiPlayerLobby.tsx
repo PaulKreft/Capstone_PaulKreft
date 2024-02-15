@@ -149,7 +149,7 @@ export const MultiPlayerLobby: React.FC<ActiveLobbyProps> = ({ user }) => {
       gameStartTime={startTime}
       onLose={onLose}
       onSuccess={onSuccess}
-      streakToWin={streakToWin}
+      streakToWin={lobby.streakToWin}
     />
   );
 };
