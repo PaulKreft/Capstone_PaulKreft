@@ -30,6 +30,7 @@ export const LobbyEntrance: React.FC<MultiPlayerProps> = ({ user }) => {
       isGameOver: false,
       difficulty: 4,
       losers: [],
+      streakToWin: 3,
     };
 
     axios.post("/api/lobby", lobby).then(() => navigate(`/multiplayer/lobby/${targetLobby}`));
