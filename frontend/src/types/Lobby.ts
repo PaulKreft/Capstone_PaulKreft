@@ -9,6 +9,7 @@ export type Lobby = {
   difficulty: Difficulty;
   winner?: Player;
   losers: Player[];
+  streakToWin: number;
   timeToBeat?: number;
   lastGameStarted?: string;
 };

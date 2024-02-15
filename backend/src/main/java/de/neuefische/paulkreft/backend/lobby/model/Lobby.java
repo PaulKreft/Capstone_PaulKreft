@@ -17,6 +17,7 @@ public record Lobby(
         int difficulty,
         Player winner,
         List<Player> losers,
+        Integer streakToWin,
         Integer timeToBeat,
         Instant lastGameStarted
 ) {
