@@ -15,8 +15,6 @@ export const MultiPlayerLobby: React.FC<ActiveLobbyProps> = ({ user }) => {
   const { id } = useParams();
   const [lobby, setLobby] = useState<Lobby>();
 
-  const [streakToWin, setStreakToWin] = useState<number>(3);
-
   const [startTime, setStartTime] = useState<number>();
 
   const player: Player = { id: user ? user.id : "", name: user ? user.name : "" };
@@ -72,6 +70,15 @@ export const MultiPlayerLobby: React.FC<ActiveLobbyProps> = ({ user }) => {
     axios.put(`/api/lobby/${id}/setLoser`, player).then((response) => setLobby(response.data));
   };
 
+  const onStreakToWinChange = (event: ChangeEvent<HTMLInputElement>) => {
+    axios
+      .put("/api/lobby", {
+        ...lobby,
+        streakToWin: parseInt(event.target.value),
+      })
+      .then((response) => setLobby(response.data));
+  };
+
   if (!lobby) {
     return (
       <div className="flex flex-1 flex-col items-center justify-center">
@@ -116,11 +123,11 @@ export const MultiPlayerLobby: React.FC<ActiveLobbyProps> = ({ user }) => {
               <div key={player.id}> {player.name}</div>
             ))}
             <div className="mt-10">
-              <span className="font-medium mr-5">Streak to win</span>
+              <span className="mr-5 font-medium">Streak to win</span>
               <input
                 className="h-max w-20 items-center rounded-lg border-2 border-black bg-white px-3 py-1 font-light text-black"
-                value={streakToWin.toString()}
-                onChange={(event: ChangeEvent<HTMLInputElement>) => setStreakToWin(parseInt(event.target.value))}
+                value={lobby.streakToWin.toString()}
+                onChange={onStreakToWinChange}
                 type="number"
               />
             </div>
