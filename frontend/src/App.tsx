@@ -16,6 +16,7 @@ import Footer from "./components/Footer.tsx";
 import { EmailLogin } from "./components/EmailLogin.tsx";
 import { EmailSignUp } from "./components/EmailSignUp.tsx";
 import { Profile } from "./components/Profile.tsx";
+import Spinner from "./components/Spinner.tsx";
 
 function App() {
   const navigate = useNavigate();
@@ -47,14 +48,18 @@ function App() {
     });
 
   if (isLoading) {
-    return <></>;
+    return (
+      <div className="flex h-screen w-screen items-center justify-center">
+        <Spinner />
+      </div>
+    );
   }
 
   return (
     <div className="flex min-h-screen w-screen flex-col">
       <Header isLoggedIn={!!user} logout={logout} userName={user?.name} />
       <Routes>
-        <Route path="/" element={<Home user={user}/>} />
+        <Route path="/" element={<Home user={user} />} />
         <Route path="/play" element={<Play userId={user?.id} />} />
         <Route path="/multiplayer" element={<LobbyEntrance user={user} />} />
         <Route path="/multiplayer/lobby/:id" element={<MultiPlayerLobby user={user} />} />
