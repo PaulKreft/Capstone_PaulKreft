@@ -24,18 +24,23 @@ public class LobbyService {
         return lobbyRepo.findById(id).orElseThrow(RuntimeException::new);
     }
 
-    public Lobby joinLobby(String id, @RequestBody Player player) {
-        Lobby lobby = getLobbyById(id);
-
-        lobby.players().add(player);
-        return lobbyRepo.save(lobby);
-    }
 
     public Lobby updateLobby(Lobby lobby) {
         if (!lobbyRepo.existsById(lobby.id())) {
             throw new RuntimeException();
         }
 
+        return lobbyRepo.save(lobby);
+    }
+
+    public Lobby joinLobby(String id, @RequestBody Player player) {
+        Lobby lobby = getLobbyById(id);
+
+        if(lobby.players().contains(player)) {
+            return lobby;
+        }
+
+        lobby.players().add(player);
         return lobbyRepo.save(lobby);
     }
 
