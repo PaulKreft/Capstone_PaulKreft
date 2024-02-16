@@ -71,10 +71,15 @@ export const MultiPlayerLobby: React.FC<ActiveLobbyProps> = ({ user }) => {
   };
 
   const onStreakToWinChange = (event: ChangeEvent<HTMLInputElement>) => {
+      let newValue: number = Math.abs(parseInt(event.target.value));
+      if(!event.target.value) {
+          newValue = 1;
+      }
+
     axios
       .put("/api/lobby", {
         ...lobby,
-        streakToWin: parseInt(event.target.value),
+        streakToWin: newValue,
       })
       .then((response) => setLobby(response.data));
   };
@@ -129,12 +134,13 @@ export const MultiPlayerLobby: React.FC<ActiveLobbyProps> = ({ user }) => {
                 value={lobby.streakToWin.toString()}
                 onChange={onStreakToWinChange}
                 type="number"
+                min="1"
               />
             </div>
             <button
               className="mt-6 h-max items-center rounded-lg border-2 border-black bg-black px-9 py-3 text-xl font-light text-white hover:bg-white hover:text-black disabled:bg-black disabled:text-white"
               onClick={startGame}
-              disabled={lobby.players.length <= 1}
+              disabled={lobby.players.length <= 1 || !lobby.streakToWin}
             >
               Start Game
             </button>
