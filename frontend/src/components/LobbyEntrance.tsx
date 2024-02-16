@@ -25,6 +25,7 @@ export const LobbyEntrance: React.FC<MultiPlayerProps> = ({ user }) => {
 
     const lobby: Lobby = {
       id: targetLobby,
+      owner: currentPlayer,
       players: [currentPlayer],
       isGameInProgress: false,
       isGameOver: false,

@@ -11,6 +11,7 @@ import java.util.List;
 public record Lobby(
         @Id
         String id,
+        Player owner,
         List<Player> players,
         boolean isGameInProgress,
         boolean isGameOver,

@@ -71,10 +71,10 @@ export const MultiPlayerLobby: React.FC<ActiveLobbyProps> = ({ user }) => {
   };
 
   const onStreakToWinChange = (event: ChangeEvent<HTMLInputElement>) => {
-      let newValue: number = Math.abs(parseInt(event.target.value));
-      if(!event.target.value) {
-          newValue = 1;
-      }
+    let newValue: number = Math.abs(parseInt(event.target.value));
+    if (!event.target.value) {
+      newValue = 1;
+    }
 
     axios
       .put("/api/lobby", {
@@ -122,11 +122,14 @@ export const MultiPlayerLobby: React.FC<ActiveLobbyProps> = ({ user }) => {
     return (
       <div className="flex flex-1 flex-col items-center justify-center">
         <div className="flex justify-evenly rounded-2xl border-2 border-black px-20 py-10">
-          <div className="flex flex-col items-center gap-2">
-            <div className="mb-5 text-xl font-extrabold">Players in lobby</div>
-            {lobby.players.map((player) => (
-              <div key={player.id}> {player.name}</div>
-            ))}
+          <div className="flex flex-col items-center">
+            <div className="text-xl font-extrabold">{`${lobby.owner.name}'s lobby`}</div>
+            <div className="mb-5 text-lg font-light">{`ID: ${lobby.id}`}</div>
+            <div className="flex flex-col gap-1 rounded-lg border border-black p-3">
+              {lobby.players.map((player) => (
+                <div key={player.id}> {player.name}</div>
+              ))}
+            </div>
             <div className="mt-10">
               <span className="mr-5 font-medium">Streak to win</span>
               <input
