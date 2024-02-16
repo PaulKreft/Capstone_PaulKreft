@@ -89,6 +89,11 @@ public class LobbyService {
     public Lobby setLoser(String id, Player loser) {
         Lobby lobby = getLobbyById(id);
 
+
+        if(!lobby.players().contains(loser)) {
+            throw new PlayerNotPartOfLobbyException("Trying to set loser that is not in the lobby");
+        }
+
         lobby.losers().add(loser);
         return lobbyRepo.save(lobby);
     }

@@ -626,4 +626,88 @@ class LobbyControllerIntegrationTest {
                                  }
                         """));
     }
+
+    @DirtiesContext
+    @Test
+    void setLoserTest_whenSettingLoserOfLobbyThatDoesNotExist_throwLobbyNotFoundException() throws Exception {
+        // Given & When
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/lobby/1/setLoser")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                    {
+                                        "id": "2",
+                                        "name": "Soso"
+                                    }
+                                """)
+                )
+
+                // Then
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertInstanceOf(LobbyNotFoundException.class, result.getResolvedException()))
+                .andExpect(content().string(""));
+    }
+
+
+    @DirtiesContext
+    @Test
+    void setLoserTest_whenSettingLoserOfLobbyThatIsNotPartOfThatLobby_throwPlayerNotPartOfLobbyException() throws Exception {
+        // Given
+        lobbyRepo.save(testLobby);
+
+        // When
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/lobby/1/setLoser")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                 { "player":
+                                     {
+                                        "id": "3",
+                                        "name": "Jürgen"
+                                     },
+                                 "time": 123
+                                 }
+                                """)
+                )
+
+                // Then
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertInstanceOf(PlayerNotPartOfLobbyException.class, result.getResolvedException()))
+                .andExpect(content().string(""));
+    }
+
+    @DirtiesContext
+    @Test
+    void setLoserTest_whenSettingLoserOfLobby_returnLobbyWithPlayerAsPartOfLosers() throws Exception {
+        // Given
+        lobbyRepo.save(testLobby);
+
+        // When
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/lobby/1/setLoser")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                    {
+                                        "id": "2",
+                                        "name": "Soso"
+                                    }
+                                """)
+                )
+
+                // Then
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                                 {
+                                    "id": "1",
+                                    "host": { "id" :  "1", "name":  "Paul"},
+                                    "players": [{ "id" :  "1", "name":  "Paul"}, { "id" :  "2", "name":  "Soso"}],
+                                    "isGameInProgress": false,
+                                    "isGameOver": false,
+                                    "difficulty": 4,
+                                    "winner": null,
+                                    "losers": [{ "id" :  "2", "name":  "Soso"}],
+                                    "streakToWin": 3,
+                                    "timeToBeat": null,
+                                    "lastGameStarted": null
+                                 }
+                        """));
+    }
+
 }
