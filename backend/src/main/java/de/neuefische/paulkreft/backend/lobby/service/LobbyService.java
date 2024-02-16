@@ -74,7 +74,7 @@ public class LobbyService {
         }
 
         if (winner == null) {
-            lobbyRepo.save(lobby.withWinner(player).withTimeToBeat(time));
+            return lobbyRepo.save(lobby.withWinner(player).withTimeToBeat(time));
         }
 
         if (lobby.timeToBeat() != null && lobby.timeToBeat() <= time) {
