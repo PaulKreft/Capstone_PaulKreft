@@ -3,6 +3,7 @@ package de.neuefische.paulkreft.backend.lobby.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import de.neuefische.paulkreft.backend.exception.LobbyNotFoundException;
 import de.neuefische.paulkreft.backend.lobby.model.Lobby;
 import de.neuefische.paulkreft.backend.lobby.repository.LobbyRepo;
 import de.neuefische.paulkreft.backend.users.models.Player;
@@ -27,7 +28,7 @@ public class LobbyService {
 
     public Lobby updateLobby(Lobby lobby) {
         if (!lobbyRepo.existsById(lobby.id())) {
-            throw new RuntimeException();
+            throw new LobbyNotFoundException("Could not find lobby");
         }
 
         return lobbyRepo.save(lobby);

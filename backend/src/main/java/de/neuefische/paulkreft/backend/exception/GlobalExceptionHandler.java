@@ -54,4 +54,10 @@ public class GlobalExceptionHandler {
     public String handleException(UsernameNotFoundException exception) {
         return exception.getMessage();
     }
+
+    @ExceptionHandler({LobbyNotFoundException.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String handleException(LobbyNotFoundException exception) {
+        return exception.getMessage();
+    }
 }
