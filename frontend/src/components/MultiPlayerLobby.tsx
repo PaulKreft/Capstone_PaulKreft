@@ -27,12 +27,17 @@ export const MultiPlayerLobby: React.FC<ActiveLobbyProps> = ({ user }) => {
     return () => {
       // on navigating away from the lobby component, leave the lobby
       axios.put(`/api/lobby/${id}/leave`, player).then((response) => {
-        const updatedLobby = response.data;
-        setLobby(updatedLobby);
+          console.log(response.data)
 
         // if you were the last one in the lobby, delete the lobby
         if (!response.data.players.length) {
           axios.delete(`/api/lobby/${id}`).then((response) => console.log(response));
+          return;
+        }
+
+        // otherwise, if was host, transfer ownership
+        if(response.data.host.id === player.id){
+            axios.put(`/api/lobby`, {...response.data, host: response.data.players[0]}).then((response) => console.log(response));
         }
       });
       clearInterval(interval);
@@ -141,7 +146,7 @@ export const MultiPlayerLobby: React.FC<ActiveLobbyProps> = ({ user }) => {
               ))}
             </div>
             <div className={cn("mt-10", lobby.host.id !== player.id ? "hidden" : "block")}>
-              <span className="mr-5 font-medium">Streak to win</span>’
+              <span className="mr-5 font-medium">Streak to win</span>
               <input
                 className="h-max w-20 items-center rounded-lg border-2 border-black bg-white px-3 py-1 font-light text-black"
                 value={lobby.streakToWin.toString()}
