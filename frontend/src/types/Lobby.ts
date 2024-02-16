@@ -3,7 +3,7 @@ import {Difficulty} from "./Difficulty.ts";
 
 export type Lobby = {
   id: string;
-  owner: Player;
+  host: Player;
   players: Player[];
   isGameInProgress: boolean;
   isGameOver: boolean;

@@ -133,14 +133,14 @@ export const MultiPlayerLobby: React.FC<ActiveLobbyProps> = ({ user }) => {
       <div className="flex flex-1 flex-col items-center justify-center">
         <div className="flex justify-evenly rounded-2xl border-2 border-black px-20 py-10">
           <div className="flex flex-col items-center">
-            <div className="text-xl font-extrabold">{`${lobby.owner.name}'s lobby`}</div>
-            <div className="mb-5 text-lg font-light">{`ID: ${lobby.id}`}</div>
-            <div className="flex flex-col gap-1 rounded-lg border border-black p-3">
+            <div className="text-xl font-extrabold">{`${lobby.host.name}'s lobby`}</div>
+            <div className="text-lg font-light">{`ID: ${lobby.id}`}</div>
+            <div className="mt-12 flex flex-col gap-1 rounded-lg border border-black p-3">
               {lobby.players.map((player) => (
                 <div key={player.id}> {player.name}</div>
               ))}
             </div>
-            <div className={cn("mt-10", lobby.owner.id !== player.id ? "hidden" : "block")}>
+            <div className={cn("mt-10", lobby.host.id !== player.id ? "hidden" : "block")}>
               <span className="mr-5 font-medium">Streak to win</span>’
               <input
                 className="h-max w-20 items-center rounded-lg border-2 border-black bg-white px-3 py-1 font-light text-black"
@@ -150,7 +150,7 @@ export const MultiPlayerLobby: React.FC<ActiveLobbyProps> = ({ user }) => {
                 min="1"
               />
             </div>
-            {lobby.owner.id === player.id ? (
+            {lobby.host.id === player.id ? (
               <button
                 className="mt-6 h-max items-center rounded-lg border-2 border-black bg-black px-9 py-3 text-xl font-light text-white hover:bg-white hover:text-black disabled:bg-black disabled:text-white"
                 onClick={startGame}
