@@ -1,23 +1,24 @@
 import { useParams } from "react-router-dom";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { Lobby } from "../types/Lobby.ts";
-import Spinner from "./Spinner.tsx";
+import { Spinner } from "./Spinner.tsx";
 import axios from "axios";
 import { MultiPlay } from "./MultiPlay.tsx";
 import { Player } from "../types/Player.ts";
 import { User } from "../types/User.ts";
+import { cn } from "../lib/utils.ts";
 
 type ActiveLobbyProps = {
   user: User;
 };
 
 export const MultiPlayerLobby: React.FC<ActiveLobbyProps> = ({ user }) => {
+  const player: Player = { id: user ? user.id : "", name: user ? user.name : "" };
+
   const { id } = useParams();
   const [lobby, setLobby] = useState<Lobby>();
 
   const [startTime, setStartTime] = useState<number>();
-
-  const player: Player = { id: user ? user.id : "", name: user ? user.name : "" };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -139,8 +140,8 @@ export const MultiPlayerLobby: React.FC<ActiveLobbyProps> = ({ user }) => {
                 <div key={player.id}> {player.name}</div>
               ))}
             </div>
-            <div className="mt-10">
-              <span className="mr-5 font-medium">Streak to win</span>
+            <div className={cn("mt-10", lobby.owner.id !== player.id ? "hidden" : "block")}>
+              <span className="mr-5 font-medium">Streak to win</span>’
               <input
                 className="h-max w-20 items-center rounded-lg border-2 border-black bg-white px-3 py-1 font-light text-black"
                 value={lobby.streakToWin.toString()}
@@ -149,13 +150,18 @@ export const MultiPlayerLobby: React.FC<ActiveLobbyProps> = ({ user }) => {
                 min="1"
               />
             </div>
-            <button
-              className="mt-6 h-max items-center rounded-lg border-2 border-black bg-black px-9 py-3 text-xl font-light text-white hover:bg-white hover:text-black disabled:bg-black disabled:text-white"
-              onClick={startGame}
-              disabled={lobby.players.length <= 1 || !lobby.streakToWin}
-            >
-              Start Game
-            </button>
+            {lobby.owner.id === player.id ? (
+              <button
+                className="mt-6 h-max items-center rounded-lg border-2 border-black bg-black px-9 py-3 text-xl font-light text-white hover:bg-white hover:text-black disabled:bg-black disabled:text-white"
+                onClick={startGame}
+              >
+                Start Game
+              </button>
+            ) : (
+              <div className="mt-12 flex flex-col items-center gap-2">
+                Waiting for host <Spinner size="sm" />
+              </div>
+            )}
           </div>
         </div>
       </div>

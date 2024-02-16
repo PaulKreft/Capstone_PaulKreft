@@ -16,7 +16,7 @@ import Footer from "./components/Footer.tsx";
 import { EmailLogin } from "./components/EmailLogin.tsx";
 import { EmailSignUp } from "./components/EmailSignUp.tsx";
 import { Profile } from "./components/Profile.tsx";
-import Spinner from "./components/Spinner.tsx";
+import { Spinner } from "./components/Spinner.tsx";
 
 function App() {
   const navigate = useNavigate();

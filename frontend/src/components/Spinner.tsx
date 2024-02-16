@@ -1,9 +1,21 @@
-export default function Spinner() {
+import React from "react";
+import { cn } from "../lib/utils.ts";
+
+type SpinnerProps = {
+  size?: "sm" | "md" | "lg";
+};
+
+export const Spinner: React.FC<SpinnerProps> = ({ size = "lg" }) => {
   return (
     <div role="status">
       <svg
         aria-hidden="true"
-        className="inline h-32 w-32 animate-spin-slow fill-black text-white"
+        className={cn(
+          "inline animate-spin-slow fill-black text-white",
+          size === "sm" && "h-8 w-8",
+          size === "md" && "h-16 w-16",
+          size === "lg" && "h-32 w-32",
+        )}
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -20,4 +32,4 @@ export default function Spinner() {
       <span className="sr-only">Loading...</span>
     </div>
   );
-}
+};
