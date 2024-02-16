@@ -24,7 +24,16 @@ export const MultiPlayerLobby: React.FC<ActiveLobbyProps> = ({ user }) => {
       axios.get(`/api/lobby/${id}`).then((response) => setLobby(response.data));
     }, 3000);
     return () => {
-      axios.put(`/api/lobby/${id}/leave`, player).then((response) => setLobby(response.data));
+      // on navigating away from the lobby component, leave the lobby
+      axios.put(`/api/lobby/${id}/leave`, player).then((response) => {
+        const updatedLobby = response.data;
+        setLobby(updatedLobby);
+
+        // if you were the last one in the lobby, delete the lobby
+        if (!response.data.players.length) {
+          axios.delete(`/api/lobby/${id}`).then((response) => console.log(response));
+        }
+      });
       clearInterval(interval);
     };
   }, [id]);
