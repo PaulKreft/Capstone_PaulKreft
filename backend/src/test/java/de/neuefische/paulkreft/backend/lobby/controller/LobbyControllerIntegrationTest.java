@@ -470,4 +470,160 @@ class LobbyControllerIntegrationTest {
                 .andExpect(result -> assertInstanceOf(PlayerNotPartOfLobbyException.class, result.getResolvedException()))
                 .andExpect(content().string(""));
     }
+
+    @DirtiesContext
+    @Test
+    void setWinnerTest_whenSettingWinnerOfLobby_returnLobbyWithWinnerAndTimeToBeat() throws Exception {
+        // Given
+        lobbyRepo.save(testLobby);
+
+        // When
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/lobby/1/setWinner")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                 { "player":
+                                     {
+                                        "id": "2",
+                                        "name": "Soso"
+                                     },
+                                 "time": 123
+                                 }
+                                """)
+                )
+
+                // Then
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                                 {
+                                    "id": "1",
+                                    "host": { "id" :  "1", "name":  "Paul"},
+                                    "players": [{ "id" :  "1", "name":  "Paul"}, { "id" :  "2", "name":  "Soso"}],
+                                    "isGameInProgress": false,
+                                    "isGameOver": false,
+                                    "difficulty": 4,
+                                    "winner": { "id" :  "2", "name":  "Soso"},
+                                    "losers": [],
+                                    "streakToWin": 3,
+                                    "timeToBeat": 123,
+                                    "lastGameStarted": null
+                                 }
+                        """));
+    }
+
+    @DirtiesContext
+    @Test
+    void setWinnerTest_whenSettingWinnerWithBetterTimeThanWinnerAlreadySet_returnLobbyWithWinnerAndTimeToBeatAndOldWinnerPartOfLosers() throws Exception {
+        // Given
+        lobbyRepo.save(testLobby.withWinner(testLobby.host()).withTimeToBeat(500));
+
+        // When
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/lobby/1/setWinner")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                 { "player":
+                                     {
+                                        "id": "2",
+                                        "name": "Soso"
+                                     },
+                                 "time": 123
+                                 }
+                                """)
+                )
+
+                // Then
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                                 {
+                                    "id": "1",
+                                    "host": { "id" :  "1", "name":  "Paul"},
+                                    "players": [{ "id" :  "1", "name":  "Paul"}, { "id" :  "2", "name":  "Soso"}],
+                                    "isGameInProgress": false,
+                                    "isGameOver": false,
+                                    "difficulty": 4,
+                                    "winner": { "id" :  "2", "name":  "Soso"},
+                                    "losers": [{ "id" :  "1", "name":  "Paul"}],
+                                    "streakToWin": 3,
+                                    "timeToBeat": 123,
+                                    "lastGameStarted": null
+                                 }
+                        """));
+    }
+
+    @DirtiesContext
+    @Test
+    void setWinnerTest_whenSettingWinnerWithSameTimeThanWinnerAlreadySet_returnLobbyWithWinnerAndTimeToBeatAndOldWinnerPartOfLosers() throws Exception {
+        // Given
+        lobbyRepo.save(testLobby.withWinner(testLobby.host()).withTimeToBeat(123));
+
+        // When
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/lobby/1/setWinner")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                 { "player":
+                                     {
+                                        "id": "2",
+                                        "name": "Soso"
+                                     },
+                                 "time": 123
+                                 }
+                                """)
+                )
+
+                // Then
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                                 {
+                                    "id": "1",
+                                    "host": { "id" :  "1", "name":  "Paul"},
+                                    "players": [{ "id" :  "1", "name":  "Paul"}, { "id" :  "2", "name":  "Soso"}],
+                                    "isGameInProgress": false,
+                                    "isGameOver": false,
+                                    "difficulty": 4,
+                                    "winner": { "id" :  "2", "name":  "Soso"},
+                                    "losers": [{ "id" :  "1", "name":  "Paul"}],
+                                    "streakToWin": 3,
+                                    "timeToBeat": 123,
+                                    "lastGameStarted": null
+                                 }
+                        """));
+    }
+
+    @DirtiesContext
+    @Test
+    void setWinnerTest_whenSettingWinnerWithWorseTimeThanWinnerAlreadySet_returnLobbyWithNewWinnerAsPartOfLosers() throws Exception {
+        // Given
+        lobbyRepo.save(testLobby.withWinner(testLobby.host()).withTimeToBeat(123));
+
+        // When
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/lobby/1/setWinner")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                 { "player":
+                                     {
+                                        "id": "2",
+                                        "name": "Soso"
+                                     },
+                                 "time": 500
+                                 }
+                                """)
+                )
+
+                // Then
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                                 {
+                                    "id": "1",
+                                    "host": { "id" :  "1", "name":  "Paul"},
+                                    "players": [{ "id" :  "1", "name":  "Paul"}, { "id" :  "2", "name":  "Soso"}],
+                                    "isGameInProgress": false,
+                                    "isGameOver": false,
+                                    "difficulty": 4,
+                                    "winner": { "id" :  "1", "name":  "Paul"},
+                                    "losers": [{ "id" :  "2", "name":  "Soso"}],
+                                    "streakToWin": 3,
+                                    "timeToBeat": 123,
+                                    "lastGameStarted": null
+                                 }
+                        """));
+    }
 }
