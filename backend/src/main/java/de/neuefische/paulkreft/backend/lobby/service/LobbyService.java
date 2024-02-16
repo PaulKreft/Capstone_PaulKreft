@@ -1,6 +1,7 @@
 package de.neuefische.paulkreft.backend.lobby.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.neuefische.paulkreft.backend.exception.LobbyNotFoundException;
@@ -64,8 +65,13 @@ public class LobbyService {
         Lobby lobby = getLobbyById(id);
 
         Player player = new ObjectMapper().treeToValue(payload.get("player"), Player.class);
-        Integer time = payload.get("time").asInt();
+        JsonNode timeNode = payload.get("time");
 
+        if(timeNode == null) {
+            throw new IllegalArgumentException("Time cannot be empty when setting winner");
+        }
+
+        int time = timeNode.asInt();
 
         Player winner = lobby.winner();
 

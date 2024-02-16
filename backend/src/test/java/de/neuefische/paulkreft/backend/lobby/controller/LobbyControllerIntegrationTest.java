@@ -709,27 +709,65 @@ class LobbyControllerIntegrationTest {
 
     @DirtiesContext
     @Test
-    void setWinnerTest_whenSettingLoserOfLobbyThatIsNotPartOfThatLobby_throwPlayerNotPartOfLobbyException() throws Exception {
+    void setWinnerTest_whenSettingWinnerWithoutTime_returnIllegalArgumentException() throws Exception {
         // Given
         lobbyRepo.save(testLobby);
 
         // When
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/lobby/1/setLoser")
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/lobby/1/setWinner")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                  { "player":
                                      {
-                                        "id": "3",
-                                        "name": "Jürgen"
-                                     },
-                                 "time": 123
+                                        "id": "2",
+                                        "name": "Soso"
+                                     }
                                  }
                                 """)
                 )
 
                 // Then
-                .andExpect(status().isNotFound())
-                .andExpect(result -> assertInstanceOf(PlayerNotPartOfLobbyException.class, result.getResolvedException()))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertInstanceOf(IllegalArgumentException.class, result.getResolvedException()))
                 .andExpect(content().string(""));
+    }
+
+    @DirtiesContext
+    @Test
+    void setWinnerTest_whenSettingWinnerWhenWinnerWithNoTimeAlreadySet_returnLobbyWithWinnerAndTimeToBeatAndOldWinnerPartOfLosers() throws Exception {
+        // Given
+        lobbyRepo.save(testLobby.withWinner(testLobby.host()));
+
+        // When
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/lobby/1/setWinner")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                 { "player":
+                                     {
+                                        "id": "2",
+                                        "name": "Soso"
+                                     },
+                                 "time": 5000
+                                 }
+                                """)
+                )
+
+                // Then
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                                 {
+                                    "id": "1",
+                                    "host": { "id" :  "1", "name":  "Paul"},
+                                    "players": [{ "id" :  "1", "name":  "Paul"}, { "id" :  "2", "name":  "Soso"}],
+                                    "isGameInProgress": false,
+                                    "isGameOver": false,
+                                    "difficulty": 4,
+                                    "winner": { "id" :  "2", "name":  "Soso"},
+                                    "losers": [{ "id" :  "1", "name":  "Paul"}],
+                                    "streakToWin": 3,
+                                    "timeToBeat": 5000,
+                                    "lastGameStarted": null
+                                 }
+                        """));
     }
 }
