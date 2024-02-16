@@ -60,4 +60,10 @@ public class GlobalExceptionHandler {
     public String handleException(LobbyNotFoundException exception) {
         return exception.getMessage();
     }
+
+    @ExceptionHandler({PlayerNotPartOfLobbyException.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String handleException(PlayerNotPartOfLobbyException exception) {
+        return exception.getMessage();
+    }
 }

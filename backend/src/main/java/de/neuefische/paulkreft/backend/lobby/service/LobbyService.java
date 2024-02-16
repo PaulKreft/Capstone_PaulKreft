@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.neuefische.paulkreft.backend.exception.LobbyNotFoundException;
+import de.neuefische.paulkreft.backend.exception.PlayerNotPartOfLobbyException;
 import de.neuefische.paulkreft.backend.lobby.model.Lobby;
 import de.neuefische.paulkreft.backend.lobby.repository.LobbyRepo;
 import de.neuefische.paulkreft.backend.users.models.Player;
@@ -67,6 +68,10 @@ public class LobbyService {
 
 
         Player winner = lobby.winner();
+
+        if(!lobby.players().contains(player)) {
+            throw new PlayerNotPartOfLobbyException("Trying to set winner that is not in the lobby");
+        }
 
         if (winner == null) {
             lobbyRepo.save(lobby.withWinner(player).withTimeToBeat(time));
