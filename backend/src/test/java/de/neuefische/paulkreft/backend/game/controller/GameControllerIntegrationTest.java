@@ -42,7 +42,7 @@ class GameControllerIntegrationTest {
 
     @DirtiesContext
     @Test
-    void createGameTest_whenGameCreateGive_thenReturnGame() throws Exception {
+    void createGameTest_whenGameCreateGiven_thenReturnGame() throws Exception {
         Instant now = Instant.parse("2016-06-09T00:00:00Z");
         when(timeService.getNow()).thenReturn(now);
         when(idService.generateUUID()).thenReturn("gameId");
