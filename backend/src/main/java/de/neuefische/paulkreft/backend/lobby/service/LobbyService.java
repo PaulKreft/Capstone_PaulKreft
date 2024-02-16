@@ -22,7 +22,7 @@ public class LobbyService {
     }
 
     public Lobby getLobbyById(String id) {
-        return lobbyRepo.findById(id).orElseThrow(RuntimeException::new);
+        return lobbyRepo.findById(id).orElseThrow(() -> new LobbyNotFoundException("Could not find lobby"));
     }
 
 
