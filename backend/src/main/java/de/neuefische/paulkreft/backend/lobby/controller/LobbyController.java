@@ -24,14 +24,14 @@ public class LobbyController {
         return lobbyService.getLobbyById(id);
     }
 
-    @PutMapping("/{id}/join")
-    public Lobby joinLobby(@PathVariable String id, @RequestBody Player player) {
-        return lobbyService.joinLobby(id, player);
-    }
-
     @PutMapping
     public Lobby updateLobby(@RequestBody Lobby lobby) {
         return lobbyService.updateLobby(lobby);
+    }
+
+    @PutMapping("/{id}/join")
+    public Lobby joinLobby(@PathVariable String id, @RequestBody Player player) {
+        return lobbyService.joinLobby(id, player);
     }
 
     @PutMapping("/{id}/leave")
