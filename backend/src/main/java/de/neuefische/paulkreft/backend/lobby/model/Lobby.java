@@ -11,12 +11,14 @@ import java.util.List;
 public record Lobby(
         @Id
         String id,
+        Player host,
         List<Player> players,
         boolean isGameInProgress,
         boolean isGameOver,
         int difficulty,
         Player winner,
         List<Player> losers,
+        Integer streakToWin,
         Integer timeToBeat,
         Instant lastGameStarted
 ) {

@@ -1,8 +1,11 @@
 package de.neuefische.paulkreft.backend.lobby.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import de.neuefische.paulkreft.backend.exception.LobbyNotFoundException;
+import de.neuefische.paulkreft.backend.exception.PlayerNotPartOfLobbyException;
 import de.neuefische.paulkreft.backend.lobby.model.Lobby;
 import de.neuefische.paulkreft.backend.lobby.repository.LobbyRepo;
 import de.neuefische.paulkreft.backend.users.models.Player;
@@ -21,21 +24,26 @@ public class LobbyService {
     }
 
     public Lobby getLobbyById(String id) {
-        return lobbyRepo.findById(id).orElseThrow(RuntimeException::new);
+        return lobbyRepo.findById(id).orElseThrow(() -> new LobbyNotFoundException("Could not find lobby"));
+    }
+
+
+    public Lobby updateLobby(Lobby lobby) {
+        if (!lobbyRepo.existsById(lobby.id())) {
+            throw new LobbyNotFoundException("Could not find lobby");
+        }
+
+        return lobbyRepo.save(lobby);
     }
 
     public Lobby joinLobby(String id, @RequestBody Player player) {
         Lobby lobby = getLobbyById(id);
 
-        lobby.players().add(player);
-        return lobbyRepo.save(lobby);
-    }
-
-    public Lobby updateLobby(Lobby lobby) {
-        if (!lobbyRepo.existsById(lobby.id())) {
-            throw new RuntimeException();
+        if(lobby.players().contains(player)) {
+            return lobby;
         }
 
+        lobby.players().add(player);
         return lobbyRepo.save(lobby);
     }
 
@@ -57,16 +65,25 @@ public class LobbyService {
         Lobby lobby = getLobbyById(id);
 
         Player player = new ObjectMapper().treeToValue(payload.get("player"), Player.class);
-        Integer time = payload.get("time").asInt();
+        JsonNode timeNode = payload.get("time");
 
+        if(timeNode == null) {
+            throw new IllegalArgumentException("Time cannot be empty when setting winner");
+        }
+
+        int time = timeNode.asInt();
 
         Player winner = lobby.winner();
 
-        if (winner == null) {
-            lobbyRepo.save(lobby.withWinner(player).withTimeToBeat(time));
+        if(!lobby.players().contains(player)) {
+            throw new PlayerNotPartOfLobbyException("Trying to set winner that is not in the lobby");
         }
 
-        if (lobby.timeToBeat() != null && lobby.timeToBeat() <= time) {
+        if (winner == null) {
+            return lobbyRepo.save(lobby.withWinner(player).withTimeToBeat(time));
+        }
+
+        if (lobby.timeToBeat() != null && lobby.timeToBeat() < time) {
             lobby.losers().add(player);
             return lobbyRepo.save(lobby);
         }
@@ -77,6 +94,11 @@ public class LobbyService {
 
     public Lobby setLoser(String id, Player loser) {
         Lobby lobby = getLobbyById(id);
+
+
+        if(!lobby.players().contains(loser)) {
+            throw new PlayerNotPartOfLobbyException("Trying to set loser that is not in the lobby");
+        }
 
         lobby.losers().add(loser);
         return lobbyRepo.save(lobby);
