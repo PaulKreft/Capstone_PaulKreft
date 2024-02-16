@@ -658,13 +658,10 @@ class LobbyControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.put("/api/lobby/1/setLoser")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                 { "player":
                                      {
                                         "id": "3",
                                         "name": "Jürgen"
-                                     },
-                                 "time": 123
-                                 }
+                                     }
                                 """)
                 )
 
@@ -710,4 +707,29 @@ class LobbyControllerIntegrationTest {
                         """));
     }
 
+    @DirtiesContext
+    @Test
+    void setWinnerTest_whenSettingLoserOfLobbyThatIsNotPartOfThatLobby_throwPlayerNotPartOfLobbyException() throws Exception {
+        // Given
+        lobbyRepo.save(testLobby);
+
+        // When
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/lobby/1/setLoser")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                 { "player":
+                                     {
+                                        "id": "3",
+                                        "name": "Jürgen"
+                                     },
+                                 "time": 123
+                                 }
+                                """)
+                )
+
+                // Then
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertInstanceOf(PlayerNotPartOfLobbyException.class, result.getResolvedException()))
+                .andExpect(content().string(""));
+    }
 }
