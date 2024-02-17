@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { cn } from "../lib/utils.ts";
-import { StopWatch } from "./StopWatch.tsx";
 import { TileConfiguration } from "./TileConfiguration.tsx";
 import { addHexColors, getRandomHexColor, subtractHexColors } from "../lib/hexUtils.ts";
 import { shuffleArray } from "../lib/shuffleArray.tsx";
@@ -29,7 +28,6 @@ export const MultiplayerPlay: React.FC<MultiPlayProps> = ({
   const [streak, setStreak] = useState<number>(0);
 
   const [puzzleStartTime, setPuzzleStartTime] = useState<number>();
-  const [endTime, setEndTime] = useState<number>();
 
   const [isOver, setIsOver] = useState<boolean>(false);
 
@@ -53,7 +51,6 @@ export const MultiplayerPlay: React.FC<MultiPlayProps> = ({
     const hasWon: boolean = result === "won";
 
     if (hasWon) {
-      setEndTime(now);
       setStreak((s) => s + 1);
     } else {
       setStreak(0);
@@ -73,7 +70,6 @@ export const MultiplayerPlay: React.FC<MultiPlayProps> = ({
 
   const resetClock = (): void => {
     setPuzzleStartTime(undefined);
-    setEndTime(undefined);
   };
 
   const resetConfig = (): string[] => {
@@ -108,10 +104,6 @@ export const MultiplayerPlay: React.FC<MultiPlayProps> = ({
         <div className={cn("absolute -top-10 left-4 text-xl text-black", streak ? "block" : "hidden")}>
           Streak: {streak}
         </div>
-        <StopWatch
-          className={cn("absolute -top-10 right-3 text-xl text-black", puzzleStartTime && endTime ? "block" : "hidden")}
-          value={puzzleStartTime && endTime ? endTime - puzzleStartTime : null}
-        />
       </TileConfiguration>
 
       <button className="mt-10 rounded-[20px] border-2 border-black px-12 py-4 text-2xl" onClick={shuffleColours}>
