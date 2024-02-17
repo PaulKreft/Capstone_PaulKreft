@@ -1,4 +1,3 @@
-import { cn } from "../lib/utils.ts";
 import { Spinner } from "./Spinner.tsx";
 import React, { ChangeEvent } from "react";
 import { Player } from "../types/Player.ts";
@@ -8,13 +7,19 @@ type MultiplayerLobbyProps = {
   lobby: Lobby;
   player: Player;
   onStreakToWinChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  onDifficultyChange: (event: ChangeEvent<HTMLSelectElement>) => void;
   startGame: () => void;
 };
+
+const EASY = 1;
+const MEDIUM = 2;
+const HARD = 4;
 
 export const MultiplayerLobby: React.FC<MultiplayerLobbyProps> = ({
   lobby,
   player,
   onStreakToWinChange,
+  onDifficultyChange,
   startGame,
 }) => {
   return (
@@ -54,7 +59,7 @@ export const MultiplayerLobby: React.FC<MultiplayerLobbyProps> = ({
             </div>
           ) : lobby.host.id === player.id ? (
             <button
-              className="mt-6 h-max items-center rounded-lg border-2 border-black bg-black px-9 py-3 text-xl font-light text-white hover:bg-white hover:text-black disabled:bg-black disabled:text-white"
+              className="mt-6 h-max items-center rounded-lg border-2 border-black bg-black px-9 py-3 text-xl font-light text-white hover:bg-white hover:text-black"
               onClick={startGame}
             >
               Start Game
