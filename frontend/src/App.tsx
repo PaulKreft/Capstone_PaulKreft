@@ -1,7 +1,7 @@
 import "./App.css";
 import { Play } from "./components/Play.tsx";
 import { LobbyEntrance } from "./components/LobbyEntrance.tsx";
-import { MultiPlayerLobby } from "./components/MultiPlayerLobby.tsx";
+import { MultiplayerSession } from "./components/MultiplayerSession.tsx";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { Home } from "./components/Home.tsx";
 import Login from "./components/Login.tsx";
@@ -62,7 +62,7 @@ function App() {
         <Route path="/" element={<Home user={user} />} />
         <Route path="/play" element={<Play userId={user?.id} />} />
         <Route path="/multiplayer" element={<LobbyEntrance user={user} />} />
-        <Route path="/multiplayer/lobby/:id" element={<MultiPlayerLobby user={user} />} />
+        <Route path="/multiplayer/lobby/:id" element={<MultiplayerSession user={user} />} />
         <Route path="/profile" element={<Profile user={user} />} />
         <Route path="/login" element={<Login />} />
         <Route path="/login/email" element={<EmailLogin login={login} />} />

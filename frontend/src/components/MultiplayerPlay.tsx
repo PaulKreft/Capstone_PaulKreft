@@ -13,19 +13,15 @@ const BLACK = "#000000";
 type MultiPlayProps = {
   playerId?: string;
   difficulty: Difficulty;
-  timeToBeat?: number;
   gameStartTime: number;
-  onLose: () => void;
   onSuccess: (time: number) => void;
   streakToWin: number;
 };
 
-export const MultiPlay: React.FC<MultiPlayProps> = ({
+export const MultiplayerPlay: React.FC<MultiPlayProps> = ({
   playerId,
   difficulty,
-  timeToBeat,
   gameStartTime,
-  onLose,
   onSuccess,
   streakToWin,
 }) => {
@@ -44,20 +40,6 @@ export const MultiPlay: React.FC<MultiPlayProps> = ({
         .map((_value, index) => (index % 2 === 0 ? BLACK : WHITE)),
     );
   }, [difficulty]);
-
-  useEffect(() => {
-    if (isOver) {
-      return;
-    }
-
-    const currentTime: number = Date.now() - gameStartTime;
-
-    if (!timeToBeat || timeToBeat > currentTime) {
-      return;
-    }
-
-    onLose();
-  }, [gameStartTime, timeToBeat]);
 
   useEffect(() => {
     if (streak === streakToWin) {
