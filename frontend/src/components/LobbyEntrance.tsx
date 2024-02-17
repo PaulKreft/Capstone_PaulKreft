@@ -9,6 +9,8 @@ type MultiPlayerProps = {
   user: User;
 };
 
+const EASY = 1;
+
 export const LobbyEntrance: React.FC<MultiPlayerProps> = ({ user }) => {
   const [lobbyId, setLobbyId] = useState<string>("");
 
@@ -29,7 +31,7 @@ export const LobbyEntrance: React.FC<MultiPlayerProps> = ({ user }) => {
       players: [currentPlayer],
       isGameInProgress: false,
       isGameOver: false,
-      difficulty: 4,
+      difficulty: EASY,
       losers: [],
       streakToWin: 3,
     };

@@ -107,6 +107,14 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
     axios.put(`/api/lobby/${id}/setLoser`, player).then((response) => setLobby(response.data));
   };
 
+  if (!lobby) {
+    return (
+      <div className="flex flex-1 flex-col items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
+
   const onStreakToWinChange = (event: ChangeEvent<HTMLInputElement>) => {
     let newValue: number = Math.abs(parseInt(event.target.value));
     if (!event.target.value) {
@@ -121,13 +129,19 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
       .then((response) => setLobby(response.data));
   };
 
-  if (!lobby) {
-    return (
-      <div className="flex flex-1 flex-col items-center justify-center">
-        <Spinner />
-      </div>
-    );
-  }
+  const onDifficultyChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    let newDifficulty: number = Math.abs(parseInt(event.target.value));
+    if (!event.target.value) {
+      newDifficulty = lobby.difficulty;
+    }
+
+    axios
+      .put("/api/lobby", {
+        ...lobby,
+        difficulty: newDifficulty,
+      })
+      .then((response) => setLobby(response.data));
+  };
 
   if (!user) {
     return <div>no user</div>;
@@ -157,7 +171,13 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
 
   if (!lobby.isGameInProgress) {
     return (
-      <MultiplayerLobby lobby={lobby} player={player} onStreakToWinChange={onStreakToWinChange} startGame={startGame} />
+      <MultiplayerLobby
+        lobby={lobby}
+        player={player}
+        onStreakToWinChange={onStreakToWinChange}
+        onDifficultyChange={onDifficultyChange}
+        startGame={startGame}
+      />
     );
   }
 
