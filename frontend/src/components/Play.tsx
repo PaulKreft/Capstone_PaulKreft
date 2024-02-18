@@ -29,8 +29,6 @@ export const Play: React.FC<PlayProps> = ({ userId }) => {
   const [startTime, setStartTime] = useState<number>();
   const [endTime, setEndTime] = useState<number>();
 
-  console.log(typeof EASY)
-
   useEffect(() => {
     setColorConfig(
       Array(4 + difficulty * 2)
@@ -89,13 +87,11 @@ export const Play: React.FC<PlayProps> = ({ userId }) => {
   };
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center px-5 pb-32 pt-20 xs:pb-20 sm:px-10">
-      <TileConfiguration baseConfig={colorConfig} overEvent={handleOverEvent}>
-        <div className={cn("absolute -top-10 left-4 text-xl text-black", streak ? "block" : "hidden")}>
-          Streak: {streak}
-        </div>
+    <div className="flex flex-1 flex-col items-center px-2 pb-32 xs:pb-20 sm:mx-10 justify-center">
+      <TileConfiguration className="mt-6" baseConfig={colorConfig} overEvent={handleOverEvent}>
+        <div className={cn("text-xl text-black", streak ? "text-black" : "text-transparent")}>Streak: {streak}</div>
         <StopWatch
-          className={cn("absolute -top-10 right-3 text-xl text-black", startTime && endTime ? "block" : "hidden")}
+          className={cn("text-xl text-black", startTime && endTime ? "text-black" : "text-transparent")}
           value={startTime && endTime ? endTime - startTime : null}
         />
       </TileConfiguration>

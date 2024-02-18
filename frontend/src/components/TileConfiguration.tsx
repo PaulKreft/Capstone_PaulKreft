@@ -6,6 +6,7 @@ import { addHexColors } from "../lib/hexUtils.ts";
 
 type TileConfigurationProps = {
   children: React.ReactNode;
+  className: string;
   baseConfig: string[];
   overEvent: (result: "lost" | "won") => void;
 };
@@ -18,7 +19,7 @@ type Tile = {
 const WHITE = "#ffffff";
 const BLACK = "#000000";
 
-export const TileConfiguration: React.FC<TileConfigurationProps> = ({ children, baseConfig, overEvent }) => {
+export const TileConfiguration: React.FC<TileConfigurationProps> = ({ children, className, baseConfig, overEvent }) => {
   const [currentConfig, setCurrentConfig] = useState<Tile[]>([]);
 
   const [isLocked, setIsLocked] = useState<boolean>(false);
@@ -108,24 +109,28 @@ export const TileConfiguration: React.FC<TileConfigurationProps> = ({ children, 
   };
 
   return (
-    <div
-      className={cn(
-        "relative flex flex-wrap justify-center gap-4",
-        baseConfig.length === 6 ? "max-w-80 sm:max-w-96" : "max-w-[24rem] sm:max-w-[32rem]",
-      )}
-    >
-      {children}
-      {currentConfig.map((tile) => (
-        <Tile
-          key={tile.id}
-          onClick={() => selectTile(tile)}
-          color={tile.color}
-          isSelected={sourceTile?.id === tile.id}
-          isWrong={wrongMatch === tile.id}
-          isCorrect={actualMatch === tile.id}
-          isClickable={!(isLocked || tile.color === WHITE || tile.color === BLACK)}
-        />
-      ))}
+    <div className={className}>
+      <div className={cn("mb-2 flex justify-around xs:justify-between sm:px-4", baseConfig.length === 6 ? "px-7" : "px-4")}>
+        {children}
+      </div>
+      <div
+        className={cn(
+          "relative flex flex-wrap justify-center gap-4",
+          baseConfig.length === 6 ? "max-w-80 sm:max-w-96" : "max-w-[24rem] sm:max-w-[32rem]",
+        )}
+      >
+        {currentConfig.map((tile) => (
+          <Tile
+            key={tile.id}
+            onClick={() => selectTile(tile)}
+            color={tile.color}
+            isSelected={sourceTile?.id === tile.id}
+            isWrong={wrongMatch === tile.id}
+            isCorrect={actualMatch === tile.id}
+            isClickable={!(isLocked || tile.color === WHITE || tile.color === BLACK)}
+          />
+        ))}
+      </div>
     </div>
   );
 };
