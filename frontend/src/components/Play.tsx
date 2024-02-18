@@ -89,9 +89,9 @@ export const Play: React.FC<PlayProps> = ({ userId }) => {
   return (
     <div className="flex flex-1 flex-col items-center px-2 pb-32 xs:pb-20 sm:mx-10 justify-center">
       <TileConfiguration className="mt-6" baseConfig={colorConfig} overEvent={handleOverEvent}>
-        <div className={cn("text-xl text-black", streak ? "block" : "hidden")}>Streak: {streak}</div>
+        <div className={cn("text-xl text-black", streak ? "text-black" : "text-transparent")}>Streak: {streak}</div>
         <StopWatch
-          className={cn("text-xl text-black", startTime && endTime ? "block" : "hidden")}
+          className={cn("text-xl text-black", startTime && endTime ? "text-black" : "text-transparent")}
           value={startTime && endTime ? endTime - startTime : null}
         />
       </TileConfiguration>
