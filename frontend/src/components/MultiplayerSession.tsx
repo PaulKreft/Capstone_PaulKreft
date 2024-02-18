@@ -116,15 +116,16 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
   }
 
   const onStreakToWinChange = (event: ChangeEvent<HTMLInputElement>) => {
-    let newValue: number = Math.abs(parseInt(event.target.value));
-    if (!event.target.value) {
-      newValue = 1;
+    let newStreakToWin: number | null = Math.abs(parseInt(event.target.value));
+
+    if (!event.target.value || event.target.value === "0") {
+        newStreakToWin = null;
     }
 
     axios
       .put("/api/lobby", {
         ...lobby,
-        streakToWin: newValue,
+        streakToWin: newStreakToWin,
       })
       .then((response) => setLobby(response.data));
   };

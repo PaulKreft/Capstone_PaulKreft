@@ -35,18 +35,25 @@ export const MultiplayerLobby: React.FC<MultiplayerLobbyProps> = ({
           </div>
           <div className={lobby.host.id !== player.id ? "hidden" : "mt-10 flex flex-col gap-2"}>
             <div className="flex items-center justify-between">
-              <span className="mr-5 font-medium">Difficulty</span>
-              <select value={lobby.difficulty} onChange={onDifficultyChange}>
+              <label htmlFor="difficultySelect" className="mr-5 font-medium">
+                Difficulty
+              </label>
+              <select
+              className="h-max items-center rounded-lg border-2 border-transparent px-3 py-1 font-light text-black"
+                  id="difficultySelect" value={lobby.difficulty} onChange={onDifficultyChange}>
                 <option value={EASY}>Easy</option>
                 <option value={MEDIUM}>Medium</option>
                 <option value={HARD}>Hard</option>
               </select>
             </div>
             <div className="flex items-center justify-between">
-              <span className="mr-5 font-medium">Streak to win</span>
+              <label htmlFor="streakToWinInput" className="mr-5 font-medium">
+                Streak to win
+              </label>
               <input
-                className="h-max w-20 items-center rounded-lg border-2 border-black bg-white px-3 py-1 font-light text-black"
-                value={lobby.streakToWin.toString()}
+                id="streakToWinInput"
+                className="h-max w-20 items-center rounded-lg border border-black bg-white px-3 py-1 font-light text-black"
+                value={lobby.streakToWin?.toString() || ""}
                 onChange={onStreakToWinChange}
                 type="number"
                 min="1"
@@ -59,8 +66,9 @@ export const MultiplayerLobby: React.FC<MultiplayerLobbyProps> = ({
             </div>
           ) : lobby.host.id === player.id ? (
             <button
-              className="mt-6 h-max items-center rounded-lg border-2 border-black bg-black px-9 py-3 text-xl font-light text-white hover:bg-white hover:text-black"
+              className="mt-6 h-max items-center rounded-lg border-2 border-black bg-black px-9 py-3 text-xl font-light text-white hover:bg-white hover:text-black disabled:border-transparent disabled:bg-black/70 disabled:text-white/80"
               onClick={startGame}
+              disabled={!lobby.streakToWin}
             >
               Start Game
             </button>
