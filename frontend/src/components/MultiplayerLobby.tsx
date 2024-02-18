@@ -23,8 +23,8 @@ export const MultiplayerLobby: React.FC<MultiplayerLobbyProps> = ({
   startGame,
 }) => {
   return (
-    <div className="flex flex-1 flex-col items-center justify-center">
-      <div className="flex justify-evenly rounded-2xl border-2 border-black px-20 py-10">
+    <div className="flex flex-1 flex-col items-center justify-center px-2">
+      <div className="flex w-full items-center justify-evenly rounded-2xl border-2 border-black xs:px-20 xs:w-max py-10">
         <div className="flex flex-col items-center">
           <div className="text-xl font-extrabold">{`${lobby.host.name}'s lobby`}</div>
           <div className="text-lg font-light">{`ID: ${lobby.id}`}</div>
