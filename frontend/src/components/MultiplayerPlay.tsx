@@ -101,7 +101,7 @@ export const MultiplayerPlay: React.FC<MultiPlayProps> = ({
   return (
     <div className="flex flex-1 flex-col items-center justify-center px-2 pb-32 xs:pb-20 sm:mx-10">
       <TileConfiguration className="mt-6" baseConfig={colorConfig} overEvent={handleOverEvent}>
-        <div className={cn("text-xl text-black", streak ? "block" : "hidden")}>Streak: {streak}</div>
+        <div className={cn("text-xl text-black", streak ? "text-black" : "text-transparent")}>Streak: {streak}</div>
       </TileConfiguration>
 
       <button className="mt-10 rounded-[20px] border-2 border-black px-12 py-4 text-2xl" onClick={shuffleColours}>

@@ -39,7 +39,7 @@ export const MultiplayerLobby: React.FC<MultiplayerLobbyProps> = ({
                 Difficulty
               </label>
               <select
-              className="h-max items-center rounded-lg border-2 border-transparent px-3 py-1 font-light text-black"
+              className="h-max items-center rounded-lg border-2 border-transparent px-3 py-1 font-light bg-white text-black"
                   id="difficultySelect" value={lobby.difficulty} onChange={onDifficultyChange}>
                 <option value={EASY}>Easy</option>
                 <option value={MEDIUM}>Medium</option>
