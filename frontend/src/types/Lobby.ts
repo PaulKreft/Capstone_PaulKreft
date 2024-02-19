@@ -12,5 +12,5 @@ export type Lobby = {
   losers: Player[];
   streakToWin: number;
   timeToBeat?: number;
-  lastGameStarted?: string;
+  lastGameStarted?: Date;
 };

@@ -8,6 +8,7 @@ import { Player } from "../types/Player.ts";
 import { User } from "../types/User.ts";
 import { MultiplayerLobby } from "./MultiplayerLobby.tsx";
 import { MultiplayerGameOverScreen } from "./MultiplayerGameOverScreen.tsx";
+import { CountDown } from "./CountDown.tsx";
 
 type ActiveLobbyProps = {
   user: User;
@@ -45,11 +46,11 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
       });
   };
 
-  useEffect(() => {
+  const startTimer = (): void => {
     setStartTime(Date.now());
-  }, [lobby?.lastGameStarted]);
+  };
 
-  const startGame = (): void => {
+  const initiateGame = (): void => {
     axios
       .put(`/api/lobby`, {
         ...lobby,
@@ -58,7 +59,7 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
         timeToBeat: null,
         winner: null,
         losers: [],
-        lastGameStarted: Date.now(),
+        lastGameStarted: new Date(Date.now()),
       })
       .then((response) => {
         setLobby(response.data);
@@ -145,7 +146,7 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
   }
 
   if (lobby.losers.length && lobby.losers.length >= lobby.players.length - 1) {
-    return <MultiplayerGameOverScreen lobby={lobby} player={player} startGame={startGame} backToLobby={backToLobby} />;
+    return <MultiplayerGameOverScreen lobby={lobby} player={player} startGame={initiateGame} backToLobby={backToLobby} />;
   }
 
   if (!lobby.isGameInProgress) {
@@ -155,16 +156,12 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
         player={player}
         onStreakToWinChange={onStreakToWinChange}
         onDifficultyChange={onDifficultyChange}
-        startGame={startGame}
+        startGame={initiateGame}
       />
     );
   }
 
-  if (!startTime) {
-    return <Spinner />;
-  }
-
-  return (
+  return startTime && startTime > (new Date(lobby.lastGameStarted ?? 0).getTime()) ? (
     <MultiplayerPlay
       playerId={player.id}
       difficulty={lobby.difficulty}
