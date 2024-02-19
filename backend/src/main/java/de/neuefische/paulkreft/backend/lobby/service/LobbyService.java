@@ -8,7 +8,7 @@ import de.neuefische.paulkreft.backend.exception.LobbyNotFoundException;
 import de.neuefische.paulkreft.backend.exception.PlayerNotPartOfLobbyException;
 import de.neuefische.paulkreft.backend.lobby.model.Lobby;
 import de.neuefische.paulkreft.backend.lobby.repository.LobbyRepo;
-import de.neuefische.paulkreft.backend.users.models.Player;
+import de.neuefische.paulkreft.backend.user.model.Player;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -1,9 +1,9 @@
 package de.neuefische.paulkreft.backend.security.controller;
 
 import de.neuefische.paulkreft.backend.exception.EmailAlreadyRegisteredException;
-import de.neuefische.paulkreft.backend.security.models.SignUpRequest;
-import de.neuefische.paulkreft.backend.security.services.SignUpService;
-import de.neuefische.paulkreft.backend.users.models.UserGet;
+import de.neuefische.paulkreft.backend.security.model.SignUpRequest;
+import de.neuefische.paulkreft.backend.security.service.SignUpService;
+import de.neuefische.paulkreft.backend.user.model.UserGet;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
