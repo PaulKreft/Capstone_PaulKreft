@@ -24,13 +24,30 @@ export const MultiplayerLobby: React.FC<MultiplayerLobbyProps> = ({
 }) => {
   return (
     <div className="flex flex-1 flex-col items-center justify-center px-2">
-      <div className="flex w-full items-center justify-evenly rounded-2xl border-2 border-black xs:px-20 xs:w-max py-10">
+      <div className="flex w-full items-center justify-evenly rounded-2xl border-2 border-black py-10 xs:w-max xs:px-20">
         <div className="flex flex-col items-center">
-          <div className="text-xl font-extrabold">{`${lobby.host.name}'s lobby`}</div>
+          <div className="text-xl font-extrabold">{`${lobby.host.name.substring(0, 15)}'s lobby`}</div>
           <div className="text-lg font-light">{`ID: ${lobby.id}`}</div>
-          <div className="mt-12 flex flex-col gap-1 rounded-lg border border-black p-3">
+
+          {lobby.host.id !== player.id && (
+            <div className="mt-5 flex gap-5">
+              <div>
+                <span className="font-light">Streak to win </span>
+                <span className="font-bold">{lobby.difficulty}</span>
+              </div>
+              <div>
+                <span className="font-light">Difficulty </span>
+                <span className="font-bold">{lobby.streakToWin ?? "1"}</span>
+              </div>
+            </div>
+          )}
+
+          <div className="mt-12 flex flex-col gap-1">
             {lobby.players.map((player) => (
-              <div key={player.id}> {player.name}</div>
+              <div key={player.id}>
+                <div> {player.name}</div>
+                <div className="w-full h-[1px] mt-1 mb-1 bg-gradient-to-r from-white via-black to-white"/>
+              </div>
             ))}
           </div>
           <div className={lobby.host.id !== player.id ? "hidden" : "mt-10 flex flex-col gap-2"}>
@@ -39,8 +56,11 @@ export const MultiplayerLobby: React.FC<MultiplayerLobbyProps> = ({
                 Difficulty
               </label>
               <select
-              className="h-max items-center rounded-lg border-2 border-transparent px-3 py-1 font-light bg-white text-black"
-                  id="difficultySelect" value={lobby.difficulty} onChange={onDifficultyChange}>
+                className="h-max items-center rounded-lg border-2 border-transparent bg-white px-3 py-1 font-light text-black"
+                id="difficultySelect"
+                value={lobby.difficulty}
+                onChange={onDifficultyChange}
+              >
                 <option value={EASY}>Easy</option>
                 <option value={MEDIUM}>Medium</option>
                 <option value={HARD}>Hard</option>
@@ -60,11 +80,13 @@ export const MultiplayerLobby: React.FC<MultiplayerLobbyProps> = ({
               />
             </div>
           </div>
-          {lobby.players.length < 2 ? (
+          {lobby.players.length < 2 && (
             <div className="mt-12 flex flex-col items-center gap-2">
               Waiting for players <Spinner size="sm" />
             </div>
-          ) : lobby.host.id === player.id ? (
+          )}
+
+          {lobby.players.length > 1 && lobby.host.id === player.id ? (
             <button
               className="mt-6 h-max items-center rounded-lg border-2 border-black bg-black px-9 py-3 text-xl font-light text-white hover:bg-white hover:text-black disabled:border-transparent disabled:bg-black/70 disabled:text-white/80"
               onClick={startGame}
