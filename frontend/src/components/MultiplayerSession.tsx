@@ -7,6 +7,7 @@ import { MultiplayerPlay } from "./MultiplayerPlay.tsx";
 import { Player } from "../types/Player.ts";
 import { User } from "../types/User.ts";
 import { MultiplayerLobby } from "./MultiplayerLobby.tsx";
+import { MultiplayerGameOverScreen } from "./MultiplayerGameOverScreen.tsx";
 
 type ActiveLobbyProps = {
   user: User;
@@ -24,23 +25,23 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
     axios.get(`/api/lobby/${id}`).then((response) => {
       setLobby(response.data);
     });
-    startListening();
+    pollForLobbyChanges();
 
     return () => {
       axios.put(`/api/lobby/${id}/leave`, player).then(() => {});
     };
   }, []);
 
-  const startListening = (): void => {
+  const pollForLobbyChanges = (): void => {
     axios
       .get(`/api/lobby/long`)
       .then((response) => {
         setLobby(response.data);
-        startListening();
+        pollForLobbyChanges();
       })
       .catch((error) => {
         console.log(error);
-        startListening();
+        pollForLobbyChanges();
       });
   };
 
@@ -144,35 +145,7 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
   }
 
   if (lobby.losers.length && lobby.losers.length >= lobby.players.length - 1) {
-    return (
-      <div className="flex flex-1 flex-col items-center justify-center gap-5">
-        <div className="text-center text-5xl font-light">
-          <span className="font-extrabold">{lobby.winner?.name}</span> won!
-        </div>
-
-        <div className="mb-16 mt-3 text-2xl font-thin">
-          in <span className="font light">{((lobby.timeToBeat ?? 0) / 1000).toFixed(3)}</span> seconds
-        </div>
-        {lobby.host.id === player.id ? (
-          <button
-            className="h-max items-center rounded-2xl border-2 border-black bg-black px-12 py-4 text-3xl font-light text-white hover:bg-white hover:text-black"
-            onClick={startGame}
-          >
-            Rematch
-          </button>
-        ) : (
-          <div className="mb-10">
-            <Spinner size="md" />
-          </div>
-        )}
-        <button
-          className="h-max items-center rounded-lg border-2 border-black px-3 py-1 font-light hover:bg-black hover:text-white"
-          onClick={backToLobby}
-        >
-          Back to lobby
-        </button>
-      </div>
-    );
+    return <MultiplayerGameOverScreen lobby={lobby} player={player} startGame={startGame} backToLobby={backToLobby} />;
   }
 
   if (!lobby.isGameInProgress) {
