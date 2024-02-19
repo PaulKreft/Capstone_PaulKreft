@@ -16,8 +16,4 @@ public record UserGet(
     public UserGet(User user) {
         this(user.id(), user.name(), user.email(), user.lastActive(), user.createdAt());
     }
-
-    public User withPassword(String password) {
-        return new User(this.id(), this.name(), this.email(), password, this.lastActive(), this.createdAt());
-    }
 }
