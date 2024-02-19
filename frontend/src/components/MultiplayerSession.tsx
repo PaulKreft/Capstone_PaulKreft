@@ -172,5 +172,7 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
       onSuccess={onSuccess}
       streakToWin={lobby.streakToWin}
     />
+  ) : (
+    <CountDown key={`${lobby.lastGameStarted}-${player.id}`} trigger={startTimer} />
   );
 };
