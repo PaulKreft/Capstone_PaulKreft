@@ -21,9 +21,11 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
   const [startTime, setStartTime] = useState<number>();
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      axios.get(`/api/lobby/${id}`).then((response) => setLobby(response.data));
-    }, 3000);
+    axios.get(`/api/lobby/${id}`).then((response) => {
+      setLobby(response.data);
+    });
+    startListening();
+
     return () => {
       // on navigating away from the lobby component, leave the lobby
       axios.put(`/api/lobby/${id}/leave`, player).then((response) => {
@@ -45,9 +47,21 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
             .then((response) => console.log(response));
         }
       });
-      clearInterval(interval);
     };
-  }, [id]);
+  }, []);
+
+  const startListening = (): void => {
+    axios
+      .get(`/api/lobby/long`)
+      .then((response) => {
+        setLobby(response.data);
+        startListening();
+      })
+      .catch((error) => {
+        console.log(error);
+        startListening();
+      });
+  };
 
   useEffect(() => {
     setStartTime(Date.now());
@@ -119,7 +133,7 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
     let newStreakToWin: number | null = Math.abs(parseInt(event.target.value));
 
     if (!event.target.value || event.target.value === "0") {
-        newStreakToWin = null;
+      newStreakToWin = null;
     }
 
     axios
@@ -151,15 +165,23 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
   if (lobby.losers.length && lobby.losers.length >= lobby.players.length - 1) {
     return (
       <div className="flex flex-1 flex-col items-center justify-center gap-5">
-        <div className="mb-16 text-5xl font-light">
+        <div className="text-center text-5xl font-light">
           <span className="font-extrabold">{lobby.winner?.name}</span> won!
         </div>
-        <button
-          className="h-max items-center rounded-2xl border-2 border-black bg-black px-12 py-4 text-3xl font-light text-white hover:bg-white hover:text-black"
-          onClick={startGame}
-        >
-          Rematch
-        </button>
+
+        <div className="mb-16 mt-3 text-2xl font-thin">in <span className="font light">{((lobby.timeToBeat ?? 0) / 1000).toFixed(3)}</span> seconds</div>
+        {lobby.host.id === player.id ? (
+          <button
+            className="h-max items-center rounded-2xl border-2 border-black bg-black px-12 py-4 text-3xl font-light text-white hover:bg-white hover:text-black"
+            onClick={startGame}
+          >
+            Rematch
+          </button>
+        ) : (
+          <div className="mb-10">
+            <Spinner size="md" />
+          </div>
+        )}
         <button
           className="h-max items-center rounded-lg border-2 border-black px-3 py-1 font-light hover:bg-black hover:text-white"
           onClick={backToLobby}
