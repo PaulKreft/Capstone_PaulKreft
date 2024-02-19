@@ -31,13 +31,15 @@ export const MultiplayerLobby: React.FC<MultiplayerLobbyProps> = ({
 
           {lobby.host.id !== player.id && (
             <div className="mt-5 flex gap-5">
-              <div>
+              <div className="flex flex-col items-center">
                 <span className="font-light">Streak to win </span>
-                <span className="font-bold">{lobby.difficulty}</span>
-              </div>
-              <div>
-                <span className="font-light">Difficulty </span>
                 <span className="font-bold">{lobby.streakToWin ?? "1"}</span>
+              </div>
+              <div className="flex flex-col items-center">
+                <span className="font-light">Difficulty </span>
+                <span className="font-bold">
+                  {lobby.difficulty === 1 ? "Easy" : lobby.difficulty === 2 ? "Medium" : "Hard"}
+                </span>
               </div>
             </div>
           )}
@@ -46,7 +48,7 @@ export const MultiplayerLobby: React.FC<MultiplayerLobbyProps> = ({
             {lobby.players.map((player) => (
               <div key={player.id}>
                 <div> {player.name}</div>
-                <div className="w-full h-[1px] mt-1 mb-1 bg-gradient-to-r from-white via-black to-white"/>
+                <div className="mb-1 mt-1 h-[1px] w-full bg-gradient-to-r from-white via-black to-white" />
               </div>
             ))}
           </div>
@@ -80,13 +82,13 @@ export const MultiplayerLobby: React.FC<MultiplayerLobbyProps> = ({
               />
             </div>
           </div>
-          {lobby.players.length < 2 && (
+          {lobby.players.length < 2 && lobby.host.id === player.id && (
             <div className="mt-12 flex flex-col items-center gap-2">
               Waiting for players <Spinner size="sm" />
             </div>
           )}
 
-          {lobby.players.length > 1 && lobby.host.id === player.id ? (
+          {lobby.players.length > 1 && lobby.host.id === player.id && (
             <button
               className="mt-6 h-max items-center rounded-lg border-2 border-black bg-black px-9 py-3 text-xl font-light text-white hover:bg-white hover:text-black disabled:border-transparent disabled:bg-black/70 disabled:text-white/80"
               onClick={startGame}
@@ -94,7 +96,8 @@ export const MultiplayerLobby: React.FC<MultiplayerLobbyProps> = ({
             >
               Start Game
             </button>
-          ) : (
+          )}
+          {lobby.host.id !== player.id && (
             <div className="mt-12 flex flex-col items-center gap-2">
               Waiting for host <Spinner size="sm" />
             </div>

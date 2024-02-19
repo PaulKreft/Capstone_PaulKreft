@@ -165,9 +165,11 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
   if (lobby.losers.length && lobby.losers.length >= lobby.players.length - 1) {
     return (
       <div className="flex flex-1 flex-col items-center justify-center gap-5">
-        <div className="mb-16 text-5xl font-light">
+        <div className="text-center text-5xl font-light">
           <span className="font-extrabold">{lobby.winner?.name}</span> won!
         </div>
+
+        <div className="mb-16 mt-3 text-2xl font-thin">in <span className="font light">{((lobby.timeToBeat ?? 0) / 1000).toFixed(3)}</span> seconds</div>
         {lobby.host.id === player.id ? (
           <button
             className="h-max items-center rounded-2xl border-2 border-black bg-black px-12 py-4 text-3xl font-light text-white hover:bg-white hover:text-black"
