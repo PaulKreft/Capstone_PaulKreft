@@ -83,7 +83,7 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
     }
   }, [lobby]);
 
-  const backToLobby = (): void => {
+  const navigateToLobby = (): void => {
     axios
       .put(`/api/lobby`, {
         ...lobby,
@@ -146,7 +146,9 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
   }
 
   if (lobby.losers.length && lobby.losers.length >= lobby.players.length - 1) {
-    return <MultiplayerGameOverScreen lobby={lobby} player={player} startGame={initiateGame} backToLobby={backToLobby} />;
+    return (
+      <MultiplayerGameOverScreen lobby={lobby} player={player} startGame={initiateGame} backToLobby={navigateToLobby} />
+    );
   }
 
   if (!lobby.isGameInProgress) {
@@ -161,7 +163,7 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
     );
   }
 
-  return startTime && startTime > (new Date(lobby.lastGameStarted ?? 0).getTime()) ? (
+  return startTime && startTime > new Date(lobby.lastGameStarted ?? 0).getTime() ? (
     <MultiplayerPlay
       playerId={player.id}
       difficulty={lobby.difficulty}
