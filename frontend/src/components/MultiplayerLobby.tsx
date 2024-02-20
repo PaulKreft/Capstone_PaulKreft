@@ -2,12 +2,13 @@ import { Spinner } from "./Spinner.tsx";
 import React, { ChangeEvent } from "react";
 import { Player } from "../types/Player.ts";
 import { Lobby } from "../types/Lobby.ts";
+import copyToClipBoardIconUrl from "./../assets/copy-to-clipboard-icon.svg";
 
 type MultiplayerLobbyProps = {
   lobby: Lobby;
   player: Player;
-  onStreakToWinChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  onDifficultyChange: (event: ChangeEvent<HTMLSelectElement>) => void;
+  onChangeStreakToWin: (event: ChangeEvent<HTMLInputElement>) => void;
+  onChangeDifficulty: (event: ChangeEvent<HTMLSelectElement>) => void;
   startGame: () => void;
 };
 
@@ -18,8 +19,8 @@ const HARD = 4;
 export const MultiplayerLobby: React.FC<MultiplayerLobbyProps> = ({
   lobby,
   player,
-  onStreakToWinChange,
-  onDifficultyChange,
+  onChangeStreakToWin,
+  onChangeDifficulty,
   startGame,
 }) => {
   return (
@@ -27,7 +28,15 @@ export const MultiplayerLobby: React.FC<MultiplayerLobbyProps> = ({
       <div className="flex w-full items-center justify-evenly rounded-2xl border-2 border-black py-10 xs:w-max xs:px-20">
         <div className="flex flex-col items-center">
           <div className="text-xl font-extrabold">{`${lobby.host.name.substring(0, 15)}'s lobby`}</div>
-          <div className="text-lg font-light">{`ID: ${lobby.id}`}</div>
+          <div
+            className="flex cursor-pointer items-center"
+            onClick={() => {
+              navigator.clipboard.writeText(lobby.id);
+            }}
+          >
+            <div className="text-lg font-light">{lobby.id}</div>
+            <img className="h-7" src={copyToClipBoardIconUrl} alt="copy to clipboard" />
+          </div>
 
           {lobby.host.id !== player.id && (
             <div className="mt-5 flex gap-5">
@@ -61,7 +70,7 @@ export const MultiplayerLobby: React.FC<MultiplayerLobbyProps> = ({
                 className="h-max items-center rounded-lg border-2 border-transparent bg-white px-3 py-1 font-light text-black"
                 id="difficultySelect"
                 value={lobby.difficulty}
-                onChange={onDifficultyChange}
+                onChange={onChangeDifficulty}
               >
                 <option value={EASY}>Easy</option>
                 <option value={MEDIUM}>Medium</option>
@@ -76,7 +85,7 @@ export const MultiplayerLobby: React.FC<MultiplayerLobbyProps> = ({
                 id="streakToWinInput"
                 className="h-max w-20 items-center rounded-lg border border-black bg-white px-3 py-1 font-light text-black"
                 value={lobby.streakToWin?.toString() || ""}
-                onChange={onStreakToWinChange}
+                onChange={onChangeStreakToWin}
                 type="number"
                 min="1"
               />

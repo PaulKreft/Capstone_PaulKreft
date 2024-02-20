@@ -9,7 +9,7 @@ import { UserMenu } from "./UserMenu.tsx";
 
 import React, { MouseEvent, useEffect, useState } from "react";
 import { cn } from "../lib/utils.ts";
-import {UserDropdown} from "./UserDropdown.tsx";
+import { UserDropdown } from "./UserDropdown.tsx";
 
 type HeaderProps = {
   isLoggedIn?: boolean;
@@ -25,9 +25,7 @@ export const Header: React.FC<HeaderProps> = ({ isLoggedIn, logout, userName }) 
     { name: "Play", href: "/play" },
   ];
 
-  const loggedInMenuItems: MenuItem[] = [
-    { name: "Profile", href: "/profile" },
-  ];
+  const loggedInMenuItems: MenuItem[] = [{ name: "Profile", href: "/profile" }];
 
   if (isLoggedIn) {
     menuItems.push(...loggedInMenuItems);
@@ -103,7 +101,7 @@ export const Header: React.FC<HeaderProps> = ({ isLoggedIn, logout, userName }) 
 
   return (
     <>
-      <StickyHeader className="bg-white" isFixed={isMenuClicked}>
+      <StickyHeader className="z-10 bg-white" isFixed={isMenuClicked}>
         <div className="flex h-1/2 w-full items-center justify-between px-8">
           <div className="flex h-full">
             <Link to={"/"} className="flex h-full items-center">
@@ -138,9 +136,11 @@ export const Header: React.FC<HeaderProps> = ({ isLoggedIn, logout, userName }) 
           </div>
           <UserMenu className="hidden lg:flex" isLoggedIn={isLoggedIn || false} logout={logout || (() => {})} />
           <div className="flex justify-self-end lg:hidden">
-            {isLoggedIn ?
-                <UserDropdown toggleDropdown={toggleMenu} isActive={isMenuClicked} userName={userName} />:
-            <HamburgerTwo onHamburgerClick={toggleMenu} isActive={isMenuClicked} /> }
+            {isLoggedIn ? (
+              <UserDropdown toggleDropdown={toggleMenu} isActive={isMenuClicked} userName={userName} />
+            ) : (
+              <HamburgerTwo onHamburgerClick={toggleMenu} isActive={isMenuClicked} />
+            )}
           </div>
         </div>
       </StickyHeader>

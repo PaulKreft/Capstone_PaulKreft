@@ -8,7 +8,7 @@ import de.neuefische.paulkreft.backend.exception.LobbyNotFoundException;
 import de.neuefische.paulkreft.backend.exception.PlayerNotPartOfLobbyException;
 import de.neuefische.paulkreft.backend.lobby.model.Lobby;
 import de.neuefische.paulkreft.backend.lobby.repository.LobbyRepo;
-import de.neuefische.paulkreft.backend.users.models.Player;
+import de.neuefische.paulkreft.backend.user.model.Player;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,7 +39,7 @@ public class LobbyService {
     public Lobby joinLobby(String id, @RequestBody Player player) {
         Lobby lobby = getLobbyById(id);
 
-        if(lobby.players().contains(player)) {
+        if (lobby.players().contains(player)) {
             return lobby;
         }
 
@@ -51,6 +51,16 @@ public class LobbyService {
         Lobby lobby = getLobbyById(id);
 
         lobby.players().remove(player);
+
+        if (lobby.players().isEmpty()) {
+            lobbyRepo.deleteById(id);
+            return lobby;
+        }
+
+        if (lobby.host().equals(player)) {
+            return lobbyRepo.save(lobby.withHost(lobby.players().getFirst()));
+        }
+
         return lobbyRepo.save(lobby);
     }
 
@@ -67,7 +77,7 @@ public class LobbyService {
         Player player = new ObjectMapper().treeToValue(payload.get("player"), Player.class);
         JsonNode timeNode = payload.get("time");
 
-        if(timeNode == null) {
+        if (timeNode == null) {
             throw new IllegalArgumentException("Time cannot be empty when setting winner");
         }
 
@@ -75,7 +85,7 @@ public class LobbyService {
 
         Player winner = lobby.winner();
 
-        if(!lobby.players().contains(player)) {
+        if (!lobby.players().contains(player)) {
             throw new PlayerNotPartOfLobbyException("Trying to set winner that is not in the lobby");
         }
 
@@ -96,7 +106,7 @@ public class LobbyService {
         Lobby lobby = getLobbyById(id);
 
 
-        if(!lobby.players().contains(loser)) {
+        if (!lobby.players().contains(loser)) {
             throw new PlayerNotPartOfLobbyException("Trying to set loser that is not in the lobby");
         }
 

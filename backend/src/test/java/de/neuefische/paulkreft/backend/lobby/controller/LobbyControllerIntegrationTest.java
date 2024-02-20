@@ -4,7 +4,7 @@ import de.neuefische.paulkreft.backend.exception.LobbyNotFoundException;
 import de.neuefische.paulkreft.backend.exception.PlayerNotPartOfLobbyException;
 import de.neuefische.paulkreft.backend.lobby.model.Lobby;
 import de.neuefische.paulkreft.backend.lobby.repository.LobbyRepo;
-import de.neuefische.paulkreft.backend.users.models.Player;
+import de.neuefische.paulkreft.backend.user.model.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -125,7 +124,21 @@ class LobbyControllerIntegrationTest {
     @Test
     void updateLobbyTest_whenUpdateLobby_thenReturnUpdatedLobby() throws Exception {
         // Given
-        lobbyRepo.save(testLobby);
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/lobby")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                         {
+                            "id": "1",
+                            "host": { "id" :  "1", "name":  "Paul"},
+                            "players": [{ "id" :  "1", "name":  "Paul"}, { "id" :  "2", "name":  "Soso"}],
+                            "isGameInProgress": false,
+                            "isGameOver": false,
+                            "difficulty": 4,
+                            "losers": [],
+                            "streakToWin": 3
+                         }
+                        """)
+        );
 
         // When
         mockMvc.perform(MockMvcRequestBuilders.put("/api/lobby")
@@ -213,7 +226,21 @@ class LobbyControllerIntegrationTest {
     @Test
     void joinLobbyTest_whenJoiningLobby_returnUpdatedLobbyWithNewPlayer() throws Exception {
         // Given
-        lobbyRepo.save(testLobby);
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/lobby")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                         {
+                            "id": "1",
+                            "host": { "id" :  "1", "name":  "Paul"},
+                            "players": [{ "id" :  "1", "name":  "Paul"}, { "id" :  "2", "name":  "Soso"}],
+                            "isGameInProgress": false,
+                            "isGameOver": false,
+                            "difficulty": 4,
+                            "losers": [],
+                            "streakToWin": 3
+                         }
+                        """)
+        );
 
         // When
         mockMvc.perform(MockMvcRequestBuilders.put("/api/lobby/1/join")
@@ -249,9 +276,21 @@ class LobbyControllerIntegrationTest {
     @Test
     void joinLobbyTest_whenJoiningLobbyAgain_returnLobbyWithNewPlayerPresentOnlyOnce() throws Exception {
         // Given
-        Player newPlayer = new Player("3", "Jürgen");
-        List<Player> listIncludingNewPlayer = Stream.concat(testLobby.players().stream(), Stream.of(newPlayer)).toList();
-        lobbyRepo.save(testLobby.withPlayers(listIncludingNewPlayer));
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/lobby")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                         {
+                            "id": "1",
+                            "host": { "id" :  "1", "name":  "Paul"},
+                            "players": [{ "id" :  "1", "name":  "Paul"}, { "id" :  "2", "name":  "Soso"}, { "id" :  "3", "name":  "Jürgen"}],
+                            "isGameInProgress": false,
+                            "isGameOver": false,
+                            "difficulty": 4,
+                            "losers": [],
+                            "streakToWin": 3
+                         }
+                        """)
+        );
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/lobby/1"))
                 .andExpect(status().isOk())
@@ -325,7 +364,21 @@ class LobbyControllerIntegrationTest {
     @Test
     void leaveLobbyTest_whenLeavingLobby_returnUpdatedLobbyWithoutPlayer() throws Exception {
         // Given
-        lobbyRepo.save(testLobby);
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/lobby")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                         {
+                            "id": "1",
+                            "host": { "id" :  "1", "name":  "Paul"},
+                            "players": [{ "id" :  "1", "name":  "Paul"}, { "id" :  "2", "name":  "Soso"}],
+                            "isGameInProgress": false,
+                            "isGameOver": false,
+                            "difficulty": 4,
+                            "losers": [],
+                            "streakToWin": 3
+                         }
+                        """)
+        );
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/lobby/1"))
                 .andExpect(status().isOk())
@@ -475,7 +528,21 @@ class LobbyControllerIntegrationTest {
     @Test
     void setWinnerTest_whenSettingWinnerOfLobby_returnLobbyWithWinnerAndTimeToBeat() throws Exception {
         // Given
-        lobbyRepo.save(testLobby);
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/lobby")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                         {
+                            "id": "1",
+                            "host": { "id" :  "1", "name":  "Paul"},
+                            "players": [{ "id" :  "1", "name":  "Paul"}, { "id" :  "2", "name":  "Soso"}],
+                            "isGameInProgress": false,
+                            "isGameOver": false,
+                            "difficulty": 4,
+                            "losers": [],
+                            "streakToWin": 3
+                         }
+                        """)
+        );
 
         // When
         mockMvc.perform(MockMvcRequestBuilders.put("/api/lobby/1/setWinner")
@@ -514,7 +581,23 @@ class LobbyControllerIntegrationTest {
     @Test
     void setWinnerTest_whenSettingWinnerWithBetterTimeThanWinnerAlreadySet_returnLobbyWithWinnerAndTimeToBeatAndOldWinnerPartOfLosers() throws Exception {
         // Given
-        lobbyRepo.save(testLobby.withWinner(testLobby.host()).withTimeToBeat(500));
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/lobby")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                         {
+                            "id": "1",
+                            "host": { "id" :  "1", "name":  "Paul"},
+                            "players": [{ "id" :  "1", "name":  "Paul"}, { "id" :  "2", "name":  "Soso"}],
+                            "isGameInProgress": false,
+                            "isGameOver": false,
+                            "difficulty": 4,
+                            "winner": {"id" :  "1", "name":  "Paul"},
+                            "timeToBeat": 500,
+                            "losers": [],
+                            "streakToWin": 3
+                         }
+                        """)
+        );
 
         // When
         mockMvc.perform(MockMvcRequestBuilders.put("/api/lobby/1/setWinner")
@@ -553,8 +636,23 @@ class LobbyControllerIntegrationTest {
     @Test
     void setWinnerTest_whenSettingWinnerWithSameTimeThanWinnerAlreadySet_returnLobbyWithWinnerAndTimeToBeatAndOldWinnerPartOfLosers() throws Exception {
         // Given
-        lobbyRepo.save(testLobby.withWinner(testLobby.host()).withTimeToBeat(123));
-
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/lobby")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                         {
+                            "id": "1",
+                            "host": { "id" :  "1", "name":  "Paul"},
+                            "players": [{ "id" :  "1", "name":  "Paul"}, { "id" :  "2", "name":  "Soso"}],
+                            "isGameInProgress": false,
+                            "isGameOver": false,
+                            "difficulty": 4,
+                            "winner": {"id" :  "1", "name":  "Paul"},
+                            "timeToBeat": 123,
+                            "losers": [],
+                            "streakToWin": 3
+                         }
+                        """)
+        );
         // When
         mockMvc.perform(MockMvcRequestBuilders.put("/api/lobby/1/setWinner")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -592,7 +690,23 @@ class LobbyControllerIntegrationTest {
     @Test
     void setWinnerTest_whenSettingWinnerWithWorseTimeThanWinnerAlreadySet_returnLobbyWithNewWinnerAsPartOfLosers() throws Exception {
         // Given
-        lobbyRepo.save(testLobby.withWinner(testLobby.host()).withTimeToBeat(123));
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/lobby")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                         {
+                            "id": "1",
+                            "host": { "id" :  "1", "name":  "Paul"},
+                            "players": [{ "id" :  "1", "name":  "Paul"}, { "id" :  "2", "name":  "Soso"}],
+                            "isGameInProgress": false,
+                            "isGameOver": false,
+                            "difficulty": 4,
+                            "winner": {"id" :  "1", "name":  "Paul"},
+                            "timeToBeat": 123,
+                            "losers": [],
+                            "streakToWin": 3
+                         }
+                        """)
+        );
 
         // When
         mockMvc.perform(MockMvcRequestBuilders.put("/api/lobby/1/setWinner")
@@ -675,7 +789,21 @@ class LobbyControllerIntegrationTest {
     @Test
     void setLoserTest_whenSettingLoserOfLobby_returnLobbyWithPlayerAsPartOfLosers() throws Exception {
         // Given
-        lobbyRepo.save(testLobby);
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/lobby")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                         {
+                            "id": "1",
+                            "host": { "id" :  "1", "name":  "Paul"},
+                            "players": [{ "id" :  "1", "name":  "Paul"}, { "id" :  "2", "name":  "Soso"}],
+                            "isGameInProgress": false,
+                            "isGameOver": false,
+                            "difficulty": 4,
+                            "losers": [],
+                            "streakToWin": 3
+                         }
+                        """)
+        );
 
         // When
         mockMvc.perform(MockMvcRequestBuilders.put("/api/lobby/1/setLoser")
@@ -736,7 +864,22 @@ class LobbyControllerIntegrationTest {
     @Test
     void setWinnerTest_whenSettingWinnerWhenWinnerWithNoTimeAlreadySet_returnLobbyWithWinnerAndTimeToBeatAndOldWinnerPartOfLosers() throws Exception {
         // Given
-        lobbyRepo.save(testLobby.withWinner(testLobby.host()));
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/lobby")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                         {
+                            "id": "1",
+                            "host": { "id" :  "1", "name":  "Paul"},
+                            "players": [{ "id" :  "1", "name":  "Paul"}, { "id" :  "2", "name":  "Soso"}],
+                            "isGameInProgress": false,
+                            "isGameOver": false,
+                            "difficulty": 4,
+                            "winner": {"id" :  "1", "name":  "Paul"},
+                            "losers": [],
+                            "streakToWin": 3
+                         }
+                        """)
+        );
 
         // When
         mockMvc.perform(MockMvcRequestBuilders.put("/api/lobby/1/setWinner")

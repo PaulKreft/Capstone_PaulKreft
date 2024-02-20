@@ -1,6 +1,6 @@
 package de.neuefische.paulkreft.backend.lobby.model;
 
-import de.neuefische.paulkreft.backend.users.models.Player;
+import de.neuefische.paulkreft.backend.user.model.Player;
 import lombok.With;
 import org.springframework.data.annotation.Id;
 

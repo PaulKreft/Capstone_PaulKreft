@@ -23,10 +23,10 @@ export const LobbyEntrance: React.FC<MultiPlayerProps> = ({ user }) => {
   const currentPlayer: Player = { id: user.id, name: user.name };
 
   const createLobby = (): void => {
-    const targetLobby = Math.ceil(Math.random() * 1000000).toString();
+    const lobbyId = Math.ceil(Math.random() * 1000000).toString();
 
     const lobby: Lobby = {
-      id: targetLobby,
+      id: lobbyId,
       host: currentPlayer,
       players: [currentPlayer],
       isGameInProgress: false,
@@ -36,7 +36,7 @@ export const LobbyEntrance: React.FC<MultiPlayerProps> = ({ user }) => {
       streakToWin: 3,
     };
 
-    axios.post("/api/lobby", lobby).then(() => navigate(`/multiplayer/lobby/${targetLobby}`));
+    axios.post("/api/lobby", lobby).then(() => navigate(`/multiplayer/lobby/${lobbyId}`));
   };
 
   const joinLobby = (): void => {

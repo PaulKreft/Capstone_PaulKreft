@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { Lobby } from "../types/Lobby.ts";
 import { Spinner } from "./Spinner.tsx";
@@ -7,12 +7,16 @@ import { MultiplayerPlay } from "./MultiplayerPlay.tsx";
 import { Player } from "../types/Player.ts";
 import { User } from "../types/User.ts";
 import { MultiplayerLobby } from "./MultiplayerLobby.tsx";
+import { MultiplayerGameOverScreen } from "./MultiplayerGameOverScreen.tsx";
+import { CountDown } from "./CountDown.tsx";
 
 type ActiveLobbyProps = {
   user: User;
 };
 
 export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
+  const navigate = useNavigate();
+
   const player: Player = { id: user ? user.id : "", name: user ? user.name : "" };
 
   const { id } = useParams();
@@ -24,50 +28,34 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
     axios.get(`/api/lobby/${id}`).then((response) => {
       setLobby(response.data);
     });
-    startListening();
+    pollForLobbyChanges();
 
     return () => {
-      // on navigating away from the lobby component, leave the lobby
-      axios.put(`/api/lobby/${id}/leave`, player).then((response) => {
-        console.log(response.data);
-
-        // if you were the last one in the lobby, delete the lobby
-        if (!response.data.players.length) {
-          axios.delete(`/api/lobby/${id}`).then((response) => console.log(response));
-          return;
-        }
-
-        // otherwise, if was host, transfer ownership
-        if (response.data.host.id === player.id) {
-          axios
-            .put(`/api/lobby`, {
-              ...response.data,
-              host: response.data.players[0],
-            })
-            .then((response) => console.log(response));
-        }
-      });
+      axios.put(`/api/lobby/${id}/leave`, player).then(() => {});
     };
   }, []);
 
-  const startListening = (): void => {
+  const pollForLobbyChanges = (): void => {
     axios
-      .get(`/api/lobby/long`)
+      .get(`/api/lobby/${id}/long`)
       .then((response) => {
         setLobby(response.data);
-        startListening();
+        pollForLobbyChanges();
       })
       .catch((error) => {
-        console.log(error);
-        startListening();
+        if (error.response.status === 404) {
+          navigate("/multiplayer");
+          return;
+        }
+        pollForLobbyChanges();
       });
   };
 
-  useEffect(() => {
+  const startTimer = (): void => {
     setStartTime(Date.now());
-  }, [lobby?.lastGameStarted]);
+  };
 
-  const startGame = (): void => {
+  const initiateGame = (): void => {
     axios
       .put(`/api/lobby`, {
         ...lobby,
@@ -76,7 +64,7 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
         timeToBeat: null,
         winner: null,
         losers: [],
-        lastGameStarted: Date.now(),
+        lastGameStarted: new Date(Date.now()),
       })
       .then((response) => {
         setLobby(response.data);
@@ -100,7 +88,7 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
     }
   }, [lobby]);
 
-  const backToLobby = (): void => {
+  const navigateToLobby = (): void => {
     axios
       .put(`/api/lobby`, {
         ...lobby,
@@ -129,7 +117,7 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
     );
   }
 
-  const onStreakToWinChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const onChangeStreakToWin = (event: ChangeEvent<HTMLInputElement>) => {
     let newStreakToWin: number | null = Math.abs(parseInt(event.target.value));
 
     if (!event.target.value || event.target.value === "0") {
@@ -144,7 +132,7 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
       .then((response) => setLobby(response.data));
   };
 
-  const onDifficultyChange = (event: ChangeEvent<HTMLSelectElement>) => {
+  const onChangeDifficulty = (event: ChangeEvent<HTMLSelectElement>) => {
     let newDifficulty: number = Math.abs(parseInt(event.target.value));
     if (!event.target.value) {
       newDifficulty = lobby.difficulty;
@@ -164,31 +152,7 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
 
   if (lobby.losers.length && lobby.losers.length >= lobby.players.length - 1) {
     return (
-      <div className="flex flex-1 flex-col items-center justify-center gap-5">
-        <div className="text-center text-5xl font-light">
-          <span className="font-extrabold">{lobby.winner?.name}</span> won!
-        </div>
-
-        <div className="mb-16 mt-3 text-2xl font-thin">in <span className="font light">{((lobby.timeToBeat ?? 0) / 1000).toFixed(3)}</span> seconds</div>
-        {lobby.host.id === player.id ? (
-          <button
-            className="h-max items-center rounded-2xl border-2 border-black bg-black px-12 py-4 text-3xl font-light text-white hover:bg-white hover:text-black"
-            onClick={startGame}
-          >
-            Rematch
-          </button>
-        ) : (
-          <div className="mb-10">
-            <Spinner size="md" />
-          </div>
-        )}
-        <button
-          className="h-max items-center rounded-lg border-2 border-black px-3 py-1 font-light hover:bg-black hover:text-white"
-          onClick={backToLobby}
-        >
-          Back to lobby
-        </button>
-      </div>
+      <MultiplayerGameOverScreen lobby={lobby} player={player} startGame={initiateGame} backToLobby={navigateToLobby} />
     );
   }
 
@@ -197,18 +161,14 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
       <MultiplayerLobby
         lobby={lobby}
         player={player}
-        onStreakToWinChange={onStreakToWinChange}
-        onDifficultyChange={onDifficultyChange}
-        startGame={startGame}
+        onChangeStreakToWin={onChangeStreakToWin}
+        onChangeDifficulty={onChangeDifficulty}
+        startGame={initiateGame}
       />
     );
   }
 
-  if (!startTime) {
-    return <Spinner />;
-  }
-
-  return (
+  return startTime && startTime > new Date(lobby.lastGameStarted ?? 0).getTime() ? (
     <MultiplayerPlay
       playerId={player.id}
       difficulty={lobby.difficulty}
@@ -216,5 +176,7 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
       onSuccess={onSuccess}
       streakToWin={lobby.streakToWin}
     />
+  ) : (
+    <CountDown key={`${lobby.lastGameStarted}-${player.id}`} trigger={startTimer} />
   );
 };

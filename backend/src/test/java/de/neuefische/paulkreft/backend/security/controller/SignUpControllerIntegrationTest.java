@@ -1,7 +1,7 @@
 package de.neuefische.paulkreft.backend.security.controller;
 
-import de.neuefische.paulkreft.backend.users.models.User;
-import de.neuefische.paulkreft.backend.users.repository.UsersRepo;
+import de.neuefische.paulkreft.backend.user.model.User;
+import de.neuefische.paulkreft.backend.user.repository.UsersRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
