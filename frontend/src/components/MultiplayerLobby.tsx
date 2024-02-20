@@ -2,6 +2,7 @@ import { Spinner } from "./Spinner.tsx";
 import React, { ChangeEvent } from "react";
 import { Player } from "../types/Player.ts";
 import { Lobby } from "../types/Lobby.ts";
+import copyToClipBoardIconUrl from "./../assets/copy-to-clipboard-icon.svg";
 
 type MultiplayerLobbyProps = {
   lobby: Lobby;
@@ -27,7 +28,15 @@ export const MultiplayerLobby: React.FC<MultiplayerLobbyProps> = ({
       <div className="flex w-full items-center justify-evenly rounded-2xl border-2 border-black py-10 xs:w-max xs:px-20">
         <div className="flex flex-col items-center">
           <div className="text-xl font-extrabold">{`${lobby.host.name.substring(0, 15)}'s lobby`}</div>
-          <div className="text-lg font-light">{`ID: ${lobby.id}`}</div>
+          <div
+            className="flex cursor-pointer items-center"
+            onClick={() => {
+              navigator.clipboard.writeText(lobby.id);
+            }}
+          >
+            <div className="text-lg font-light">{lobby.id}</div>
+            <img className="h-7" src={copyToClipBoardIconUrl} alt="copy to clipboard" />
+          </div>
 
           {lobby.host.id !== player.id && (
             <div className="mt-5 flex gap-5">
