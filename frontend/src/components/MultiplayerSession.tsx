@@ -112,7 +112,7 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
     );
   }
 
-  const onStreakToWinChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const onChangeStreakToWin = (event: ChangeEvent<HTMLInputElement>) => {
     let newStreakToWin: number | null = Math.abs(parseInt(event.target.value));
 
     if (!event.target.value || event.target.value === "0") {
@@ -127,7 +127,7 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
       .then((response) => setLobby(response.data));
   };
 
-  const onDifficultyChange = (event: ChangeEvent<HTMLSelectElement>) => {
+  const onChangeDifficulty = (event: ChangeEvent<HTMLSelectElement>) => {
     let newDifficulty: number = Math.abs(parseInt(event.target.value));
     if (!event.target.value) {
       newDifficulty = lobby.difficulty;
@@ -154,8 +154,8 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
       <MultiplayerLobby
         lobby={lobby}
         player={player}
-        onStreakToWinChange={onStreakToWinChange}
-        onDifficultyChange={onDifficultyChange}
+        onChangeStreakToWin={onChangeStreakToWin}
+        onChangeDifficulty={onChangeDifficulty}
         startGame={initiateGame}
       />
     );
