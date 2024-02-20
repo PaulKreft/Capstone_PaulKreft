@@ -2,6 +2,7 @@ package de.neuefische.paulkreft.backend.lobby.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import de.neuefische.paulkreft.backend.exception.LobbyNotFoundException;
 import de.neuefische.paulkreft.backend.lobby.model.Lobby;
 import de.neuefische.paulkreft.backend.lobby.service.LobbyService;
 import de.neuefische.paulkreft.backend.user.model.Player;
@@ -9,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 @RestController
@@ -17,18 +20,26 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class LobbyController {
     private final LobbyService lobbyService;
 
-    private final ConcurrentLinkedQueue<DeferredResult<Lobby>> queuedRequests = new ConcurrentLinkedQueue<>();
+    private final Map<String, ConcurrentLinkedQueue<DeferredResult<Lobby>>> queuedRequests = new HashMap<>();
 
-    @GetMapping("/long")
-    public DeferredResult<Lobby> getGameUpdate() {
+    @GetMapping("/{id}/long")
+    public DeferredResult<Lobby> getGameUpdate(@PathVariable String id) {
+        ConcurrentLinkedQueue<DeferredResult<Lobby>> queue = this.queuedRequests.get(id);
+
+        if (queue == null) {
+            throw new LobbyNotFoundException("Lobby does not exist in database");
+        }
+
         DeferredResult<Lobby> updatedLobby = new DeferredResult<>();
-        updatedLobby.onTimeout(() -> queuedRequests.remove(updatedLobby));
-        queuedRequests.add(updatedLobby);
+        updatedLobby.onTimeout(() -> queue.remove(updatedLobby));
+        queue.add(updatedLobby);
         return updatedLobby;
     }
 
     @PostMapping
     public Lobby createLobby(@RequestBody Lobby lobby) {
+        queuedRequests.put(lobby.id(), new ConcurrentLinkedQueue<>());
+
         return lobbyService.createLobby(lobby);
     }
 
@@ -83,7 +94,13 @@ public class LobbyController {
     }
 
     public void resolveRequest(Lobby lobby) {
-        for (DeferredResult<Lobby> defResult : this.queuedRequests) {
+        ConcurrentLinkedQueue<DeferredResult<Lobby>> queue = this.queuedRequests.get(lobby.id());
+
+        if (queue == null) {
+            throw new LobbyNotFoundException("Lobby does not exist in database");
+        }
+
+        for (DeferredResult<Lobby> defResult : queue) {
             defResult.setResult(lobby);
         }
     }

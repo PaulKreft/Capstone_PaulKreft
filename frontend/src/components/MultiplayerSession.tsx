@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { Lobby } from "../types/Lobby.ts";
 import { Spinner } from "./Spinner.tsx";
@@ -15,6 +15,8 @@ type ActiveLobbyProps = {
 };
 
 export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
+  const navigate = useNavigate();
+
   const player: Player = { id: user ? user.id : "", name: user ? user.name : "" };
 
   const { id } = useParams();
@@ -35,13 +37,16 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
 
   const pollForLobbyChanges = (): void => {
     axios
-      .get(`/api/lobby/long`)
+      .get(`/api/lobby/${id}/long`)
       .then((response) => {
         setLobby(response.data);
         pollForLobbyChanges();
       })
       .catch((error) => {
-        console.log(error);
+        if (error.response.status === 404) {
+          navigate("/multiplayer");
+          return;
+        }
         pollForLobbyChanges();
       });
   };
