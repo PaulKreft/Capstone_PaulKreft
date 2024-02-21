@@ -31,7 +31,7 @@ public class LobbyController {
         }
 
         DeferredResult<Lobby> updatedLobby = new DeferredResult<>();
-        updatedLobby.onTimeout(() -> queue.remove(updatedLobby));
+        updatedLobby.onTimeout(() -> resolveRequest(lobbyService.getLobbyById(id)));
         queue.add(updatedLobby);
         return updatedLobby;
     }
