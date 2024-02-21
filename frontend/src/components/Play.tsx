@@ -6,7 +6,7 @@ import { TileConfiguration } from "./TileConfiguration.tsx";
 import { addHexColors, getRandomHexColor, subtractHexColors } from "../lib/hexUtils.ts";
 import { shuffleArray } from "../lib/shuffleArray.tsx";
 import axios from "axios";
-import {Difficulty} from "../types/Difficulty.ts";
+import { Difficulty } from "../types/Difficulty.ts";
 
 const WHITE = "#ffffff";
 const BLACK = "#000000";
@@ -49,14 +49,15 @@ export const Play: React.FC<PlayProps> = ({ userId }) => {
     }
 
     axios
-        .post("/api/games", {
-          userId,
-          type: "",
-          difficulty,
-          isSuccess: hasWon,
-          duration: hasWon && startTime ? now - startTime : null,
-          configuration: colorConfig,
-         }).then(() => {});
+      .post("/api/games", {
+        userId,
+        type: "",
+        difficulty,
+        isSuccess: hasWon,
+        duration: hasWon && startTime ? now - startTime : null,
+        configuration: colorConfig,
+      })
+      .then(() => {});
   };
 
   const resetClock = (): void => {
@@ -87,11 +88,19 @@ export const Play: React.FC<PlayProps> = ({ userId }) => {
   };
 
   return (
-    <div className="flex flex-1 flex-col items-center px-2 pb-32 xs:pb-20 sm:mx-10 justify-center">
+    <div className="flex flex-1 flex-col items-center justify-center px-2 pb-32 xs:pb-20 sm:mx-10">
       <TileConfiguration className="mt-6" baseConfig={colorConfig} overEvent={handleOverEvent}>
-        <div className={cn("text-xl text-black", streak ? "text-black" : "text-transparent")}>Streak: {streak}</div>
+        <div
+          className={cn("text-xl text-black", streak ? "text-black" : "text-transparent", userId ? "block" : "hidden")}
+        >
+          Streak: {streak}
+        </div>
         <StopWatch
-          className={cn("text-xl text-black", startTime && endTime ? "text-black" : "text-transparent")}
+          className={cn(
+            "text-xl text-black",
+            startTime && endTime ? "text-black" : "text-transparent",
+            userId ? "block" : "hidden",
+          )}
           value={startTime && endTime ? endTime - startTime : null}
         />
       </TileConfiguration>
