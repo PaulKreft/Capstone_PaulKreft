@@ -55,9 +55,15 @@ public class GlobalExceptionHandler {
         return exception.getMessage();
     }
 
-    @ExceptionHandler({LobbyNotFoundException.class})
+    @ExceptionHandler({LobbyGoneException.class})
+    @ResponseStatus(HttpStatus.GONE)
+    public String handleException(LobbyGoneException exception) {
+        return exception.getMessage();
+    }
+
+    @ExceptionHandler({RequestQueueNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String handleException(LobbyNotFoundException exception) {
+    public String handleException(RequestQueueNotFoundException exception) {
         return exception.getMessage();
     }
 
