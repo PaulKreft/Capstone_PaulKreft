@@ -23,6 +23,16 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
 
   const [startTime, setStartTime] = useState<number>();
 
+  const [isGameOver, setIsGameOver] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (lobby?.losers.length && lobby.losers.length >= lobby.players.length - 1) {
+      setIsGameOver(true);
+      return;
+    }
+    setIsGameOver(false);
+  }, [lobby?.losers, lobby?.players]);
+
   useEffect(() => {
     axios.get(`/api/lobby/${id}`).then((response) => {
       setLobby(response.data);
@@ -152,7 +162,7 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
     return <div>no user</div>;
   }
 
-  if (lobby.losers.length && lobby.losers.length >= lobby.players.length - 1) {
+  if (isGameOver) {
     return (
       <MultiplayerGameOverScreen lobby={lobby} player={player} startGame={initiateGame} backToLobby={navigateToLobby} />
     );
