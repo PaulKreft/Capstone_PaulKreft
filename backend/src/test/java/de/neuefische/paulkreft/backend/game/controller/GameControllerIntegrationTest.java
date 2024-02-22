@@ -2,8 +2,8 @@ package de.neuefische.paulkreft.backend.game.controller;
 
 import de.neuefische.paulkreft.backend.game.model.Game;
 import de.neuefische.paulkreft.backend.game.repository.GameRepo;
-import de.neuefische.paulkreft.backend.service.IdService;
-import de.neuefische.paulkreft.backend.service.TimeService;
+import de.neuefische.paulkreft.backend.utils.service.IdService;
+import de.neuefische.paulkreft.backend.utils.service.TimeService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;

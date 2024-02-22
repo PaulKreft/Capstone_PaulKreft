@@ -1,8 +1,8 @@
 package de.neuefische.paulkreft.backend.user.controller;
 
 import de.neuefische.paulkreft.backend.github.service.GithubService;
-import de.neuefische.paulkreft.backend.service.IdService;
-import de.neuefische.paulkreft.backend.service.TimeService;
+import de.neuefische.paulkreft.backend.utils.service.IdService;
+import de.neuefische.paulkreft.backend.utils.service.TimeService;
 import de.neuefische.paulkreft.backend.user.model.User;
 import de.neuefische.paulkreft.backend.user.repository.UsersRepo;
 import org.junit.jupiter.api.BeforeEach;
