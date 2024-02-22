@@ -49,7 +49,7 @@ export const Play: React.FC<PlayProps> = ({ userId }) => {
     }
 
     axios
-      .post("/api/games", {
+      .post("/api/game", {
         userId,
         type: "",
         difficulty,

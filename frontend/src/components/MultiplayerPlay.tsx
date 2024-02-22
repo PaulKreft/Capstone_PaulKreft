@@ -58,7 +58,7 @@ export const MultiplayerPlay: React.FC<MultiPlayProps> = ({
     }
 
     axios
-      .post("/api/games", {
+      .post("/api/game", {
         userId: playerId,
         type: "",
         difficulty,

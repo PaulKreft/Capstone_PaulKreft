@@ -1,7 +1,7 @@
 package de.neuefische.paulkreft.backend.game.controller;
 
-import de.neuefische.paulkreft.backend.game.model.Game;
-import de.neuefische.paulkreft.backend.game.repository.GameRepo;
+import de.neuefische.paulkreft.backend.game.classic.model.Game;
+import de.neuefische.paulkreft.backend.game.classic.repository.GameRepo;
 import de.neuefische.paulkreft.backend.utils.service.IdService;
 import de.neuefische.paulkreft.backend.utils.service.TimeService;
 import org.junit.jupiter.api.Test;
@@ -48,7 +48,7 @@ class GameControllerIntegrationTest {
         when(idService.generateUUID()).thenReturn("gameId");
 
         // Given, when and then
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/games")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/game")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                  {
@@ -93,7 +93,7 @@ class GameControllerIntegrationTest {
         gameRepo.save(testGame2);
 
         // When
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/games/user/User1"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/game/user/User1"))
                 // Then
                 .andExpect(status().isOk())
                 .andExpect(content().json("""

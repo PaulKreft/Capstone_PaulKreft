@@ -1,6 +1,6 @@
-package de.neuefische.paulkreft.backend.game.repository;
+package de.neuefische.paulkreft.backend.game.classic.repository;
 
-import de.neuefische.paulkreft.backend.game.model.Game;
+import de.neuefische.paulkreft.backend.game.classic.model.Game;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,7 +1,7 @@
 package de.neuefische.paulkreft.backend.user.service;
 
-import de.neuefische.paulkreft.backend.game.model.Game;
-import de.neuefische.paulkreft.backend.game.repository.GameRepo;
+import de.neuefische.paulkreft.backend.game.classic.model.Game;
+import de.neuefische.paulkreft.backend.game.classic.repository.GameRepo;
 import de.neuefische.paulkreft.backend.github.service.GithubService;
 import de.neuefische.paulkreft.backend.utils.service.IdService;
 import de.neuefische.paulkreft.backend.utils.service.TimeService;
