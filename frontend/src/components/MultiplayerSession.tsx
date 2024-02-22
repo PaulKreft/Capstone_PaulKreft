@@ -24,13 +24,30 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
   const [startTime, setStartTime] = useState<number>();
 
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
+  const [isSavedToDatabase, setIsSavedToDatabase] = useState<boolean>(false);
 
   useEffect(() => {
-    if (lobby?.losers.length && lobby.losers.length >= lobby.players.length - 1) {
+    if (lobby?.losers.length && lobby.winner && lobby.losers.length >= lobby.players.length - 1) {
       setIsGameOver(true);
+
+      lobby.host.id === player.id &&
+        !isSavedToDatabase &&
+        axios
+          .post("/api/game/multiplayer", {
+            playerIds: lobby.players.map((player) => player.id),
+            difficulty: lobby.difficulty,
+            streakToWin: lobby.streakToWin,
+            winnerId: lobby.winner.id,
+            loserIds: lobby.losers.map((loser) => loser.id),
+            wonInMilliseconds: lobby.timeToBeat,
+          })
+          .then(() => setIsSavedToDatabase(true))
+          .catch((error) => console.log(error));
+
       return;
     }
     setIsGameOver(false);
+    setIsSavedToDatabase(false);
   }, [lobby?.losers, lobby?.players]);
 
   useEffect(() => {
