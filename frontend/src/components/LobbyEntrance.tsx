@@ -44,23 +44,18 @@ export const LobbyEntrance: React.FC<MultiPlayerProps> = ({ user }) => {
   };
 
   const handleKeyDownOnInput = (event: React.KeyboardEvent<HTMLInputElement>): void => {
-    if(event.key === "Enter") {
+    if (event.key === "Enter") {
       joinLobby();
     }
-  }
+  };
 
   return (
     <div className="flex h-max flex-1 flex-col items-center px-5 pb-32 pt-20 xs:pb-20 sm:px-10">
-      <div className="flex h-80 w-80 flex-col items-center justify-evenly gap-5 rounded-2xl border-2 border-black p-5">
-        <button
-          className="h-max items-center rounded-lg border-2 border-black px-6 py-2 text-xl font-light hover:bg-black hover:text-white"
-          onClick={createLobby}
-        >
-          Create new lobby
-        </button>
-        <div className="flex justify-center gap-5">
+      <div className="flex h-[24rem] w-80 flex-col items-center justify-between rounded-2xl border-2 border-black px-12 pt-8 pb-14">
+        <div className="text-2xl font-bold">Enter a lobby</div>
+        <div className="mb-4 flex w-full justify-between">
           <input
-            className="h-max w-2/5 rounded-lg border-2 border-black px-3 py-1 font-light"
+            className="h-max w-3/5 rounded-lg border-2 border-black px-3 py-1 font-light"
             type="text"
             value={lobbyId}
             onChange={(event) => setLobbyId(event.target.value)}
@@ -72,6 +67,20 @@ export const LobbyEntrance: React.FC<MultiPlayerProps> = ({ user }) => {
             onClick={joinLobby}
           >
             Join
+          </button>
+        </div>
+        <div className="w-full flex flex-col gap-5">
+          <button
+            className="h-max w-full items-center rounded-lg border-2 border-black px-6 py-2 text-xl font-light hover:bg-black hover:text-white"
+            onClick={createLobby}
+          >
+            New 1v1 lobby
+          </button>
+          <button
+            className="h-max w-full items-center rounded-lg border-2 border-black px-6 py-2 text-xl font-light hover:bg-black hover:text-white"
+            onClick={createLobby}
+          >
+            New group lobby
           </button>
         </div>
       </div>
