@@ -48,6 +48,9 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
     axios
       .get(`/api/lobby/${id}/long`)
       .then((response) => {
+        if (!response.data.players.filter((p: Player) => p.id === player.id).length) {
+          return;
+        }
         setLobby(response.data);
         pollForLobbyChanges();
       })
