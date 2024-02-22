@@ -1,6 +1,6 @@
 package de.neuefische.paulkreft.backend.lobby.controller;
 
-import de.neuefische.paulkreft.backend.exception.LobbyNotFoundException;
+import de.neuefische.paulkreft.backend.exception.LobbyGoneException;
 import de.neuefische.paulkreft.backend.exception.PlayerNotPartOfLobbyException;
 import de.neuefische.paulkreft.backend.lobby.model.Lobby;
 import de.neuefische.paulkreft.backend.lobby.repository.LobbyRepo;
@@ -25,7 +25,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class LobbyControllerIntegrationTest {
-
 
     @Autowired
     private MockMvc mockMvc;
@@ -111,12 +110,12 @@ class LobbyControllerIntegrationTest {
 
     @DirtiesContext
     @Test
-    void getLobbyByIdTest_whenLobbyDoesNotExist_throwLobbyNotFoundException() throws Exception {
+    void getLobbyByIdTest_whenLobbyDoesNotExist_throwLobbyGoneException() throws Exception {
         // Given and when
         mockMvc.perform(MockMvcRequestBuilders.get("/api/lobby/1"))
                 // Then
-                .andExpect(status().isNotFound())
-                .andExpect(result -> assertInstanceOf(LobbyNotFoundException.class, result.getResolvedException()))
+                .andExpect(status().isGone())
+                .andExpect(result -> assertInstanceOf(LobbyGoneException.class, result.getResolvedException()))
                 .andExpect(content().string(""));
     }
 
@@ -178,7 +177,7 @@ class LobbyControllerIntegrationTest {
 
     @DirtiesContext
     @Test
-    void updateLobbyTest_whenUpdateNonExistingLobby_throwLobbyNotFoundException() throws Exception {
+    void updateLobbyTest_whenUpdateNonExistingLobby_throwLobbyGoneException() throws Exception {
         // Given and when
         mockMvc.perform(MockMvcRequestBuilders.put("/api/lobby")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -197,14 +196,14 @@ class LobbyControllerIntegrationTest {
                 )
 
                 // Then
-                .andExpect(status().isNotFound())
-                .andExpect(result -> assertInstanceOf(LobbyNotFoundException.class, result.getResolvedException()))
+                .andExpect(status().isGone())
+                .andExpect(result -> assertInstanceOf(LobbyGoneException.class, result.getResolvedException()))
                 .andExpect(content().string(""));
     }
 
     @DirtiesContext
     @Test
-    void joinLobbyTest_whenJoiningLobbyThatDoesNotExist_throwLobbyNotFoundException() throws Exception {
+    void joinLobbyTest_whenJoiningLobbyThatDoesNotExist_throwLobbyGoneException() throws Exception {
         // Given & When
         mockMvc.perform(MockMvcRequestBuilders.put("/api/lobby/1/join")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -217,8 +216,8 @@ class LobbyControllerIntegrationTest {
                 )
 
                 // Then
-                .andExpect(status().isNotFound())
-                .andExpect(result -> assertInstanceOf(LobbyNotFoundException.class, result.getResolvedException()))
+                .andExpect(status().isGone())
+                .andExpect(result -> assertInstanceOf(LobbyGoneException.class, result.getResolvedException()))
                 .andExpect(content().string(""));
     }
 
@@ -342,7 +341,7 @@ class LobbyControllerIntegrationTest {
 
     @DirtiesContext
     @Test
-    void leaveLobbyTest_whenLeavingLobbyThatDoesNotExist_throwLobbyNotFoundException() throws Exception {
+    void leaveLobbyTest_whenLeavingLobbyThatDoesNotExist_throwLobbyGoneException() throws Exception {
         // Given & When
         mockMvc.perform(MockMvcRequestBuilders.put("/api/lobby/1/leave")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -355,8 +354,8 @@ class LobbyControllerIntegrationTest {
                 )
 
                 // Then
-                .andExpect(status().isNotFound())
-                .andExpect(result -> assertInstanceOf(LobbyNotFoundException.class, result.getResolvedException()))
+                .andExpect(status().isGone())
+                .andExpect(result -> assertInstanceOf(LobbyGoneException.class, result.getResolvedException()))
                 .andExpect(content().string(""));
     }
 
@@ -457,27 +456,27 @@ class LobbyControllerIntegrationTest {
 
         // & Then
         mockMvc.perform(MockMvcRequestBuilders.get("/api/lobby/1"))
-                .andExpect(status().isNotFound())
-                .andExpect(result -> assertInstanceOf(LobbyNotFoundException.class, result.getResolvedException()))
+                .andExpect(status().isGone())
+                .andExpect(result -> assertInstanceOf(LobbyGoneException.class, result.getResolvedException()))
                 .andExpect(content().string(""));
 
     }
 
     @DirtiesContext
     @Test
-    void deleteLobbyTest_whenDeletingLobbyThatDoesNotExist_throwLobbyNotFoundException() throws Exception {
+    void deleteLobbyTest_whenDeletingLobbyThatDoesNotExist_throwLobbyGoneException() throws Exception {
         // Given & When
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/lobby/1"))
 
                 // Then
-                .andExpect(status().isNotFound())
-                .andExpect(result -> assertInstanceOf(LobbyNotFoundException.class, result.getResolvedException()))
+                .andExpect(status().isGone())
+                .andExpect(result -> assertInstanceOf(LobbyGoneException.class, result.getResolvedException()))
                 .andExpect(content().string(""));
     }
 
     @DirtiesContext
     @Test
-    void setWinnerTest_whenSettingWinnerOfLobbyThatDoesNotExist_throwLobbyNotFoundException() throws Exception {
+    void setWinnerTest_whenSettingWinnerOfLobbyThatDoesNotExist_throwLobbyGoneException() throws Exception {
         // Given & When
         mockMvc.perform(MockMvcRequestBuilders.put("/api/lobby/1/setWinner")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -493,8 +492,8 @@ class LobbyControllerIntegrationTest {
                 )
 
                 // Then
-                .andExpect(status().isNotFound())
-                .andExpect(result -> assertInstanceOf(LobbyNotFoundException.class, result.getResolvedException()))
+                .andExpect(status().isGone())
+                .andExpect(result -> assertInstanceOf(LobbyGoneException.class, result.getResolvedException()))
                 .andExpect(content().string(""));
     }
 
@@ -743,8 +742,8 @@ class LobbyControllerIntegrationTest {
 
     @DirtiesContext
     @Test
-    void setLoserTest_whenSettingLoserOfLobbyThatDoesNotExist_throwLobbyNotFoundException() throws Exception {
-        // Given & When
+    void setLoserTest_whenSettingLoserOfLobbyThatDoesNotExist_throwLobbyGoneException() throws Exception {
+        // When
         mockMvc.perform(MockMvcRequestBuilders.put("/api/lobby/1/setLoser")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -756,8 +755,8 @@ class LobbyControllerIntegrationTest {
                 )
 
                 // Then
-                .andExpect(status().isNotFound())
-                .andExpect(result -> assertInstanceOf(LobbyNotFoundException.class, result.getResolvedException()))
+                .andExpect(status().isGone())
+                .andExpect(result -> assertInstanceOf(LobbyGoneException.class, result.getResolvedException()))
                 .andExpect(content().string(""));
     }
 

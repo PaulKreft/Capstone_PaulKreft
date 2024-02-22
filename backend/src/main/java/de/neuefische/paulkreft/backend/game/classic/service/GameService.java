@@ -1,10 +1,10 @@
-package de.neuefische.paulkreft.backend.game.service;
+package de.neuefische.paulkreft.backend.game.classic.service;
 
-import de.neuefische.paulkreft.backend.game.model.Game;
-import de.neuefische.paulkreft.backend.game.model.GameCreate;
-import de.neuefische.paulkreft.backend.game.repository.GameRepo;
-import de.neuefische.paulkreft.backend.service.IdService;
-import de.neuefische.paulkreft.backend.service.TimeService;
+import de.neuefische.paulkreft.backend.game.classic.model.Game;
+import de.neuefische.paulkreft.backend.game.classic.model.GameCreate;
+import de.neuefische.paulkreft.backend.game.classic.repository.GameRepo;
+import de.neuefische.paulkreft.backend.utils.service.IdService;
+import de.neuefische.paulkreft.backend.utils.service.TimeService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package de.neuefische.paulkreft.backend.service;
+package de.neuefische.paulkreft.backend.utils.service;
 
 import org.springframework.stereotype.Service;
 

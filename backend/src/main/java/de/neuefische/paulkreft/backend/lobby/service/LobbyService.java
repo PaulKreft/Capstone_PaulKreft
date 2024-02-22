@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import de.neuefische.paulkreft.backend.exception.LobbyNotFoundException;
+import de.neuefische.paulkreft.backend.exception.LobbyGoneException;
 import de.neuefische.paulkreft.backend.exception.PlayerNotPartOfLobbyException;
 import de.neuefische.paulkreft.backend.lobby.model.Lobby;
 import de.neuefische.paulkreft.backend.lobby.repository.LobbyRepo;
@@ -24,13 +24,13 @@ public class LobbyService {
     }
 
     public Lobby getLobbyById(String id) {
-        return lobbyRepo.findById(id).orElseThrow(() -> new LobbyNotFoundException("Could not find lobby"));
+        return lobbyRepo.findById(id).orElseThrow(() -> new LobbyGoneException("Could not find lobby"));
     }
 
 
     public Lobby updateLobby(Lobby lobby) {
         if (!lobbyRepo.existsById(lobby.id())) {
-            throw new LobbyNotFoundException("Could not find lobby");
+            throw new LobbyGoneException("Could not find lobby");
         }
 
         return lobbyRepo.save(lobby);

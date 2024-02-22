@@ -2,7 +2,7 @@ package de.neuefische.paulkreft.backend.lobby.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import de.neuefische.paulkreft.backend.exception.LobbyNotFoundException;
+import de.neuefische.paulkreft.backend.exception.RequestQueueNotFoundException;
 import de.neuefische.paulkreft.backend.lobby.model.Lobby;
 import de.neuefische.paulkreft.backend.lobby.service.LobbyService;
 import de.neuefische.paulkreft.backend.user.model.Player;
@@ -27,11 +27,11 @@ public class LobbyController {
         ConcurrentLinkedQueue<DeferredResult<Lobby>> queue = this.queuedRequests.get(id);
 
         if (queue == null) {
-            throw new LobbyNotFoundException("Lobby does not exist in database");
+            throw new RequestQueueNotFoundException("Cannot resolve request");
         }
 
         DeferredResult<Lobby> updatedLobby = new DeferredResult<>();
-        updatedLobby.onTimeout(() -> queue.remove(updatedLobby));
+        updatedLobby.onTimeout(() -> resolveRequest(lobbyService.getLobbyById(id)));
         queue.add(updatedLobby);
         return updatedLobby;
     }
@@ -97,7 +97,7 @@ public class LobbyController {
         ConcurrentLinkedQueue<DeferredResult<Lobby>> queue = this.queuedRequests.get(lobby.id());
 
         if (queue == null) {
-            throw new LobbyNotFoundException("Lobby does not exist in database");
+            throw new RequestQueueNotFoundException("Cannot resolve request");
         }
 
         for (DeferredResult<Lobby> defResult : queue) {

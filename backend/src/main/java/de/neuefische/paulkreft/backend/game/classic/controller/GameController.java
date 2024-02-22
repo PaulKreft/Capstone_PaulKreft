@@ -1,14 +1,14 @@
-package de.neuefische.paulkreft.backend.game.controller;
+package de.neuefische.paulkreft.backend.game.classic.controller;
 
-import de.neuefische.paulkreft.backend.game.model.Game;
-import de.neuefische.paulkreft.backend.game.model.GameCreate;
-import de.neuefische.paulkreft.backend.game.service.GameService;
+import de.neuefische.paulkreft.backend.game.classic.model.Game;
+import de.neuefische.paulkreft.backend.game.classic.model.GameCreate;
+import de.neuefische.paulkreft.backend.game.classic.service.GameService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/games")
+@RequestMapping("/api/game")
 public class GameController {
     private final GameService gameService;
 

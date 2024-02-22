@@ -24,7 +24,12 @@ export const MultiplayerPlay: React.FC<MultiPlayProps> = ({
   onSuccess,
   streakToWin,
 }) => {
-  const [colorConfig, setColorConfig] = useState<string[]>([]);
+  const [colorConfig, setColorConfig] = useState<string[]>(
+    Array(4 + difficulty * 2)
+      .fill("")
+      .map((_value, index) => (index % 2 === 0 ? BLACK : WHITE)),
+  );
+
   const [streak, setStreak] = useState<number>(0);
 
   const [puzzleStartTime, setPuzzleStartTime] = useState<number>();
@@ -32,12 +37,8 @@ export const MultiplayerPlay: React.FC<MultiPlayProps> = ({
   const [isOver, setIsOver] = useState<boolean>(false);
 
   useEffect(() => {
-    setColorConfig(
-      Array(4 + difficulty * 2)
-        .fill("")
-        .map((_value, index) => (index % 2 === 0 ? BLACK : WHITE)),
-    );
-  }, [difficulty]);
+    shuffleColours();
+  }, []);
 
   useEffect(() => {
     if (streak === streakToWin) {
@@ -57,7 +58,7 @@ export const MultiplayerPlay: React.FC<MultiPlayProps> = ({
     }
 
     axios
-      .post("/api/games", {
+      .post("/api/game", {
         userId: playerId,
         type: "",
         difficulty,
@@ -65,7 +66,7 @@ export const MultiplayerPlay: React.FC<MultiPlayProps> = ({
         duration: hasWon && puzzleStartTime ? now - puzzleStartTime : null,
         configuration: colorConfig,
       })
-      .then(() => {});
+      .then(() => shuffleColours());
   };
 
   const resetClock = (): void => {
@@ -103,10 +104,6 @@ export const MultiplayerPlay: React.FC<MultiPlayProps> = ({
       <TileConfiguration className="mt-6" baseConfig={colorConfig} overEvent={handleOverEvent}>
         <div className={cn("text-xl text-black", streak ? "text-black" : "text-transparent")}>Streak: {streak}</div>
       </TileConfiguration>
-
-      <button className="mt-10 rounded-[20px] border-2 border-black px-12 py-4 text-2xl" onClick={shuffleColours}>
-        New Puzzle
-      </button>
     </div>
   );
 };

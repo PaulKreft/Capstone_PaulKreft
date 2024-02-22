@@ -1,4 +1,4 @@
-package de.neuefische.paulkreft.backend.game.model;
+package de.neuefische.paulkreft.backend.game.classic.model;
 
 import org.springframework.data.annotation.Id;
 
