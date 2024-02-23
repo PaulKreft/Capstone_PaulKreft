@@ -13,4 +13,5 @@ export type Lobby = {
   streakToWin: number;
   timeToBeat?: number;
   lastGameStarted?: Date;
+  capacity?: number;
 };

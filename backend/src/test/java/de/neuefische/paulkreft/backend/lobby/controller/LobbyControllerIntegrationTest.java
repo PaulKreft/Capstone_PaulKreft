@@ -38,7 +38,7 @@ class LobbyControllerIntegrationTest {
     public void instantiateTestLobby() {
         Player host = new Player("1", "Paul");
         Player participant = new Player("2", "Soso");
-        testLobby = new Lobby("1", host, List.of(host, participant), false, false, 4, null, List.of(), 3, null, null);
+        testLobby = new Lobby("1", host, List.of(host, participant), false, false, 4, null, List.of(), 3, null, null, false);
     }
 
 
