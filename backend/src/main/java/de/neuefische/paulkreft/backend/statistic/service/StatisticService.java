@@ -44,8 +44,7 @@ public class StatisticService {
 
 
     public DuelStatistics getUserDuelStatistics(String id, String opponentId) {
-        List<MultiplayerGame> games = multiplayerGameRepo.findAllByTotalPlayersAndPlayerIdsOrderByCreatedAtAsc(DUEL_TOTAL_PLAYERS, List.of(id, opponentId));
-
+        List<MultiplayerGame> games = multiplayerGameRepo.findAllByTotalPlayersAndPlayerIdsIsContainingOrderByCreatedAtAsc(DUEL_TOTAL_PLAYERS, List.of(id, opponentId));
 
         List<MultiplayerGame> easyGames = games.stream().filter(game -> game.difficulty() == EASY).toList();
         List<MultiplayerGame> mediumGames = games.stream().filter(game -> game.difficulty() == MEDIUM).toList();

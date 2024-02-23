@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface MultiplayerGameRepo extends MongoRepository<MultiplayerGame, String> {
-    List<MultiplayerGame> findAllByTotalPlayersAndPlayerIdsOrderByCreatedAtAsc(int totalPlayers, List<String> playerIds);
+    List<MultiplayerGame> findAllByTotalPlayersAndPlayerIdsIsContainingOrderByCreatedAtAsc(int totalPlayers, List<String> playerIds);
 }
