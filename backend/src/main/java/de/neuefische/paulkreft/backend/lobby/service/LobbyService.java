@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import de.neuefische.paulkreft.backend.exception.LobbyCapacityExceededException;
 import de.neuefische.paulkreft.backend.exception.LobbyGoneException;
 import de.neuefische.paulkreft.backend.exception.PlayerNotPartOfLobbyException;
 import de.neuefische.paulkreft.backend.lobby.model.Lobby;
@@ -41,6 +42,10 @@ public class LobbyService {
 
         if (lobby.players().contains(player)) {
             return lobby;
+        }
+
+        if (lobby.capacity() != null && lobby.players().size() == lobby.capacity()) {
+            throw new LobbyCapacityExceededException("This lobby is full");
         }
 
         lobby.players().add(player);

@@ -3,8 +3,9 @@ export type MultiplayerGame = {
   playerIds: string[];
   difficulty: number;
   streakToWin: number;
-  winnerId: string;
+  winnerId: string[];
   loserIds: string[];
   wonInMilliseconds: number;
+  totalPlayers: number;
   createdAt?: string;
 };

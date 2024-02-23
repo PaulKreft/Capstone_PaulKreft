@@ -25,6 +25,7 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
 
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
   const [isSavedToDatabase, setIsSavedToDatabase] = useState<boolean>(false);
+  const [totalPlayers, setTotalPlayers] = useState<number>(2);
 
   useEffect(() => {
     if (lobby?.losers.length && lobby.winner && lobby.losers.length >= lobby.players.length - 1) {
@@ -37,9 +38,10 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
             playerIds: lobby.players.map((player) => player.id),
             difficulty: lobby.difficulty,
             streakToWin: lobby.streakToWin,
-            winnerId: lobby.winner.id,
+            winnerIds: [lobby.winner.id],
             loserIds: lobby.losers.map((loser) => loser.id),
             wonInMilliseconds: lobby.timeToBeat,
+            totalPlayers
           })
           .then(() => setIsSavedToDatabase(true))
           .catch((error) => console.log(error));
@@ -100,6 +102,7 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
       })
       .then((response) => {
         setLobby(response.data);
+        setTotalPlayers(lobby ? lobby.players.length : 0);
       });
   };
 

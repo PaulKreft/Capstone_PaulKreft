@@ -43,7 +43,10 @@ export const LobbyEntrance: React.FC<MultiPlayerProps> = ({ user }) => {
   };
 
   const joinLobby = (): void => {
-    axios.put(`/api/lobby/${lobbyId}/join`, currentPlayer).then(() => navigate(`/multiplayer/lobby/${lobbyId}`));
+    axios
+      .put(`/api/lobby/${lobbyId}/join`, currentPlayer)
+      .then(() => navigate(`/multiplayer/lobby/${lobbyId}`))
+      .catch((error) => console.log(error));
   };
 
   const handleKeyDownOnInput = (event: React.KeyboardEvent<HTMLInputElement>): void => {
