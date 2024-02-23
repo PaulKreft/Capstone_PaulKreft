@@ -1,8 +1,10 @@
 import { Spinner } from "./Spinner.tsx";
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { Player } from "../types/Player.ts";
 import { Lobby } from "../types/Lobby.ts";
 import copyToClipBoardIconUrl from "./../assets/copy-to-clipboard-icon.svg";
+import axios from "axios";
+import { DuelStatistics } from "../types/DuelStatistics.ts";
 
 type MultiplayerLobbyProps = {
   lobby: Lobby;
@@ -16,6 +18,9 @@ const EASY = 1;
 const MEDIUM = 2;
 const HARD = 4;
 
+const DUEL_CAPACITY = 2;
+const DUEL_TOTAL_PLAYERS = 2;
+
 export const MultiplayerLobby: React.FC<MultiplayerLobbyProps> = ({
   lobby,
   player,
@@ -23,6 +28,26 @@ export const MultiplayerLobby: React.FC<MultiplayerLobbyProps> = ({
   onChangeDifficulty,
   startGame,
 }) => {
+  const [duelStatistics, setDuelStatistics] = useState<DuelStatistics>();
+
+  useEffect(() => {
+    if (lobby.capacity === DUEL_CAPACITY && lobby.players.length === DUEL_TOTAL_PLAYERS) {
+      const opponent: Player | undefined = lobby.players.find((opponent) => opponent.id != player.id);
+      if (!opponent) {
+        return;
+      }
+
+      const opponentId: string = opponent.id;
+
+      axios.get(`/api/user/${player.id}/statistics/duel?opponentId=${opponentId}`).then((response) =>
+        setDuelStatistics({
+          gamesPlayed: response.data.gamesPlayed,
+          gamesWon: response.data.gamesWon,
+        }),
+      );
+    }
+  }, [lobby.players]);
+
   return (
     <div className="flex flex-1 flex-col items-center justify-center px-2">
       <div className="flex w-full items-center justify-evenly rounded-2xl border-2 border-black py-10 xs:w-max xs:px-20">
@@ -41,11 +66,11 @@ export const MultiplayerLobby: React.FC<MultiplayerLobbyProps> = ({
           {lobby.host.id !== player.id && (
             <div className="mt-5 flex gap-5">
               <div className="flex flex-col items-center">
-                <span className="font-light">Streak to win </span>
+                <span className="font-light">Streak to win</span>
                 <span className="font-bold">{lobby.streakToWin ?? "1"}</span>
               </div>
               <div className="flex flex-col items-center">
-                <span className="font-light">Difficulty </span>
+                <span className="font-light">Difficulty</span>
                 <span className="font-bold">
                   {lobby.difficulty === 1 ? "Easy" : lobby.difficulty === 2 ? "Medium" : "Hard"}
                 </span>
@@ -53,10 +78,24 @@ export const MultiplayerLobby: React.FC<MultiplayerLobbyProps> = ({
             </div>
           )}
 
-          <div className="mt-12 flex flex-col gap-1">
+          {duelStatistics && (
+            <div className="mt-10 flex flex-col items-center">
+              <span className="font-light">Record</span>
+              <span className="font-bold">
+                {duelStatistics.gamesWon[lobby.difficulty === 1 ? "easy" : lobby.difficulty === 2 ? "medium" : "hard"]}{" "}
+                -{" "}
+                {duelStatistics.gamesPlayed[
+                  lobby.difficulty === 1 ? "easy" : lobby.difficulty === 2 ? "medium" : "hard"
+                ] -
+                  duelStatistics.gamesWon[lobby.difficulty === 1 ? "easy" : lobby.difficulty === 2 ? "medium" : "hard"]}
+              </span>
+            </div>
+          )}
+
+          <div className="mt-4 flex flex-col gap-1">
             {lobby.players.map((player) => (
               <div key={player.id}>
-                <div> {player.name}</div>
+                <div>{player.name}</div>
                 <div className="mb-1 mt-1 h-[1px] w-full bg-gradient-to-r from-white via-black to-white" />
               </div>
             ))}
