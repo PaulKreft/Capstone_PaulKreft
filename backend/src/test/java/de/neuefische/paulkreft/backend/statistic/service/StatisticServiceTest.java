@@ -2,6 +2,7 @@ package de.neuefische.paulkreft.backend.statistic.service;
 
 import de.neuefische.paulkreft.backend.game.classic.model.Game;
 import de.neuefische.paulkreft.backend.game.classic.repository.GameRepo;
+import de.neuefische.paulkreft.backend.game.multiplayer.repository.MultiplayerGameRepo;
 import de.neuefische.paulkreft.backend.statistic.model.ScoreMap;
 import de.neuefische.paulkreft.backend.statistic.model.ClassicStatistics;
 import org.junit.jupiter.api.Test;
@@ -17,11 +18,12 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 class StatisticServiceTest {
     @Test
-    void getUserStatisticsTest_whenAllStatisticsCalculable_returnCorrectValues() {
+    void getUserClassicStatisticsTest_whenAllStatisticsCalculable_returnCorrectValues() {
         // Given
         GameRepo gameRepo = Mockito.mock(GameRepo.class);
+        MultiplayerGameRepo multiplayerGameRepo = Mockito.mock(MultiplayerGameRepo.class);
 
-        StatisticService statisticService = new StatisticService(gameRepo);
+        StatisticService statisticService = new StatisticService(gameRepo, multiplayerGameRepo);
 
 
         Game game1 = new Game("7b6cc6c8-b98f-428a-bee5-2e4e804901cd", "f39e6614-8132-4f8e-bd98-6fdf50fed3b0", "", 1, false, 0, List.of("#f1da9b", "#bb463d", "#0e2564", "#237dc9", "#44b9c2", "#dc8236"), Instant.parse("2024-02-09T15:18:59.426Z"));
@@ -60,7 +62,7 @@ class StatisticServiceTest {
         );
 
         // When
-        ClassicStatistics actual = statisticService.getUserStatistics("");
+        ClassicStatistics actual = statisticService.getUserClassicStatistics("");
 
         // Then
         assertNotNull(actual);

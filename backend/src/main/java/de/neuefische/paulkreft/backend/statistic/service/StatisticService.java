@@ -2,26 +2,31 @@ package de.neuefische.paulkreft.backend.statistic.service;
 
 import de.neuefische.paulkreft.backend.game.classic.model.Game;
 import de.neuefische.paulkreft.backend.game.classic.repository.GameRepo;
-import de.neuefische.paulkreft.backend.statistic.model.ScoreMap;
+import de.neuefische.paulkreft.backend.game.multiplayer.model.MultiplayerGame;
+import de.neuefische.paulkreft.backend.game.multiplayer.repository.MultiplayerGameRepo;
 import de.neuefische.paulkreft.backend.statistic.model.ClassicStatistics;
+import de.neuefische.paulkreft.backend.statistic.model.DuelStatistics;
+import de.neuefische.paulkreft.backend.statistic.model.ScoreMap;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 
-
 @Service
 @RequiredArgsConstructor
 public class StatisticService {
     private final GameRepo gameRepo;
+    private final MultiplayerGameRepo multiplayerGameRepo;
 
     private static final int EASY = 1;
     private static final int MEDIUM = 2;
     private static final int HARD = 4;
 
-    public ClassicStatistics getUserStatistics(String id) {
-        List<Game> games = gameRepo.findAllByUserIdOrderByCreatedAtAsc(id);
+    private static final int DUEL_TOTAL_PLAYERS = 2;
+
+    public ClassicStatistics getUserClassicStatistics(String id) {
+        List<Game> games = gameRepo.findAllByUserId(id);
 
         List<Game> easyGames = games.stream().filter(game -> game.difficulty() == EASY).toList();
         List<Game> mediumGames = games.stream().filter(game -> game.difficulty() == MEDIUM).toList();
@@ -35,6 +40,22 @@ public class StatisticService {
         ScoreMap averageDuration = getAverageDurations(easyGames, mediumGames, hardGames);
 
         return new ClassicStatistics(longestWinningStreaks, longestLosingStreaks, totalGames, totalGamesWon, fastestSolve, averageDuration);
+    }
+
+
+    public DuelStatistics getUserDuelStatistics(String id, String opponentId) {
+        List<MultiplayerGame> games = multiplayerGameRepo.findAllByTotalPlayersAndPlayerIdsOrderByCreatedAtAsc(DUEL_TOTAL_PLAYERS, List.of(id, opponentId));
+
+
+        List<MultiplayerGame> easyGames = games.stream().filter(game -> game.difficulty() == EASY).toList();
+        List<MultiplayerGame> mediumGames = games.stream().filter(game -> game.difficulty() == MEDIUM).toList();
+        List<MultiplayerGame> hardGames = games.stream().filter(game -> game.difficulty() == HARD).toList();
+
+        double easyGamesWon = easyGames.stream().filter(game -> game.winnerIds().contains(id)).toList().size();
+        double mediumGamesWon = mediumGames.stream().filter(game -> game.winnerIds().contains(id)).toList().size();
+        double hardGamesWon = hardGames.stream().filter(game -> game.winnerIds().contains(id)).toList().size();
+
+        return new DuelStatistics(id, opponentId, new ScoreMap((double) easyGames.size(), (double) mediumGames.size(), (double) hardGames.size()), new ScoreMap(easyGamesWon, mediumGamesWon, hardGamesWon));
     }
 
 
