@@ -11,7 +11,7 @@ public record GameCreate(
         int duration,
         List<String> configuration
 ) {
-    public ClassicGame withIdAndCreatedAt(String id, Instant createdAt) {
-        return new ClassicGame(id, this.userId, this.type, this.difficulty, this.isSuccess, this.duration, this.configuration, createdAt);
+    public Game withIdAndCreatedAt(String id, Instant createdAt) {
+        return new Game(id, this.userId, this.type, this.difficulty, this.isSuccess, this.duration, this.configuration, createdAt);
     }
 }
