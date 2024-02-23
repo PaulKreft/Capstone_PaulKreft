@@ -30,27 +30,37 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
   useEffect(() => {
     if (lobby?.losers.length && lobby.winner && lobby.losers.length >= lobby.players.length - 1) {
       setIsGameOver(true);
-
-      lobby.host.id === player.id &&
-        !isSavedToDatabase &&
-        axios
-          .post("/api/game/multiplayer", {
-            playerIds: lobby.players.map((player) => player.id),
-            difficulty: lobby.difficulty,
-            streakToWin: lobby.streakToWin,
-            winnerIds: [lobby.winner.id],
-            loserIds: lobby.losers.map((loser) => loser.id),
-            wonInMilliseconds: lobby.timeToBeat,
-            totalPlayers
-          })
-          .then(() => setIsSavedToDatabase(true))
-          .catch((error) => console.log(error));
-
       return;
     }
     setIsGameOver(false);
-    setIsSavedToDatabase(false);
   }, [lobby?.losers, lobby?.players]);
+
+  useEffect(() => {
+    if (!isGameOver) {
+      setIsSavedToDatabase(false);
+    }
+
+    if (!lobby?.winner) {
+      return;
+    }
+
+    lobby.host.id === player.id &&
+      !isSavedToDatabase &&
+      axios
+        .post("/api/game/multiplayer", {
+          playerIds: lobby.players.map((player) => player.id),
+          difficulty: lobby.difficulty,
+          streakToWin: lobby.streakToWin,
+          winnerIds: [lobby.winner.id],
+          loserIds: lobby.losers.map((loser) => loser.id),
+          wonInMilliseconds: lobby.timeToBeat,
+          totalPlayers,
+        })
+        .then(() => {
+          setIsSavedToDatabase(true);
+        })
+        .catch((error) => console.log(error));
+  }, [isGameOver]);
 
   useEffect(() => {
     axios.get(`/api/lobby/${id}`).then((response) => {
