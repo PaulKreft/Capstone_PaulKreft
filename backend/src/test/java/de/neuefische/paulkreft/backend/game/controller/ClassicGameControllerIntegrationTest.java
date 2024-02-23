@@ -1,6 +1,6 @@
 package de.neuefische.paulkreft.backend.game.controller;
 
-import de.neuefische.paulkreft.backend.game.classic.model.Game;
+import de.neuefische.paulkreft.backend.game.classic.model.ClassicGame;
 import de.neuefische.paulkreft.backend.game.classic.repository.GameRepo;
 import de.neuefische.paulkreft.backend.utils.service.IdService;
 import de.neuefische.paulkreft.backend.utils.service.TimeService;
@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class GameControllerIntegrationTest {
+class ClassicGameControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -87,8 +87,8 @@ class GameControllerIntegrationTest {
     void getGamesByUserIdTest_whenOneMatchingGameInDB_thenReturnMatchingGame() throws Exception {
         // Given
         Instant now = Instant.parse("2016-06-09T00:00:00Z");
-        Game testGame = new Game("1", "User1", "Type", 1, true, 10, List.of("#FFFFFF"), now);
-        Game testGame2 = new Game("2", "User2", "Type", 1, true, 10, Collections.emptyList(), now);
+        ClassicGame testGame = new ClassicGame("1", "User1", "Type", 1, true, 10, List.of("#FFFFFF"), now);
+        ClassicGame testGame2 = new ClassicGame("2", "User2", "Type", 1, true, 10, Collections.emptyList(), now);
         gameRepo.save(testGame);
         gameRepo.save(testGame2);
 

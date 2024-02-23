@@ -5,7 +5,7 @@ import org.springframework.data.annotation.Id;
 import java.time.Instant;
 import java.util.List;
 
-public record Game(
+public record ClassicGame(
         @Id
         String id,
         String userId,

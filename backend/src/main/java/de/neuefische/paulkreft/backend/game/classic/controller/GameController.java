@@ -1,6 +1,6 @@
 package de.neuefische.paulkreft.backend.game.classic.controller;
 
-import de.neuefische.paulkreft.backend.game.classic.model.Game;
+import de.neuefische.paulkreft.backend.game.classic.model.ClassicGame;
 import de.neuefische.paulkreft.backend.game.classic.model.GameCreate;
 import de.neuefische.paulkreft.backend.game.classic.service.GameService;
 import org.springframework.web.bind.annotation.*;
@@ -17,12 +17,12 @@ public class GameController {
     }
 
     @PostMapping
-    public Game createGame(@RequestBody GameCreate gameCreate) {
+    public ClassicGame createGame(@RequestBody GameCreate gameCreate) {
         return gameService.createGame(gameCreate);
     }
 
     @GetMapping("/user/{userId}")
-    public List<Game> getGamesByUserId(@PathVariable String userId) {
+    public List<ClassicGame> getGamesByUserId(@PathVariable String userId) {
         return gameService.getGamesByUserId(userId);
     }
 }

@@ -1,6 +1,6 @@
 package de.neuefische.paulkreft.backend.game.service;
 
-import de.neuefische.paulkreft.backend.game.classic.model.Game;
+import de.neuefische.paulkreft.backend.game.classic.model.ClassicGame;
 import de.neuefische.paulkreft.backend.game.classic.model.GameCreate;
 import de.neuefische.paulkreft.backend.game.classic.repository.GameRepo;
 import de.neuefische.paulkreft.backend.game.classic.service.GameService;
@@ -16,7 +16,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-class GameServiceTest {
+class ClassicGameServiceTest {
 
     private final GameRepo gameRepo = mock(GameRepo.class);
     private final IdService idService = mock(IdService.class);
@@ -35,32 +35,32 @@ class GameServiceTest {
         GameCreate mockGame = mock(GameCreate.class);
 
         Instant now = Instant.now();
-        Game expectedGame = new Game("1", "User1", "Type", 1, true, 10, Collections.emptyList(), now);
+        ClassicGame expectedGame = new ClassicGame("1", "User1", "Type", 1, true, 10, Collections.emptyList(), now);
 
         GameCreate gameCreate = new GameCreate("User1", "Type", 1, true, 10, Collections.emptyList());
         when(idService.generateUUID()).thenReturn("1");
         when(timeService.getNow()).thenReturn(now);
         when(mockGame.withIdAndCreatedAt("1", now)).thenReturn(expectedGame);
 
-        when(gameRepo.save(any(Game.class))).thenReturn(expectedGame);
+        when(gameRepo.save(any(ClassicGame.class))).thenReturn(expectedGame);
 
         // When
-        Game savedGame = gameService.createGame(gameCreate);
+        ClassicGame savedGame = gameService.createGame(gameCreate);
 
         // Then
         assertEquals(expectedGame, savedGame);
-        verify(gameRepo, times(1)).save(any(Game.class));
+        verify(gameRepo, times(1)).save(any(ClassicGame.class));
     }
 
     @Test
     void getGamesByUserId_shouldReturnGames() {
         // Given
         String userId = "User1";
-        List<Game> expectedGames = Collections.singletonList(new Game("1", userId, "Type", 1, true, 10, Collections.emptyList(), Instant.now()));
+        List<ClassicGame> expectedGames = Collections.singletonList(new ClassicGame("1", userId, "Type", 1, true, 10, Collections.emptyList(), Instant.now()));
         when(gameRepo.findAllByUserId(userId)).thenReturn(expectedGames);
 
         // When
-        List<Game> actualGames = gameService.getGamesByUserId(userId);
+        List<ClassicGame> actualGames = gameService.getGamesByUserId(userId);
 
         // Then
         assertEquals(expectedGames, actualGames);
