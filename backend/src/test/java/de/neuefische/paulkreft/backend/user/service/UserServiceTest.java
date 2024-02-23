@@ -1,13 +1,9 @@
 package de.neuefische.paulkreft.backend.user.service;
 
-import de.neuefische.paulkreft.backend.game.classic.model.Game;
-import de.neuefische.paulkreft.backend.game.classic.repository.GameRepo;
 import de.neuefische.paulkreft.backend.github.service.GithubService;
 import de.neuefische.paulkreft.backend.statistic.service.StatisticService;
 import de.neuefische.paulkreft.backend.utils.service.IdService;
 import de.neuefische.paulkreft.backend.utils.service.TimeService;
-import de.neuefische.paulkreft.backend.statistic.model.ScoreMap;
-import de.neuefische.paulkreft.backend.statistic.model.Statistics;
 import de.neuefische.paulkreft.backend.user.model.User;
 import de.neuefische.paulkreft.backend.user.model.UserGet;
 import de.neuefische.paulkreft.backend.user.repository.UsersRepo;
@@ -18,7 +14,6 @@ import org.mockito.Mockito;
 
 import java.security.Principal;
 import java.time.Instant;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;

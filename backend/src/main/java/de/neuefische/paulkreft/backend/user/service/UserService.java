@@ -2,7 +2,7 @@ package de.neuefische.paulkreft.backend.user.service;
 
 import de.neuefische.paulkreft.backend.exception.GithubEmailNotFoundException;
 import de.neuefische.paulkreft.backend.github.service.GithubService;
-import de.neuefische.paulkreft.backend.statistic.model.Statistics;
+import de.neuefische.paulkreft.backend.statistic.model.ClassicStatistics;
 import de.neuefische.paulkreft.backend.statistic.service.StatisticService;
 import de.neuefische.paulkreft.backend.utils.service.IdService;
 import de.neuefische.paulkreft.backend.utils.service.TimeService;
@@ -97,7 +97,7 @@ public class UserService {
         return usersRepo.existsUserByEmail(email);
     }
 
-    public Statistics getStatistics(String id) {
+    public ClassicStatistics getStatistics(String id) {
         return statisticService.getUserStatistics(id);
     }
 }

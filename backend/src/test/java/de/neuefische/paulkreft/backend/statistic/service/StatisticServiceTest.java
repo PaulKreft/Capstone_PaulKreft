@@ -3,7 +3,7 @@ package de.neuefische.paulkreft.backend.statistic.service;
 import de.neuefische.paulkreft.backend.game.classic.model.Game;
 import de.neuefische.paulkreft.backend.game.classic.repository.GameRepo;
 import de.neuefische.paulkreft.backend.statistic.model.ScoreMap;
-import de.neuefische.paulkreft.backend.statistic.model.Statistics;
+import de.neuefische.paulkreft.backend.statistic.model.ClassicStatistics;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -50,7 +50,7 @@ class StatisticServiceTest {
 
         when(gameRepo.findAllByUserIdOrderByCreatedAtAsc(any())).thenReturn(games);
 
-        Statistics expected = new Statistics(
+        ClassicStatistics expected = new ClassicStatistics(
                 new ScoreMap(2.0, 2.0, 1.0),
                 new ScoreMap(1.0, 1.0, 4.0),
                 new ScoreMap(12.0, 3.0, 6.0),
@@ -60,7 +60,7 @@ class StatisticServiceTest {
         );
 
         // When
-        Statistics actual = statisticService.getUserStatistics("");
+        ClassicStatistics actual = statisticService.getUserStatistics("");
 
         // Then
         assertNotNull(actual);

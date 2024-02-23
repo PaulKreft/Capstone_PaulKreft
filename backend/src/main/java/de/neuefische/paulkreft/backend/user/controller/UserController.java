@@ -1,6 +1,6 @@
 package de.neuefische.paulkreft.backend.user.controller;
 
-import de.neuefische.paulkreft.backend.statistic.model.Statistics;
+import de.neuefische.paulkreft.backend.statistic.model.ClassicStatistics;
 import de.neuefische.paulkreft.backend.user.model.User;
 import de.neuefische.paulkreft.backend.user.model.UserGet;
 import de.neuefische.paulkreft.backend.user.service.UserService;
@@ -27,7 +27,7 @@ public class UserController {
     }
 
     @GetMapping("{id}/statistics")
-    public Statistics getUserStatistics(@PathVariable String id) {
+    public ClassicStatistics getUserStatistics(@PathVariable String id) {
         return userService.getStatistics(id);
     }
 }

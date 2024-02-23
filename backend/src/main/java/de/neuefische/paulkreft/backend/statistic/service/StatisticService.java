@@ -3,7 +3,7 @@ package de.neuefische.paulkreft.backend.statistic.service;
 import de.neuefische.paulkreft.backend.game.classic.model.Game;
 import de.neuefische.paulkreft.backend.game.classic.repository.GameRepo;
 import de.neuefische.paulkreft.backend.statistic.model.ScoreMap;
-import de.neuefische.paulkreft.backend.statistic.model.Statistics;
+import de.neuefische.paulkreft.backend.statistic.model.ClassicStatistics;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +20,7 @@ public class StatisticService {
     private static final int MEDIUM = 2;
     private static final int HARD = 4;
 
-    public Statistics getUserStatistics(String id) {
+    public ClassicStatistics getUserStatistics(String id) {
         List<Game> games = gameRepo.findAllByUserIdOrderByCreatedAtAsc(id);
 
         List<Game> easyGames = games.stream().filter(game -> game.difficulty() == EASY).toList();
@@ -34,7 +34,7 @@ public class StatisticService {
         ScoreMap fastestSolve = getFastestSolves(easyGames, mediumGames, hardGames);
         ScoreMap averageDuration = getAverageDurations(easyGames, mediumGames, hardGames);
 
-        return new Statistics(longestWinningStreaks, longestLosingStreaks, totalGames, totalGamesWon, fastestSolve, averageDuration);
+        return new ClassicStatistics(longestWinningStreaks, longestLosingStreaks, totalGames, totalGamesWon, fastestSolve, averageDuration);
     }
 
 
