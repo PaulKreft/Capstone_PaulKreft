@@ -26,7 +26,7 @@ public class StatisticService {
     private static final int DUEL_TOTAL_PLAYERS = 2;
 
     public ClassicStatistics getUserClassicStatistics(String id) {
-        List<Game> games = gameRepo.findAllByUserId(id);
+        List<Game> games = gameRepo.findAllByUserIdOrderByCreatedAtAsc(id);
 
         List<Game> easyGames = games.stream().filter(game -> game.difficulty() == EASY).toList();
         List<Game> mediumGames = games.stream().filter(game -> game.difficulty() == MEDIUM).toList();
