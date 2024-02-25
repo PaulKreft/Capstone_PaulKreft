@@ -1,6 +1,7 @@
 package de.neuefische.paulkreft.backend.user.controller;
 
-import de.neuefische.paulkreft.backend.user.model.Statistics;
+import de.neuefische.paulkreft.backend.statistic.model.ClassicStatistics;
+import de.neuefische.paulkreft.backend.statistic.model.DuelStatistics;
 import de.neuefische.paulkreft.backend.user.model.User;
 import de.neuefische.paulkreft.backend.user.model.UserGet;
 import de.neuefische.paulkreft.backend.user.service.UserService;
@@ -27,7 +28,12 @@ public class UserController {
     }
 
     @GetMapping("{id}/statistics")
-    public Statistics getUserStatistics(@PathVariable String id) {
-        return userService.getStatistics(id);
+    public ClassicStatistics getUserClassicStatistics(@PathVariable String id) {
+        return userService.getClassicStatistics(id);
+    }
+
+    @GetMapping("{id}/statistics/duel")
+    public DuelStatistics getUserDuelStatistics(@PathVariable String id, @RequestParam String opponentId) {
+        return userService.getDuelStatistics(id, opponentId);
     }
 }

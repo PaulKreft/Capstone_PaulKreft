@@ -1,6 +1,7 @@
 import React, { FormEvent, useEffect, useState } from "react";
 import { cn } from "../lib/utils.ts";
 import axios from "axios";
+import { Spinner } from "./Spinner.tsx";
 
 type EmailSignUpProps = {
   login: (email: string, password: string) => void;
@@ -37,6 +38,14 @@ export const EmailSignUp: React.FC<EmailSignUpProps> = ({ login }) => {
       .catch((e) => console.log(e));
   };
 
+  if (isSigningUp) {
+    return (
+      <div className="flex flex-1 items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
+
   return (
     <div className="mx-auto flex flex-1 flex-col items-center justify-center pb-20">
       <div className="flex flex-col items-center rounded-2xl border-2 border-black px-20 pb-24 pt-12">
@@ -54,9 +63,7 @@ export const EmailSignUp: React.FC<EmailSignUpProps> = ({ login }) => {
             onChange={(event) => setEmail(event.target.value)}
             required
           />
-          <div
-            className={cn("mt-1 text-center text-sm", email && !isEmailValid ? "text-red" : "text-transparent")}
-          >
+          <div className={cn("mt-1 text-center text-sm", email && !isEmailValid ? "text-red" : "text-transparent")}>
             Invalid email format
           </div>
 
@@ -73,10 +80,7 @@ export const EmailSignUp: React.FC<EmailSignUpProps> = ({ login }) => {
             required
           />
           <div
-            className={cn(
-              "mt-1 text-center text-sm",
-              password && !isPasswordValid ? "text-red" : "text-transparent",
-            )}
+            className={cn("mt-1 text-center text-sm", password && !isPasswordValid ? "text-red" : "text-transparent")}
           >
             Invalid password format
           </div>

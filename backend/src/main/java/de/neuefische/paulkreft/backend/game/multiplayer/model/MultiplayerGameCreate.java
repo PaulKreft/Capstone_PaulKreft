@@ -7,11 +7,12 @@ public record MultiplayerGameCreate(
         List<String> playerIds,
         int difficulty,
         Integer streakToWin,
-        String winnerId,
+        List<String> winnerIds,
         List<String> loserIds,
-        Integer wonInMilliseconds
+        Integer wonInMilliseconds,
+        int totalPlayers
 ) {
     public MultiplayerGame withIdAndCreatedAt(String id, Instant createdAt) {
-        return new MultiplayerGame(id, this.playerIds, this.difficulty, this.streakToWin, this.winnerId, this.loserIds, this.wonInMilliseconds, createdAt);
+        return new MultiplayerGame(id, this.playerIds, this.difficulty, this.streakToWin, this.winnerIds, this.loserIds, this.wonInMilliseconds, this.totalPlayers , createdAt);
     }
 }

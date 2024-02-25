@@ -16,7 +16,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-class GameServiceTest {
+class ClassicGameServiceTest {
 
     private final GameRepo gameRepo = mock(GameRepo.class);
     private final IdService idService = mock(IdService.class);

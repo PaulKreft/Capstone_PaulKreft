@@ -11,9 +11,10 @@ public record MultiplayerGame(
         List<String> playerIds,
         int difficulty,
         Integer streakToWin,
-        String winnerId,
+        List<String> winnerIds,
         List<String> loserIds,
         Integer wonInMilliseconds,
+        int totalPlayers,
         Instant createdAt
 ) {
 }

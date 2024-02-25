@@ -20,6 +20,7 @@ public record Lobby(
         List<Player> losers,
         Integer streakToWin,
         Integer timeToBeat,
-        Instant lastGameStarted
+        Instant lastGameStarted,
+        Integer capacity
 ) {
 }

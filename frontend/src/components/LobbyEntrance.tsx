@@ -11,6 +11,8 @@ type MultiPlayerProps = {
 
 const EASY = 1;
 
+const DUEL_CAPACITY = 2;
+
 export const LobbyEntrance: React.FC<MultiPlayerProps> = ({ user }) => {
   const [lobbyId, setLobbyId] = useState<string>("");
 
@@ -22,7 +24,7 @@ export const LobbyEntrance: React.FC<MultiPlayerProps> = ({ user }) => {
 
   const currentPlayer: Player = { id: user.id, name: user.name };
 
-  const createLobby = (): void => {
+  const createLobby = (capacity: number | null = null): void => {
     const lobbyId = Math.ceil(Math.random() * 1000000).toString();
 
     const lobby: Lobby = {
@@ -34,33 +36,32 @@ export const LobbyEntrance: React.FC<MultiPlayerProps> = ({ user }) => {
       difficulty: EASY,
       losers: [],
       streakToWin: 3,
+      ...(capacity && { capacity }),
     };
 
     axios.post("/api/lobby", lobby).then(() => navigate(`/multiplayer/lobby/${lobbyId}`));
   };
 
   const joinLobby = (): void => {
-    axios.put(`/api/lobby/${lobbyId}/join`, currentPlayer).then(() => navigate(`/multiplayer/lobby/${lobbyId}`));
+    axios
+      .put(`/api/lobby/${lobbyId}/join`, currentPlayer)
+      .then(() => navigate(`/multiplayer/lobby/${lobbyId}`))
+      .catch((error) => console.log(error));
   };
 
   const handleKeyDownOnInput = (event: React.KeyboardEvent<HTMLInputElement>): void => {
-    if(event.key === "Enter") {
+    if (event.key === "Enter") {
       joinLobby();
     }
-  }
+  };
 
   return (
     <div className="flex h-max flex-1 flex-col items-center px-5 pb-32 pt-20 xs:pb-20 sm:px-10">
-      <div className="flex h-80 w-80 flex-col items-center justify-evenly gap-5 rounded-2xl border-2 border-black p-5">
-        <button
-          className="h-max items-center rounded-lg border-2 border-black px-6 py-2 text-xl font-light hover:bg-black hover:text-white"
-          onClick={createLobby}
-        >
-          Create new lobby
-        </button>
-        <div className="flex justify-center gap-5">
+      <div className="flex h-[24rem] w-80 flex-col items-center justify-between rounded-2xl border-2 border-black px-12 pb-14 pt-8">
+        <div className="text-2xl font-bold">Enter a lobby</div>
+        <div className="mb-4 flex w-full justify-between">
           <input
-            className="h-max w-2/5 rounded-lg border-2 border-black px-3 py-1 font-light"
+            className="h-max w-3/5 rounded-lg border-2 border-black px-3 py-1 font-light"
             type="text"
             value={lobbyId}
             onChange={(event) => setLobbyId(event.target.value)}
@@ -72,6 +73,20 @@ export const LobbyEntrance: React.FC<MultiPlayerProps> = ({ user }) => {
             onClick={joinLobby}
           >
             Join
+          </button>
+        </div>
+        <div className="flex w-full flex-col gap-5">
+          <button
+            className="h-max w-full items-center rounded-lg border-2 border-black py-2 text-lg font-light hover:bg-black hover:text-white"
+            onClick={() => createLobby(DUEL_CAPACITY)}
+          >
+            New Duel lobby
+          </button>
+          <button
+            className="h-max w-full items-center rounded-lg border-2 border-black py-2 text-lg font-light hover:bg-black hover:text-white"
+            onClick={() => createLobby()}
+          >
+            New Multiplayer lobby
           </button>
         </div>
       </div>

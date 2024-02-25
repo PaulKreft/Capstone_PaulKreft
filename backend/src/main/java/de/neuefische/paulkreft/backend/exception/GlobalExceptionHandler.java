@@ -72,4 +72,10 @@ public class GlobalExceptionHandler {
     public String handleException(PlayerNotPartOfLobbyException exception) {
         return exception.getMessage();
     }
+
+    @ExceptionHandler({LobbyCapacityExceededException.class})
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public String handleException(LobbyCapacityExceededException exception) {
+        return exception.getMessage();
+    }
 }

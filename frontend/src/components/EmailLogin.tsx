@@ -1,12 +1,13 @@
 import React, { FormEvent, useEffect, useState } from "react";
 import { cn } from "../lib/utils.ts";
+import {Spinner} from "./Spinner.tsx";
 
 type EmailLoginProps = {
   login: (email: string, password: string) => void;
 };
 
 export const EmailLogin: React.FC<EmailLoginProps> = ({ login }) => {
-  const [isSigningUp, setIsSigningUp] = useState<boolean>(false);
+  const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -26,9 +27,17 @@ export const EmailLogin: React.FC<EmailLoginProps> = ({ login }) => {
 
   const loginWithEmail = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setIsSigningUp(true);
+    setIsLoggingIn(true);
     login(email, password);
   };
+
+  if (isLoggingIn) {
+    return (
+        <div className="flex flex-1 items-center justify-center">
+          <Spinner />
+        </div>
+    );
+  }
 
   return (
     <div className="mx-auto flex flex-1 flex-col items-center justify-center pb-20">
@@ -76,7 +85,7 @@ export const EmailLogin: React.FC<EmailLoginProps> = ({ login }) => {
           <button
             className="mt-4 w-full rounded-lg bg-black px-3 py-2 text-white disabled:bg-black/20"
             type="submit"
-            disabled={!isEmailValid || !isPasswordValid || isSigningUp}
+            disabled={!isEmailValid || !isPasswordValid || isLoggingIn}
           >
             Log In
           </button>

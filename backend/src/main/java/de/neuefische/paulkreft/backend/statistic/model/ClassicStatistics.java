@@ -1,6 +1,6 @@
-package de.neuefische.paulkreft.backend.user.model;
+package de.neuefische.paulkreft.backend.statistic.model;
 
-public record Statistics(
+public record ClassicStatistics(
         ScoreMap longestWinningStreak,
         ScoreMap longestLosingStreak,
         ScoreMap gamesPlayed,
