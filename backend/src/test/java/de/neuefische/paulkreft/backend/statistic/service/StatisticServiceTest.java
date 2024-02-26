@@ -58,7 +58,7 @@ class StatisticServiceTest {
                 new ScoreMap(12.0, 3.0, 6.0),
                 new ScoreMap(7.0, 2.0, 1.0),
                 new ScoreMap(3632.0, 8578.0, 15833.0),
-                new ScoreMap(6866.285714285715, 25277.0, 15833.0)
+                new ScoreMap(6866.285714285715, 3611.0, 2261.8571428571427)
         );
 
         // When
