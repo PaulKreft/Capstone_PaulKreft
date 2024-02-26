@@ -3,6 +3,7 @@ import { User } from "../types/User.ts";
 import axios from "axios";
 import { Statistics } from "../types/Statistics.ts";
 import { Statistic } from "./Statistic.tsx";
+import { Spinner } from "./Spinner.tsx";
 
 type PlayProps = {
   user: User;
@@ -36,7 +37,11 @@ export const Profile: React.FC<PlayProps> = ({ user }) => {
   }, [user]);
 
   if (user == null || !statistics) {
-    return <div>loading</div>;
+    return (
+      <div className="flex h-screen w-screen items-center justify-center">
+        <Spinner />
+      </div>
+    );
   }
 
   return (
