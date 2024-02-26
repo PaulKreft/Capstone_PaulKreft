@@ -51,7 +51,7 @@ export const Play: React.FC<PlayProps> = ({ userId }) => {
     axios
       .post("/api/game", {
         userId,
-        type: "",
+        type: "classic",
         difficulty,
         isSuccess: hasWon,
         duration: hasWon && startTime ? now - startTime : null,

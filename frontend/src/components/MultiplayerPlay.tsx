@@ -60,7 +60,7 @@ export const MultiplayerPlay: React.FC<MultiPlayProps> = ({
     axios
       .post("/api/game", {
         userId: playerId,
-        type: "",
+        type: "multiplayer",
         difficulty,
         isSuccess: hasWon,
         duration: hasWon && puzzleStartTime ? now - puzzleStartTime : null,
