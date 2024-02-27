@@ -104,7 +104,7 @@ export const Header: React.FC<HeaderProps> = ({ isLoggedIn, logout, userName }) 
       <StickyHeader className="z-10 bg-white" isFixed={isMenuClicked}>
         <div className="flex h-1/2 w-full items-center justify-between px-8">
           <div className="flex h-full">
-            <Link to={"/"} className="flex h-full items-center">
+            <Link onClick={() => setIsMenuClicked(false)} to={"/"} className="flex h-full items-center">
               <img className="mr-4 h-full" src={logoUrl} alt="logo" />
               <span className="mr-12 text-xl font-extrabold">HexHex</span>
             </Link>
