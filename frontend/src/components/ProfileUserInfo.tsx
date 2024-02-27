@@ -35,7 +35,7 @@ export const ProfileUserInfo: React.FC<ProfileUserInfoProps> = ({ className, use
         {isEditingName ? (
           <div className="flex h-full gap-3">
             <button
-              className="h-full items-center rounded-lg border-2 border-black font-light hover:bg-black hover:text-white"
+              className="h-full items-center rounded-lg border-2 border-black font-light hover:bg-black hover:text-white hover:border-none"
               onClick={saveName}
             >
               <img className="h-full px-2 py-1 hover:invert" src={checkMarkUrl} alt="checkmark" />
