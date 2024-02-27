@@ -46,21 +46,24 @@ export const Profile: React.FC<PlayProps> = ({ user }) => {
   }
 
   return (
-    <div className="flex h-max flex-1 px-5 pb-32 pt-20 xs:pb-20 sm:px-10">
-      <div className="flex h-min w-full flex-col gap-2 rounded-2xl border border-black px-10 py-8">
-        <h3 className="mb-2 text-xl">User Information</h3>
+    <div className="flex h-max flex-1 justify-center px-5 pb-32 sm:pt-20 xs:pb-20 sm:px-10">
+      <div className="h-min w-96 rounded-2xl border-black py-8 sm:w-full sm:border-2 sm:px-10">
+        <h3 className="mb-1 text-lg font-extralight">User Information</h3>
         <ProfileUserInfo className="mb-16 flex flex-col gap-2" user={user} />
 
+          <h3 className="mb-1 text-lg font-extralight">Statistics</h3>
+        <div className="flex flex-col gap-2">
           {statistics.map((statistic) => (
-            <Statistic
-              key={statistic.name}
-              name={statistic.name}
-              easy={statistic.easy}
-              medium={statistic.medium}
-              hard={statistic.hard}
-            />
+              <Statistic
+                  key={statistic.name}
+                  name={statistic.name}
+                  easy={statistic.easy}
+                  medium={statistic.medium}
+                  hard={statistic.hard}
+              />
           ))}
         </div>
       </div>
+    </div>
   );
 };
