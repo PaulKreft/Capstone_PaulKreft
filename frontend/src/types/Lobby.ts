@@ -1,5 +1,5 @@
 import { Player } from "./Player.ts";
-import {Difficulty} from "./Difficulty.ts";
+import { Difficulty } from "./Difficulty.ts";
 
 export type Lobby = {
   id: string;

@@ -11,7 +11,7 @@ type ButtonProps = {
 export const Button: React.FC<ButtonProps> = ({ children, color, isActive, onClick }) => {
   return (
     <button
-      className={cn("xs:px-5 xs:py-2 xs:text-xl rounded-2xl px-3 py-1 text-lg")}
+      className={cn("rounded-2xl px-3 py-1 text-lg xs:px-5 xs:py-2 xs:text-xl")}
       style={{
         backgroundColor: isActive ? color : "white",
         color: isActive ? "white" : color,

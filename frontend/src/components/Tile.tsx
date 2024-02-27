@@ -14,13 +14,13 @@ export const Tile: React.FC<TileProps> = ({ color, isClickable, isSelected, isWr
   return (
     <button
       className={cn(
-        "h-20 w-20 rounded-xl text-blue-600 sm:h-28 sm:w-28",
+        "text-blue-600 h-20 w-20 rounded-xl sm:h-28 sm:w-28",
         isSelected ? "border-2 border-white outline outline-2 outline-black" : "",
         isWrong ? "border-4 border-white outline outline-4 outline-red" : "",
         isCorrect ? "border-4 border-white outline outline-4 outline-green" : "",
         ["#fff", "#FFFFFF", "#ffffff", "#FFF"].includes(color) ? "border border-black" : "",
       )}
-      onClick={ onClick }
+      onClick={onClick}
       style={{ backgroundColor: color }}
       disabled={!isClickable}
     />

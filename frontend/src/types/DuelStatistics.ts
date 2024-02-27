@@ -1,6 +1,6 @@
-import {ScoreMap} from "./ScoreMap.ts";
+import { ScoreMap } from "./ScoreMap.ts";
 
 export type DuelStatistics = {
-    gamesPlayed: ScoreMap;
-    gamesWon: ScoreMap;
-}
+  gamesPlayed: ScoreMap;
+  gamesWon: ScoreMap;
+};

@@ -110,7 +110,9 @@ export const TileConfiguration: React.FC<TileConfigurationProps> = ({ children, 
 
   return (
     <div className={className}>
-      <div className={cn("mb-2 flex justify-around xs:justify-between sm:px-4", baseConfig.length === 6 ? "px-7" : "px-4")}>
+      <div
+        className={cn("mb-2 flex justify-around xs:justify-between sm:px-4", baseConfig.length === 6 ? "px-7" : "px-4")}
+      >
         {children}
       </div>
       <div
