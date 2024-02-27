@@ -1,6 +1,6 @@
 import React, { FormEvent, useEffect, useState } from "react";
 import { cn } from "../lib/utils.ts";
-import {Spinner} from "./Spinner.tsx";
+import { Spinner } from "./Spinner.tsx";
 
 type EmailLoginProps = {
   login: (email: string, password: string) => void;
@@ -33,15 +33,15 @@ export const EmailLogin: React.FC<EmailLoginProps> = ({ login }) => {
 
   if (isLoggingIn) {
     return (
-        <div className="flex flex-1 items-center justify-center">
-          <Spinner />
-        </div>
+      <div className="flex flex-1 items-center justify-center">
+        <Spinner />
+      </div>
     );
   }
 
   return (
     <div className="mx-auto flex flex-1 flex-col items-center justify-center pb-20">
-      <div className="flex flex-col items-center  rounded-2xl border-2 border-black px-20 pb-24 pt-12">
+      <div className="flex flex-col items-center  rounded-2xl border-black px-20 pb-24 pt-12 sm:border-2">
         <h2 className="pb-16 text-4xl">Log in with Email</h2>
         <form className="" onSubmit={loginWithEmail} noValidate>
           <div className="mb-1 pl-1 text-lg">Email</div>
@@ -56,9 +56,7 @@ export const EmailLogin: React.FC<EmailLoginProps> = ({ login }) => {
             onChange={(event) => setEmail(event.target.value)}
             required
           />
-          <div
-            className={cn("mt-1 text-center text-sm", email && !isEmailValid ? "text-red" : "text-transparent")}
-          >
+          <div className={cn("mt-1 text-center text-sm", email && !isEmailValid ? "text-red" : "text-transparent")}>
             Invalid email format
           </div>
 
@@ -75,10 +73,7 @@ export const EmailLogin: React.FC<EmailLoginProps> = ({ login }) => {
             required
           />
           <div
-            className={cn(
-              "mt-1 text-center text-sm",
-              password && !isPasswordValid ? "text-red" : "text-transparent",
-            )}
+            className={cn("mt-1 text-center text-sm", password && !isPasswordValid ? "text-red" : "text-transparent")}
           >
             Invalid password format
           </div>

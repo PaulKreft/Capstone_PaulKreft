@@ -50,7 +50,7 @@ export const MultiplayerLobby: React.FC<MultiplayerLobbyProps> = ({
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center px-2">
-      <div className="flex w-full items-center justify-evenly rounded-2xl border-2 border-black py-10 xs:w-max xs:px-20">
+      <div className="flex w-full items-center justify-evenly rounded-2xl border-black py-10 xs:w-max xs:px-20 sm:border-2">
         <div className="flex flex-col items-center">
           <div className="text-xl font-extrabold">{`${lobby.host.name.substring(0, 15)}'s lobby`}</div>
           <div
@@ -122,7 +122,7 @@ export const MultiplayerLobby: React.FC<MultiplayerLobbyProps> = ({
               </label>
               <input
                 id="streakToWinInput"
-                className="h-max w-20 items-center rounded-lg border border-black bg-white px-3 py-1 font-light text-black"
+                className="h-max w-12 items-center rounded-lg border border-black bg-white p-1 text-center font-light text-black"
                 value={lobby.streakToWin?.toString() || ""}
                 onChange={onChangeStreakToWin}
                 type="number"
