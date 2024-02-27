@@ -47,6 +47,10 @@ function App() {
       navigate("/");
     });
 
+  const updateUser = (user: User) => {
+    setUser(user);
+  };
+
   if (isLoading) {
     return (
       <div className="flex h-screen w-screen items-center justify-center">
@@ -63,7 +67,7 @@ function App() {
         <Route path="/play" element={<Play userId={user?.id} />} />
         <Route path="/multiplayer" element={<LobbyEntrance user={user} />} />
         <Route path="/multiplayer/lobby/:id" element={<MultiplayerSession user={user} />} />
-        <Route path="/profile" element={<Profile user={user} />} />
+        <Route path="/profile" element={<Profile user={user} updateUser={updateUser} />} />
         <Route path="/login" element={<Login />} />
         <Route path="/login/email" element={<EmailLogin login={login} />} />
         <Route path="/signup" element={<SignUp />} />
