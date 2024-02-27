@@ -15,11 +15,11 @@ export const StopWatch: React.FC<StopWatchProps> = ({ className, value }) => {
       return;
     }
     const minutes: number = Math.floor(value / 60000);
-    const seconds: number = (value % 60000) / 1000;
+    const seconds: number = Math.floor((value % 60000) / 1000);
     const centiseconds: number = Math.floor((value % 1000) / 10);
 
     const minuteString = minutes >= 10 ? minutes.toString() : "0" + minutes.toString();
-    const secondString = seconds >= 10 ? seconds.toFixed(0) : "0" + seconds.toFixed(0);
+    const secondString = seconds >= 10 ? seconds.toString() : "0" + seconds.toString();
     const millisecondString = centiseconds >= 10 ? centiseconds.toString() : "0" + centiseconds.toString();
 
     setDisplayTime(`${minuteString}:${secondString}:${millisecondString}`);
