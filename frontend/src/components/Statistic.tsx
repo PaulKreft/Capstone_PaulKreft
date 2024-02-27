@@ -10,7 +10,7 @@ type StatisticProps = {
 export const Statistic: React.FC<StatisticProps> = ({ name, easy, medium, hard }) => {
   return (
     <div className="flex max-w-96 justify-between">
-      <div>{name}:</div>
+      <div className="font-bold">{name}</div>
       <div className="flex gap-5">
         <span className="text-green">{easy?.toFixed() || "N/A"}</span>
         <span className="text-blue">{medium?.toFixed() || "N/A"}</span>

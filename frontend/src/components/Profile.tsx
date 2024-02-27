@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { User } from "../types/User.ts";
 import axios from "axios";
 import { Statistics } from "../types/Statistics.ts";
+import { ProfileUserInfo } from "./ProfileUserInfo.tsx";
 import { Statistic } from "./Statistic.tsx";
 import { Spinner } from "./Spinner.tsx";
 
@@ -36,7 +37,7 @@ export const Profile: React.FC<PlayProps> = ({ user }) => {
     );
   }, [user]);
 
-  if (user == null || !statistics) {
+  if (!user || !statistics) {
     return (
       <div className="flex h-screen w-screen items-center justify-center">
         <Spinner />
@@ -45,10 +46,10 @@ export const Profile: React.FC<PlayProps> = ({ user }) => {
   }
 
   return (
-    <div className="flex h-max flex-1 flex-col items-center px-5 pb-32 pt-20 xs:pb-20 sm:px-10">
-      <div className="w-5/6">
-        <div className="flex h-min w-full flex-col gap-2 rounded-2xl border-2 border-black px-6 py-4">
-          <h3 className="mb-2 font-bold">Statistics</h3>
+    <div className="flex h-max flex-1 px-5 pb-32 pt-20 xs:pb-20 sm:px-10">
+      <div className="flex h-min w-full flex-col gap-2 rounded-2xl border border-black px-10 py-8">
+        <h3 className="mb-2 text-xl">User Information</h3>
+        <ProfileUserInfo className="mb-16 flex flex-col gap-2" user={user} />
 
           {statistics.map((statistic) => (
             <Statistic
@@ -61,6 +62,5 @@ export const Profile: React.FC<PlayProps> = ({ user }) => {
           ))}
         </div>
       </div>
-    </div>
   );
 };
