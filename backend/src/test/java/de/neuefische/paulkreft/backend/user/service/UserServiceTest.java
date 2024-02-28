@@ -1,6 +1,5 @@
 package de.neuefische.paulkreft.backend.user.service;
 
-import de.neuefische.paulkreft.backend.exception.GithubEmailNotFoundException;
 import de.neuefische.paulkreft.backend.github.service.GithubService;
 import de.neuefische.paulkreft.backend.statistic.service.StatisticService;
 import de.neuefische.paulkreft.backend.utils.service.IdService;
