@@ -1,5 +1,6 @@
 package de.neuefische.paulkreft.backend.user.service;
 
+import de.neuefische.paulkreft.backend.exception.GithubEmailNotFoundException;
 import de.neuefische.paulkreft.backend.github.service.GithubService;
 import de.neuefische.paulkreft.backend.statistic.service.StatisticService;
 import de.neuefische.paulkreft.backend.utils.service.IdService;
@@ -10,10 +11,13 @@ import de.neuefische.paulkreft.backend.user.repository.UsersRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
 import java.security.Principal;
 import java.time.Instant;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -167,7 +171,6 @@ class UserServiceTest {
         verifyNoMoreInteractions(idService, usersRepo, timeService, githubService);
     }
 
-
     @Test
     void existsByEmailTest_whenCheckNonExistingUser_returnFalse() {
         // Given
@@ -181,5 +184,43 @@ class UserServiceTest {
         assertFalse(result);
         verify(usersRepo, times(1)).existsUserByEmail(nonExistingEmail);
         verifyNoMoreInteractions(idService, usersRepo, timeService, githubService);
+    }
+
+    @Test
+    void updateUserTest_whenUpdateUserGet_ReturnUserGet() {
+        // Given
+        when(usersRepo.save(testUser)).thenReturn(testUser);
+
+        // When
+        UserGet expected = new UserGet(testUser);
+        UserGet actual = userService.updateUser(testUser);
+
+        // Then
+        assertEquals(expected, actual);
+        verify(usersRepo, times(1)).save(testUser);
+        verifyNoMoreInteractions(idService, usersRepo, timeService, githubService);
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideUsernames")
+    void updateUserTest_whenInvalidUsername_throwIllegalArgumentException(String invalidUsername) {
+        // Given
+        when(usersRepo.save(testUser)).thenReturn(testUser);
+
+        // When
+        User updatedUser = testUser.withName(invalidUsername);
+        Executable executable = () -> userService.updateUser(updatedUser);
+
+        // Then
+        assertThrows(IllegalArgumentException.class, executable);
+        verifyNoMoreInteractions(idService, usersRepo, timeService, githubService);
+    }
+
+    private static Stream<String> provideUsernames() {
+        return Stream.of(
+                "NameWithSeventeen", // Too long
+                "Name",              // Too short
+                null                 // Null
+        );
     }
 }
