@@ -2,14 +2,16 @@ import React, { useEffect, useState } from "react";
 import { User } from "../types/User.ts";
 import axios from "axios";
 import { Statistics } from "../types/Statistics.ts";
+import { ProfileUserInfo } from "./ProfileUserInfo.tsx";
 import { Statistic } from "./Statistic.tsx";
 import { Spinner } from "./Spinner.tsx";
 
-type PlayProps = {
+type ProfileProps = {
   user: User;
+  updateUser: (user: User) => void;
 };
 
-export const Profile: React.FC<PlayProps> = ({ user }) => {
+export const Profile: React.FC<ProfileProps> = ({ user, updateUser }) => {
   const [statistics, setStatistics] = useState<Statistics>();
 
   useEffect(() => {
@@ -36,7 +38,7 @@ export const Profile: React.FC<PlayProps> = ({ user }) => {
     );
   }, [user]);
 
-  if (user == null || !statistics) {
+  if (!user || !statistics) {
     return (
       <div className="flex h-screen w-screen items-center justify-center">
         <Spinner />
@@ -45,11 +47,13 @@ export const Profile: React.FC<PlayProps> = ({ user }) => {
   }
 
   return (
-    <div className="flex h-max flex-1 flex-col items-center px-5 pb-32 pt-20 xs:pb-20 sm:px-10">
-      <div className="w-5/6">
-        <div className="flex h-min w-full flex-col gap-2 rounded-2xl border-2 border-black px-6 py-4">
-          <h3 className="mb-2 font-bold">Statistics</h3>
+    <div className="flex h-max flex-1 justify-center px-5 pb-32 xs:pb-20 sm:px-10 sm:pt-20">
+      <div className="h-min w-96 rounded-2xl border-black py-8 sm:w-full sm:border-2 sm:px-10">
+        <h3 className="mb-2 font-bold">User Information</h3>
+        <ProfileUserInfo className="mb-16 flex flex-col" user={user} updateUser={updateUser} />
 
+        <h3 className="mb-2 font-bold">Statistics</h3>
+        <div className="flex flex-col gap-2">
           {statistics.map((statistic) => (
             <Statistic
               key={statistic.name}

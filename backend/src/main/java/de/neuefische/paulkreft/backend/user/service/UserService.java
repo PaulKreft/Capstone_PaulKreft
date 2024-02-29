@@ -91,6 +91,18 @@ public class UserService {
     }
 
     public UserGet updateUser(User user) {
+        if(user.name() == null) {
+            throw new IllegalArgumentException("Username cannot be null");
+        }
+
+        if(user.name().length() > 16) {
+            throw new IllegalArgumentException("Username too long");
+        }
+
+        if(user.name().length() < 5) {
+            throw new IllegalArgumentException("Username too short");
+        }
+
         return new UserGet(usersRepo.save(user));
     }
 

@@ -4,6 +4,7 @@ import axios from "axios";
 import { Lobby } from "../types/Lobby.ts";
 import { Player } from "../types/Player.ts";
 import { User } from "../types/User.ts";
+import { Spinner } from "./Spinner.tsx";
 
 type MultiPlayerProps = {
   user: User;
@@ -19,7 +20,11 @@ export const LobbyEntrance: React.FC<MultiPlayerProps> = ({ user }) => {
   const navigate = useNavigate();
 
   if (!user) {
-    return <div>No user found</div>;
+    return (
+      <div className="flex flex-1 items-center justify-center">
+        <Spinner />
+      </div>
+    );
   }
 
   const currentPlayer: Player = { id: user.id, name: user.name };

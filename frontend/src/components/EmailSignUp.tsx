@@ -48,7 +48,7 @@ export const EmailSignUp: React.FC<EmailSignUpProps> = ({ login }) => {
 
   return (
     <div className="mx-auto flex flex-1 flex-col items-center justify-center pb-20">
-      <div className="flex flex-col items-center rounded-2xl border-2 border-black px-20 pb-24 pt-12">
+      <div className="flex flex-col items-center rounded-2xl border-black px-20 pb-24 pt-12 sm:border-2">
         <h2 className="pb-16 text-4xl">Sign up with Email</h2>
         <form className="" onSubmit={signUpWithEmail} noValidate>
           <div className="mb-1 pl-1 text-lg">Email</div>

@@ -18,7 +18,7 @@ export const Home: React.FC<HomeProps> = ({ user }) => {
         <span className="cursor-magic text-[#F8F991] hover:text-[#07066e]">x</span>
         <span className="cursor-magic text-[#720026] hover:text-[#8dffd9]">!</span>
       </h1>
-      <div className="mt-20 flex items-center flex-col gap-10 md:flex-row md:mt-32 md:gap-20">
+      <div className="mt-20 flex flex-col items-center gap-10 md:mt-32 md:flex-row md:gap-20">
         {user && (
           <Link to="/multiplayer">
             <button className="rounded-3xl bg-black px-16 py-6 text-4xl text-white">Multiplayer</button>

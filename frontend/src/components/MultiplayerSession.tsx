@@ -188,7 +188,11 @@ export const MultiplayerSession: React.FC<ActiveLobbyProps> = ({ user }) => {
   };
 
   if (!user) {
-    return <div>no user</div>;
+    return (
+      <div className="flex flex-1 items-center justify-center">
+        <Spinner />
+      </div>
+    );
   }
 
   if (isGameOver) {

@@ -50,7 +50,7 @@ class UserControllerIntegrationTest {
     @BeforeEach
     public void instantiateTestUser() {
         Instant now = Instant.parse("2016-06-09T00:00:00.00Z");
-        testUser = new User("123", "Paul", "testemail@at.de", "", now, now);
+        testUser = new User("123", "Paule", "testemail@at.de", "", now, now);
     }
 
     @Test
@@ -81,7 +81,7 @@ class UserControllerIntegrationTest {
                         {
                             "id":"123",
                             "email":"testemail@at.de",
-                            "name":"Paul",
+                            "name":"Paule",
                             "lastActive": "2016-06-09T00:00:00Z",
                             "createdAt": "2016-06-09T00:00:00Z"
                         }
@@ -178,7 +178,7 @@ class UserControllerIntegrationTest {
                 .andExpect(content().json(
                         """
                                 {"id":"123",
-                                "name":"Paul",
+                                "name":"Paule",
                                 "email":"testemail@at.de",
                                 "lastActive":"2016-06-09T00:00:00Z",
                                 "createdAt":"2016-06-09T00:00:00Z"
