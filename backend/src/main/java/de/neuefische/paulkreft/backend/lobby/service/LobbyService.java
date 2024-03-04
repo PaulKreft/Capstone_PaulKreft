@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.neuefische.paulkreft.backend.exception.LobbyCapacityExceededException;
 import de.neuefische.paulkreft.backend.exception.LobbyGoneException;
 import de.neuefische.paulkreft.backend.exception.PlayerNotPartOfLobbyException;
+import de.neuefische.paulkreft.backend.lobby.model.ChatMessage;
 import de.neuefische.paulkreft.backend.lobby.model.Lobby;
 import de.neuefische.paulkreft.backend.lobby.repository.LobbyRepo;
 import de.neuefische.paulkreft.backend.user.model.Player;
@@ -110,7 +111,6 @@ public class LobbyService {
     public Lobby setLoser(String id, Player loser) {
         Lobby lobby = getLobbyById(id);
 
-
         if (!lobby.players().contains(loser)) {
             throw new PlayerNotPartOfLobbyException("Trying to set loser that is not in the lobby");
         }
@@ -119,4 +119,11 @@ public class LobbyService {
         return lobbyRepo.save(lobby);
     }
 
+    public Lobby addChatMessage(String id, ChatMessage message) {
+        Lobby lobby = getLobbyById(id);
+
+        lobby.chat().messages().add(message);
+
+        return lobbyRepo.save(lobby);
+    }
 }

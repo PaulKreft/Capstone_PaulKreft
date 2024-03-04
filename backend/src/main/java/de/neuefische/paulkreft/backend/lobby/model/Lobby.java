@@ -21,6 +21,7 @@ public record Lobby(
         Integer streakToWin,
         Integer timeToBeat,
         Instant lastGameStarted,
-        Integer capacity
+        Integer capacity,
+        Chat chat
 ) {
 }

@@ -5,6 +5,7 @@ import { Lobby } from "../types/Lobby.ts";
 import copyToClipBoardIconUrl from "./../assets/copy-to-clipboard-icon.svg";
 import axios from "axios";
 import { DuelStatistics } from "../types/DuelStatistics.ts";
+import { ChatContainer } from "./ChatContainer.tsx";
 
 type MultiplayerLobbyProps = {
   lobby: Lobby;
@@ -49,7 +50,7 @@ export const MultiplayerLobby: React.FC<MultiplayerLobbyProps> = ({
   }, [lobby.players]);
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center px-2">
+    <div className="flex flex-1 h-full flex-col items-center justify-center px-2">
       <div className="flex w-full items-center justify-evenly rounded-2xl border-black py-10 xs:w-max xs:px-20 sm:border-2">
         <div className="flex flex-col items-center">
           <div className="text-xl font-extrabold">{`${lobby.host.name.substring(0, 15)}'s lobby`}</div>
@@ -152,6 +153,12 @@ export const MultiplayerLobby: React.FC<MultiplayerLobbyProps> = ({
           )}
         </div>
       </div>
+      <ChatContainer
+        className="flex flex-1 h-min w-full flex-col justify-end"
+        username={player.name}
+        lobbyId={lobby.id}
+        chat={lobby.chat}
+      />
     </div>
   );
 };

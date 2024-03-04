@@ -3,6 +3,7 @@ package de.neuefische.paulkreft.backend.lobby.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.neuefische.paulkreft.backend.exception.RequestQueueNotFoundException;
+import de.neuefische.paulkreft.backend.lobby.model.ChatMessage;
 import de.neuefische.paulkreft.backend.lobby.model.Lobby;
 import de.neuefische.paulkreft.backend.lobby.service.LobbyService;
 import de.neuefische.paulkreft.backend.user.model.Player;
@@ -93,6 +94,17 @@ public class LobbyController {
         return updatedLobby;
     }
 
+    @PostMapping("/{lobbyId}/chatMessage")
+    public Lobby addChatMessage(@RequestBody ChatMessage message, @PathVariable String lobbyId) {
+        Lobby updatedLobby = lobbyService.addChatMessage(lobbyId, message);
+
+        resolveRequest(updatedLobby);
+
+        return updatedLobby;
+
+    }
+
+
     public void resolveRequest(Lobby lobby) {
         ConcurrentLinkedQueue<DeferredResult<Lobby>> queue = this.queuedRequests.get(lobby.id());
 
@@ -104,4 +116,5 @@ public class LobbyController {
             defResult.setResult(lobby);
         }
     }
+
 }

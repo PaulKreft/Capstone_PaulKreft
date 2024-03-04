@@ -5,6 +5,7 @@ import { Lobby } from "../types/Lobby.ts";
 import { Player } from "../types/Player.ts";
 import { User } from "../types/User.ts";
 import { Spinner } from "./Spinner.tsx";
+import {Chat} from "../types/Chat.ts";
 
 type MultiPlayerProps = {
   user: User;
@@ -32,6 +33,8 @@ export const LobbyEntrance: React.FC<MultiPlayerProps> = ({ user }) => {
   const createLobby = (capacity: number | null = null): void => {
     const lobbyId = Math.ceil(Math.random() * 1000000).toString();
 
+    const chat: Chat = { messages: [] };
+
     const lobby: Lobby = {
       id: lobbyId,
       host: currentPlayer,
@@ -42,6 +45,7 @@ export const LobbyEntrance: React.FC<MultiPlayerProps> = ({ user }) => {
       losers: [],
       streakToWin: 3,
       ...(capacity && { capacity }),
+      chat
     };
 
     axios.post("/api/lobby", lobby).then(() => navigate(`/multiplayer/lobby/${lobbyId}`));
